@@ -1,0 +1,316 @@
+/* =====================================
+   HEADER
+===================================== */
+
+.app-header {
+    background: #0f172a;
+
+    border-bottom: 1px solid rgba(59,130,246,.15);
+
+    position: sticky;
+    top: 0;
+
+    z-index: 999;
+}
+
+/* =====================================
+   LAYOUT
+===================================== */
+
+.header-content {
+    height: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* =====================================
+   LOGO
+===================================== */
+
+.logo-box {
+    width: 60px;
+    height: 60px;
+
+    border-radius: 18px;
+
+    background: rgba(37,99,235,.15);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+}
+
+.logo-box i {
+    font-size: 28px;
+    color: #3b82f6;
+}
+
+/* =====================================
+   TITLE
+===================================== */
+
+.header-title {
+    color: white;
+
+    font-size: 1.5rem;
+    font-weight: 700;
+
+    margin: 0;
+}
+
+.header-subtitle {
+    color: #94a3b8;
+
+    font-size: .9rem;
+}
+
+/* =====================================
+   THEME BUTTON
+===================================== */
+
+.theme-btn {
+    width: 46px;
+    height: 46px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: #1e293b;
+
+    color: #cbd5e1;
+
+    transition: .3s;
+}
+
+.theme-btn:hover {
+    background: #2563eb;
+    color: white;
+}
+
+/* =====================================
+   USER BOX
+===================================== */
+
+.user-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    background: #1e293b;
+
+    border: 1px solid rgba(59,130,246,.15);
+
+    padding: 8px 14px;
+
+    border-radius: 16px;
+}
+
+.user-avatar {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 12px;
+
+    background: rgba(59,130,246,.15);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-avatar i {
+    color: #60a5fa;
+    font-size: 18px;
+}
+
+.user-name {
+    color: white;
+
+    font-weight: 600;
+
+    display: block;
+}
+
+.user-info small {
+    color: #94a3b8;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+
+.app-footer {
+    background: #0f172a;
+
+    border-top: 1px solid rgba(59,130,246,.15);
+
+    margin-top: 0px;
+
+    padding-top: 10px;
+}
+
+.footer-content {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 40px;
+    margin-top: 30px;
+    padding-bottom: 30px;
+}
+
+/* =====================================
+   LEFT
+===================================== */
+
+.footer-left h5 {
+    color: white;
+
+    margin-bottom: 10px;
+
+    font-weight: 700;
+}
+
+.footer-left h5 i {
+    color: #3b82f6;
+
+    margin-right: 8px;
+}
+
+.footer-left p {
+    color: #94a3b8;
+
+    margin: 0;
+}
+
+/* =====================================
+   CENTER
+===================================== */
+
+.footer-center {
+    display: flex;
+
+    gap: 25px;
+}
+
+.footer-center a {
+    color: #94a3b8;
+
+    text-decoration: none;
+
+    transition: .3s;
+}
+
+.footer-center a:hover {
+    color: #60a5fa;
+}
+
+/* =====================================
+   RIGHT
+===================================== */
+
+.footer-right {
+    display: flex;
+
+    gap: 15px;
+}
+
+.footer-right a {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 12px;
+
+    background: #1e293b;
+
+    color: #94a3b8;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+
+    transition: .3s;
+}
+
+.footer-right a:hover {
+    background: #2563eb;
+    color: white;
+
+    transform: translateY(-3px);
+}
+
+/* =====================================
+   COPYRIGHT
+===================================== */
+
+.footer-bottom {
+    text-align: center;
+
+    color: #64748b;
+
+    border-top: 1px solid rgba(255,255,255,.05);
+
+    padding: 20px 0;
+
+    font-size: .9rem;
+}
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 768px) {
+
+    .footer-content {
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+    .footer-center {
+        flex-wrap: wrap;
+
+        justify-content: center;
+    }
+}
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 768px) {
+
+    .header-subtitle,
+    .user-info {
+        display: none;
+    }
+
+    .header-title {
+        font-size: 1.1rem;
+    }
+
+    .header-content {
+        height: 75px;
+    }
+}

@@ -1,0 +1,281 @@
+/* ==========================================
+   LOGIN PAGE
+========================================== */
+
+.login-section {
+    min-height: 100vh;
+    padding-top: 30px;
+    /* display: flex; */
+    align-items: center;
+    padding-bottom: 30px;
+    background:
+        radial-gradient(circle at top left,
+            rgba(37,99,235,.18),
+            transparent 30%),
+
+        radial-gradient(circle at bottom right,
+            rgba(239,68,68,.12),
+            transparent 40%),
+
+        #070b16;
+}
+
+/* ==========================================
+   LEFT SIDE
+========================================== */
+
+.welcome-panel {
+    color: white;
+    padding-right: 60px;
+}
+
+.logo-circle {
+    width: 80px;
+    height: 80px;
+
+    border-radius: 24px;
+
+    background: rgba(37,99,235,.15);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 30px;
+}
+
+.logo-circle i {
+    color: #3b82f6;
+    font-size: 42px;
+}
+
+.left-title {
+    color: white;
+
+    font-size: 3.8rem;
+    font-weight: 700;
+
+    margin-bottom: 25px;
+
+    line-height: 1.1;
+}
+
+.left-description {
+    color: #94a3b8;
+
+    font-size: 1.1rem;
+
+    line-height: 1.8;
+}
+
+/* ==========================================
+   LOGIN CARD
+========================================== */
+
+
+.card-header{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.login-card {
+    background: #111827;
+
+    border: 1px solid rgba(59,130,246,.2);
+
+    border-radius: 24px;
+
+    padding: 20px;
+    
+    max-width: 480px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.35),
+        0 0 0 1px rgba(59,130,246,.05);
+}
+
+.card-icon {
+    width: 70px;
+    height: 70px;
+
+    border-radius: 18px;
+
+    background: rgba(16,185,129,.15);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 20px;
+}
+
+.card-icon i {
+    color: #10b981;
+    font-size: 32px;
+}
+
+.login-card h2 {
+    color: white;
+
+    font-size: 2rem;
+    font-weight: 700;
+
+    margin-bottom: 25px;
+}
+
+/* ==========================================
+   FORM
+========================================== */
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+
+    color: #cbd5e1;
+
+    font-weight: 500;
+
+    margin-bottom: 8px;
+}
+
+.form-control {
+    width: 100%;
+
+    height: 54px;
+
+    background: #0f172a;
+
+    border: 1px solid #334155;
+
+    border-radius: 14px;
+
+    color: white;
+}
+
+.form-control:focus {
+    background: #0f172a;
+
+    color: white;
+
+    border-color: #3b82f6;
+
+    box-shadow: 0 0 0 4px rgba(59,130,246,.15);
+}
+
+.form-check-label {
+    color: #94a3b8;
+}
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.btn-danger {
+    width: 100%;
+
+    height: 50px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: #051863;
+
+    color: white;
+
+    font-weight: 600;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+.btn-primary {
+    width: 100%;
+
+    height: 54px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-weight: 600;
+
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+/* ==========================================
+   LINKS
+========================================== */
+
+.btn-link,
+.text-end a {
+    
+    color: #60a5fa;
+    text-decoration: none;
+}
+
+.btn-link:hover,
+.text-end a:hover {
+    color: white;
+}
+
+.text-end {
+    display:flex;
+    justify-content:space-around;
+    margin-top: 10px;
+}
+
+/* ==========================================
+   ALERT
+========================================== */
+
+.alert-danger {
+    background: rgba(239,68,68,.15);
+
+    border: 1px solid rgba(239,68,68,.3);
+
+    color: #fecaca;
+
+    border-radius: 12px;
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 991px) {
+
+    .welcome-panel {
+        text-align: center;
+
+        padding-right: 0;
+
+        margin-bottom: 50px;
+    }
+
+    .logo-circle {
+        margin: 0 auto 25px;
+    }
+
+    .left-title {
+        font-size: 2.5rem;
+    }
+
+    .login-card {
+        max-width: 100%;
+    }
+}
