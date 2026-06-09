@@ -1,0 +1,472 @@
+/* ===================================
+    RESET
+=================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    background: #050b17;
+    color: white;
+    min-height: 100vh;
+}
+
+/* ===================================
+    HEADER
+=================================== */
+
+.header {
+    height: 80px;
+    background: #151d2f;
+    border-bottom: 1px solid #23365b;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 40px;
+}
+
+.header-left {
+    display: flex;
+    
+    gap: 20px;
+}
+
+.header-logo a {
+    text-decoration: none;
+    color: #3b82f6;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.header-left h1 {
+    font-size: 1.2rem;
+    color: #d8e3f8;
+}
+
+.header-time {
+    color: #8fa3c7;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-clock {
+    min-width: 140px;
+    height: 70px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #19253d;
+    border: 1px solid #29426f;
+    border-radius: 16px;
+
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 700;
+
+    box-shadow:
+        0 0 15px rgba(59,130,246,.15);
+}
+
+.header-btn {
+    width: 80px;
+    height: 40px;
+
+    border: none;
+    border-radius: 16px;
+
+    cursor: pointer;
+
+    background: #19253d;
+    color: white;
+
+    font-size: 1.4rem;
+
+    transition: all .3s;
+}
+
+.header-btn:hover {
+    transform: translateY(-2px);
+}
+
+.theme-toggle:hover {
+    background: #243b63;
+}
+
+.login-btn {
+    background: #3b82f6;
+}
+
+.login-btn:hover {
+    background: #2563eb;
+}
+
+.header-login,
+.header-changeLight {
+    border: none;
+    background: #1c2841;
+    color: white;
+
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.header-login:hover,
+.header-changeLight:hover {
+    background: #3b82f6;
+}
+
+/* ===================================
+    MAIN LAYOUT
+=================================== */
+
+.container {
+    padding: 30px;
+
+    display: grid;
+    grid-template-columns: 320px 1fr 320px;
+    gap: 25px;
+}
+
+/* ===================================
+    CARD CHUNG
+=================================== */
+
+.container-attend-left,
+.container-attend-right,
+.face-guide {
+    background: #151d2f;
+    border: 1px solid #23365b;
+    border-radius: 20px;
+}
+
+/* ===================================
+    HISTORY
+=================================== */
+
+.container-attend-left {
+    padding: 25px;
+}
+
+.history-title {
+    color: #3b82f6;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.history-list {
+    list-style: none;
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.history-item {
+    background: #1a2741;
+
+    padding: 15px;
+    border-radius: 14px;
+
+    border: 1px solid #263a61;
+
+    line-height: 1.6;
+}
+
+/* ===================================
+    CAMERA
+=================================== */
+
+.container-attend-main {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.face-scanner {
+    position: relative;
+
+    height: 560px;
+
+    background: #111b2f;
+
+    border-radius: 24px;
+    border: 2px solid #3b82f6;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 0 20px rgba(59,130,246,.3),
+        inset 0 0 50px rgba(59,130,246,.05);
+}
+
+/* camera */
+
+#camera {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* khung nhận diện */
+
+.scan-overlay {
+    position: absolute;
+
+    width: 340px;
+    height: 420px;
+
+    border: 5px solid #3b82f6;
+    border-radius: 25px;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    box-shadow:
+        0 0 20px #3b82f6,
+        inset 0 0 15px rgba(59,130,246,.5);
+}
+
+/* hiệu ứng tia scan */
+
+.scan-overlay::after {
+    content: "";
+
+    position: absolute;
+
+    left: -50px;
+    right: -50px;
+
+    top: 50%;
+
+    height: 4px;
+
+    background: rgba(59,130,246,.8);
+
+    box-shadow: 0 0 20px #3b82f6;
+
+    animation: scan 3s infinite linear;
+}
+
+@keyframes scan {
+    0% {
+        top: 10%;
+    }
+
+    50% {
+        top: 90%;
+    }
+
+    100% {
+        top: 10%;
+    }
+}
+
+/* kết quả */
+
+.result-card {
+    position: absolute;
+
+    bottom: 20px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: rgba(30,64,175,.8);
+
+    padding: 14px 28px;
+
+    border-radius: 30px;
+
+    font-size: 1rem;
+}
+
+/* ===================================
+    GUIDE
+=================================== */
+
+.face-guide {
+    padding: 25px;
+}
+
+.face-guide p {
+    color: #3b82f6;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.face-guide ol {
+    padding-left: 20px;
+}
+
+.face-guide li {
+    margin-bottom: 12px;
+    color: #d7dff0;
+}
+
+/* ===================================
+    STATISTICS
+=================================== */
+
+.container-attend-right {
+    background: #151d2f;
+    border: 1px solid #23365b;
+    border-radius: 20px;
+
+    padding: 25px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.attendance-title {
+    color: #3b82f6;
+    font-size: 1.5rem;
+    font-weight: 600;
+
+    margin-bottom: 10px;
+}
+
+/* Card chung */
+
+.stat-card {
+    padding: 20px;
+    border-radius: 16px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    transition: .3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Text trong card */
+
+.stat-card p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Số liệu */
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+/* Đã chấm công */
+
+.success-card {
+    background: rgba(0, 255, 170, 0.12);
+    border: 1px solid rgba(0, 255, 170, 0.3);
+}
+
+.success-card .attendance-present,
+.success-card .stat-number {
+    color: #00e29b;
+}
+
+/* Đi muộn */
+
+.warning-card {
+    background: rgba(255, 166, 0, 0.12);
+    border: 1px solid rgba(255, 166, 0, 0.3);
+}
+
+.warning-card .attendance-late,
+.warning-card .stat-number {
+    color: #ffb347;
+}
+
+/* Chưa chấm công */
+
+.danger-card {
+    background: rgba(255, 70, 70, 0.12);
+    border: 1px solid rgba(255, 70, 70, 0.3);
+}
+
+.danger-card .attendance-absent,
+.danger-card .stat-number {
+    color: #ff6161;
+}
+
+/* Khối thông tin */
+
+.attendance-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    margin-top: 5px;
+}
+
+/* Tổng nhân viên */
+
+.attendance-sum {
+    padding: 16px;
+    border-radius: 14px;
+
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+
+    color: #dbeafe;
+}
+
+/* Giờ làm việc */
+
+.attendance-date {
+    padding: 16px;
+    border-radius: 14px;
+
+    background: rgba(255, 166, 0, 0.12);
+    border: 1px solid rgba(255, 166, 0, 0.3);
+
+    color: #ffb347;
+}
+
+/* Xóa margin mặc định */
+
+.attendance-present,
+.attendance-late,
+.attendance-absent,
+.attendance-sum,
+.attendance-date {
+    margin: 0;
+}
+/* ===================================
+    RESPONSIVE
+=================================== */
+
+@media (max-width: 1200px) {
+
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    .face-scanner {
+        height: 450px;
+    }
+}
