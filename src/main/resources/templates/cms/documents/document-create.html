@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo cáo công việc</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div th:replace="~{cms/fragments/sidebar-employee :: sidebar}"></div>
+
+    <div class="container-layout">
+        <header class="page-header">
+            <h1>Nộp báo cáo công việc</h1>
+
+            <div class="notification">
+                <i class="fa-regular fa-bell"></i>
+                <span class="dot"></span>
+            </div>
+        </header>
+
+
+        <div class="report-card">
+
+            <h2>Gửi báo cáo công việc</h2>
+
+            <form>
+
+                <!-- Nội dung -->
+                <div class="form-group">
+                    <label>Nội dung báo cáo</label>
+                    <textarea placeholder="Nhập nội dung báo cáo công việc của bạn..."></textarea>
+                </div>
+
+                <!-- Upload file -->
+                <div class="form-group">
+                    <label>Tệp đính kèm</label>
+
+                    <label class="upload-box">
+                        <input type="file" multiple>
+                        <span>📎 Chọn file hoặc kéo thả vào đây</span>
+                        <small>
+                            Hỗ trợ PDF, DOCX, XLSX, JPG, PNG, ZIP
+                        </small>
+                    </label>
+                </div>
+
+                <!-- Link tài liệu -->
+                <div class="form-group">
+                    <label>Hoặc đính kèm liên kết</label>
+
+                    <input type="url" placeholder="https://drive.google.com/..." class="link-input">
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    ✈ Gửi báo cáo
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+    <div th:replace="~{cms/layouts/footer :: footer}"></div>
+
+</body>
+
+</html>

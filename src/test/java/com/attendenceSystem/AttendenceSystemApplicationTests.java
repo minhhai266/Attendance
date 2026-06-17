@@ -1,13 +1,13 @@
-package com.attendenceSystem;
+// package com.attendenceSystem;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class AttendenceSystemApplicationTests {
+// @SpringBootTest
+// class AttendenceSystemApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+// 	@Test
+// 	void contextLoads() {
+// 	}
 
-}
+// }

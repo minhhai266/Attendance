@@ -1,0 +1,274 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách thế giới</title>
+    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div th:replace="~{cms/fragments/sidebar-employee :: sidebar}"></div>
+
+    <div class="container-layout">
+        <header class="page-header">
+            <h1>Dashboard</h1>
+
+            <div class="notification">
+                <i class="fa-regular fa-bell"></i>
+                <span class="dot"></span>
+            </div>
+        </header>
+
+        <main class="dashboard-employee">
+
+
+            <!-- ======================
+                THỐNG KÊ
+            ======================= -->
+            <section class="employee-overview">
+
+                <div class="employee-stat-card report-submitted">
+                    <div class="employee-stat-card__icon"></div>
+
+                    <div class="employee-stat-card__content">
+                        <h3 class="employee-stat-card__number">12</h3>
+                        <p class="employee-stat-card__label">Báo cáo đã nộp</p>
+                    </div>
+
+                    <span class="employee-stat-card__trend">↗</span>
+                </div>
+
+                <div class="employee-stat-card report-approved">
+                    <div class="employee-stat-card__icon"></div>
+
+                    <div class="employee-stat-card__content">
+                        <h3 class="employee-stat-card__number">10</h3>
+                        <p class="employee-stat-card__label">Báo cáo được duyệt</p>
+                    </div>
+                </div>
+
+                <div class="employee-stat-card report-rejected">
+                    <div class="employee-stat-card__icon"></div>
+
+                    <div class="employee-stat-card__content">
+                        <h3 class="employee-stat-card__number">1</h3>
+                        <p class="employee-stat-card__label">Báo cáo bị từ chối</p>
+                    </div>
+                </div>
+
+                <div class="employee-stat-card attendance-rate">
+                    <div class="employee-stat-card__icon"></div>
+
+                    <div class="employee-stat-card__content">
+                        <h3 class="employee-stat-card__number">95%</h3>
+                        <p class="employee-stat-card__label">Tỷ lệ chuyên cần</p>
+                    </div>
+
+                    <span class="employee-stat-card__status">
+                        Xuất sắc
+                    </span>
+                </div>
+
+            </section>
+
+
+
+            <!-- ======================
+         NỘI DUNG CHÍNH
+    ======================= -->
+            <section class="employee-content">
+
+                <!-- LEFT -->
+                <div class="employee-main">
+
+                    <!-- Quick Action -->
+                    <div class="quick-actions">
+
+                        <h2 class="section-title">
+                            Thao Tác Nhanh
+                        </h2>
+
+                        <div class="quick-actions-grid">
+
+                            <a href="#" class="quick-action-card">
+                                <div class="quick-action-card__icon"></div>
+
+                                <h3>Thông Tin Cá Nhân</h3>
+                                <p>Xem và cập nhật profile</p>
+                            </a>
+
+                            <a href="#" class="quick-action-card">
+                                <div class="quick-action-card__icon"></div>
+
+                                <h3>Nộp Báo Cáo</h3>
+                                <p>Tạo báo cáo công việc</p>
+                            </a>
+
+                            <a href="#" class="quick-action-card">
+                                <div class="quick-action-card__icon"></div>
+
+                                <h3>Lịch Sử Điểm Danh</h3>
+                                <p>Xem lịch sử check-in/out</p>
+                            </a>
+
+                            <a href="#" class="quick-action-card">
+                                <div class="quick-action-card__icon"></div>
+
+                                <h3>Xin Nghỉ Phép</h3>
+                                <p>Tạo đơn xin nghỉ</p>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Attendance History -->
+                    <div class="attendance-history">
+
+                        <h2 class="section-title">
+                            Lịch Sử Điểm Danh Gần Đây
+                        </h2>
+
+                        <div class="table-wrapper">
+
+                            <table class="attendance-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Ngày</th>
+                                        <th>Check In</th>
+                                        <th>Check Out</th>
+                                        <th>Trạng Thái</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+                                        <td>2/6/2026</td>
+                                        <td>07:58</td>
+                                        <td>17:05</td>
+                                        <td>
+                                            <span class="status-badge status-success">
+                                                Đúng giờ
+                                            </span>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>1/6/2026</td>
+                                        <td>08:12</td>
+                                        <td>17:02</td>
+                                        <td>
+                                            <span class="status-badge status-warning">
+                                                Đi muộn
+                                            </span>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>31/5/2026</td>
+                                        <td>08:00</td>
+                                        <td>17:00</td>
+                                        <td>
+                                            <span class="status-badge status-success">
+                                                Đúng giờ
+                                            </span>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>30/5/2026</td>
+                                        <td>07:55</td>
+                                        <td>16:45</td>
+                                        <td>
+                                            <span class="status-badge status-danger">
+                                                Về sớm
+                                            </span>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- RIGHT -->
+                <aside class="employee-sidebar">
+
+                    <!-- Profile -->
+                    <div class="profile-card">
+
+                        <h2 class="profile-card__title">
+                            Thông Tin Cá Nhân
+                        </h2>
+
+                        <div class="profile-item">
+                            <label>Email</label>
+                            <span>nguyenvana@company.com</span>
+                        </div>
+
+                        <div class="profile-item">
+                            <label>Số điện thoại</label>
+                            <span>0123456789</span>
+                        </div>
+
+                        <div class="profile-item">
+                            <label>Phòng ban</label>
+                            <span>IT Department</span>
+                        </div>
+
+                        <div class="profile-item">
+                            <label>Face ID</label>
+
+                            <span class="faceid-badge">
+                                ✓ Đã đăng ký
+                            </span>
+                        </div>
+
+                        <button class="btn-update-profile">
+                            Cập nhật thông tin
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- Reminder -->
+                    <div class="reminder-card">
+
+                        <div class="reminder-card__header">
+                            💡 Lời nhắc
+                        </div>
+
+                        <p class="reminder-card__content">
+                            Nhớ nộp báo cáo công việc hàng tuần
+                            trước 17:00 thứ 6.
+                        </p>
+
+                    </div>
+
+                </aside>
+
+            </section>
+
+        </main>
+
+    </div>
+    <div th:replace="~{cms/layouts/footer :: footer}"></div>
+</body>
+
+</html>

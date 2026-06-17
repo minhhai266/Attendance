@@ -1,0 +1,216 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách thế giới</title>
+    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div th:replace="~{cms/fragments/sidebar-manage :: sidebar}"></div>
+
+    <div class="container-layout">
+        <header class="page-header">
+            <h1>Dashboard</h1>
+
+            <div class="notification">
+                <i class="fa-regular fa-bell"></i>
+                <span class="dot"></span>
+            </div>
+        </header>
+
+        <main class="dashboard-manager">
+
+            <!-- ======================
+            THỐNG KÊ TỔNG QUAN
+            ======================= -->
+            <section class="dashboard-overview">
+
+                <div class="stat-card total-employee">
+                    <div class="stat-card__icon"></div>
+
+                    <div class="stat-card__content">
+                        <h3 class="stat-card__number">50</h3>
+                        <p class="stat-card__label">Tổng nhân viên</p>
+                    </div>
+                </div>
+
+                <div class="stat-card present">
+                    <div class="stat-card__icon"></div>
+
+                    <div class="stat-card__content">
+                        <h3 class="stat-card__number">42</h3>
+                        <p class="stat-card__label">Có mặt hôm nay</p>
+                    </div>
+
+                    <span class="stat-card__percent">84%</span>
+                </div>
+
+                <div class="stat-card late">
+                    <div class="stat-card__icon"></div>
+
+                    <div class="stat-card__content">
+                        <h3 class="stat-card__number">8</h3>
+                        <p class="stat-card__label">Đi muộn hôm nay</p>
+                    </div>
+                </div>
+
+                <div class="stat-card absent">
+                    <div class="stat-card__icon"></div>
+
+                    <div class="stat-card__content">
+                        <h3 class="stat-card__number">10</h3>
+                        <p class="stat-card__label">Vắng mặt hôm nay</p>
+                    </div>
+                </div>
+
+            </section>
+
+
+
+            <!-- ======================
+            NỘI DUNG CHÍNH
+            ======================= -->
+            <section class="dashboard-content">
+
+                <!-- LEFT -->
+                <div class="dashboard-main">
+
+                    <!-- Biểu đồ cột -->
+                    <div class="dashboard-card attendance-chart">
+
+                        <div class="card-header">
+                            <h2>Chuyên Cần Tuần Này</h2>
+                        </div>
+
+                        <div class="card-body">
+
+                            <!-- ChartJS -->
+                            <canvas id="weeklyAttendanceChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Biểu đồ tròn -->
+                    <div class="dashboard-card attendance-distribution">
+
+                        <div class="card-header">
+                            <h2>Phân Bổ Chuyên Cần</h2>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="distribution-layout">
+
+                                <div class="distribution-chart">
+                                    <canvas id="attendancePieChart"></canvas>
+                                </div>
+
+                                <div class="distribution-legend">
+
+                                    <div class="legend-item">
+                                        <span class="legend-color green"></span>
+                                        <span class="legend-label">Đúng giờ</span>
+                                        <span class="legend-value">75%</span>
+                                    </div>
+
+                                    <div class="legend-item">
+                                        <span class="legend-color yellow"></span>
+                                        <span class="legend-label">Đi muộn</span>
+                                        <span class="legend-value">18%</span>
+                                    </div>
+
+                                    <div class="legend-item">
+                                        <span class="legend-color red"></span>
+                                        <span class="legend-label">Vắng mặt</span>
+                                        <span class="legend-value">7%</span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- RIGHT -->
+                <aside class="dashboard-sidebar">
+
+                    <a href="#" class="action-card">
+                        <div class="action-card__badge">3</div>
+
+                        <div class="action-card__icon"></div>
+
+                        <div class="action-card__content">
+                            <h3>Duyệt Face ID</h3>
+                            <p>Phê duyệt đăng ký Face ID</p>
+                        </div>
+                    </a>
+
+
+                    <a href="#" class="action-card">
+                        <div class="action-card__badge">5</div>
+
+                        <div class="action-card__icon"></div>
+
+                        <div class="action-card__content">
+                            <h3>Duyệt Nghỉ Phép</h3>
+                            <p>Phê duyệt đơn xin nghỉ</p>
+                        </div>
+                    </a>
+
+
+                    <a href="#" class="action-card">
+                        <div class="action-card__badge">7</div>
+
+                        <div class="action-card__icon"></div>
+
+                        <div class="action-card__content">
+                            <h3>Quản Lý Báo Cáo</h3>
+                            <p>Duyệt báo cáo nhân viên</p>
+                        </div>
+                    </a>
+
+
+                    <a href="#" class="action-card">
+                        <div class="action-card__icon"></div>
+
+                        <div class="action-card__content">
+                            <h3>Quản Lý Nhân Viên</h3>
+                            <p>Xem danh sách nhân viên</p>
+                        </div>
+                    </a>
+
+
+                    <a href="#" class="action-card">
+                        <div class="action-card__icon"></div>
+
+                        <div class="action-card__content">
+                            <h3>Báo Cáo Điểm Danh</h3>
+                            <p>Xem báo cáo chi tiết</p>
+                        </div>
+                    </a>
+
+                </aside>
+
+            </section>
+
+        </main>
+
+    </div>
+    <div th:replace="~{cms/layouts/footer :: footer}"></div>
+</body>
+
+</html>
