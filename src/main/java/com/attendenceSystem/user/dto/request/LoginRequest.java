@@ -1,12 +1,10 @@
 package com.attendenceSystem.user.dto.request;
 
-import com.attendenceSystem.user.entity.User;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.NonNull;
 
 @Data
 public class LoginRequest {
