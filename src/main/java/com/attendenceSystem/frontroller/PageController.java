@@ -11,7 +11,11 @@ public class PageController {
 
     @GetMapping({"home",""})
     public String home() {
-        return "home";
+        return "home.";
+    }
+    @GetMapping("homet")
+    public String homet() {
+        return "homet";
     }
     @GetMapping("login")
     public String login() {

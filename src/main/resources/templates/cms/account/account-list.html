@@ -1,0 +1,134 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách thế giới</title>
+    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div th:replace="~{cms/fragments/sidebar-employee :: sidebar}"></div>
+
+    <div class="container-layout">
+        <header class="page-header">
+            <h1>Quản lý người dùng</h1>
+
+            <div class="notification">
+                <i class="fa-regular fa-bell"></i>
+                <span class="dot"></span>
+            </div>
+        </header>
+
+        <div class="card">
+
+            <div class="card-header">
+                <h2>Quản lý người dùng</h2>
+                <button class="add-btn">+ Thêm người dùng</button>
+            </div>
+
+            <div class="search-box">
+                <input type="text" placeholder="Tìm kiếm người dùng...">
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Người dùng</th>
+                        <th>Email</th>
+                        <th>Vai trò</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="user">
+                                <div class="avatar">A</div>
+                                <strong>Nguyễn Văn A</strong>
+                            </div>
+                        </td>
+                        <td>nguyenvana@company.com</td>
+                        <td><span class="role">Nhân viên</span></td>
+                        <td><span class="status active">Hoạt động</span></td>
+                        <td>
+                            <div class="actions">
+                                <button class="icon-btn btn-role">Đổi quyền</button>
+                                <button class="icon-btn lock">🔒</button>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+    <div th:replace="~{cms/layouts/footer :: footer}"></div>
+
+    ```html
+    <div id="accountModal" class="detail-modal">
+
+        <div class="detail-content">
+
+            <div class="detail-header">
+
+                <h2>Thông tin cá nhân</h2>
+
+                <button class="close-btn" onclick="closeAccountDetail()">
+
+                    ✕
+
+                </button>
+
+            </div>
+
+            <div class="detail-body">
+
+                <div class="detail-item">
+                    <label>Họ và tên</label>
+                    <p id="detailFullName"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Email</label>
+                    <p id="detailEmail"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Số điện thoại</label>
+                    <p id="detailPhone"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Phòng ban</label>
+                    <p id="detailDepartment"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Vai trò</label>
+                    <p id="detailRole"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Trạng thái</label>
+                    <span id="detailStatus"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>
