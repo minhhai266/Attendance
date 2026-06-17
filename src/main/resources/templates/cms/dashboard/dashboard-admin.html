@@ -1,0 +1,311 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách thế giới</title>
+    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div th:replace="~{cms/fragments/sidebar-admin :: sidebar}"></div>
+
+    <div class="container-layout">
+        <header class="page-header">
+            <h1>Dashboard</h1>
+
+            <div class="notification">
+                <i class="fa-regular fa-bell"></i>
+                <span class="dot"></span>
+            </div>
+        </header>
+
+        <main class="dashboard-admin">
+
+            <!-- =====================
+                OVERVIEW
+            ====================== -->
+            <section class="admin-overview">
+
+                <div class="admin-stat-card total-account">
+                    <div class="admin-stat-card__header">
+                        <span class="admin-stat-card__title">Tổng tài khoản</span>
+                        <div class="admin-stat-card__icon"></div>
+                    </div>
+
+                    <div class="admin-stat-card__body">
+                        <h2 class="admin-stat-card__number">53</h2>
+                        <p class="admin-stat-card__description">
+                            +12% so với tháng trước
+                        </p>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card active-account">
+                    <div class="admin-stat-card__header">
+                        <span class="admin-stat-card__title">
+                            Tài khoản hoạt động
+                        </span>
+                        <div class="admin-stat-card__icon"></div>
+                    </div>
+
+                    <div class="admin-stat-card__body">
+                        <h2 class="admin-stat-card__number">48</h2>
+                        <p class="admin-stat-card__description">
+                            90.6% tổng số
+                        </p>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card locked-account">
+                    <div class="admin-stat-card__header">
+                        <span class="admin-stat-card__title">
+                            Tài khoản bị khóa
+                        </span>
+                        <div class="admin-stat-card__icon"></div>
+                    </div>
+
+                    <div class="admin-stat-card__body">
+                        <h2 class="admin-stat-card__number">5</h2>
+                        <p class="admin-stat-card__description">
+                            Cần xem xét
+                        </p>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card pending-account">
+                    <div class="admin-stat-card__header">
+                        <span class="admin-stat-card__title">
+                            Chờ duyệt
+                        </span>
+                        <div class="admin-stat-card__icon"></div>
+                    </div>
+
+                    <div class="admin-stat-card__body">
+                        <h2 class="admin-stat-card__number">7</h2>
+                        <p class="admin-stat-card__description">
+                            Tài khoản mới đăng ký
+                        </p>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card uptime-system">
+                    <div class="admin-stat-card__header">
+                        <span class="admin-stat-card__title">
+                            Uptime hệ thống
+                        </span>
+                        <div class="admin-stat-card__icon"></div>
+                    </div>
+
+                    <div class="admin-stat-card__body">
+                        <h2 class="admin-stat-card__number">99.8%</h2>
+                        <p class="admin-stat-card__description">
+                            Hoạt động ổn định
+                        </p>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card today-login">
+                    <div class="admin-stat-card__header">
+                        <span class="admin-stat-card__title">
+                            Đăng nhập hôm nay
+                        </span>
+                        <div class="admin-stat-card__icon"></div>
+                    </div>
+
+                    <div class="admin-stat-card__body">
+                        <h2 class="admin-stat-card__number">142</h2>
+                        <p class="admin-stat-card__description">
+                            Lượt đăng nhập
+                        </p>
+                    </div>
+                </div>
+
+            </section>
+
+
+
+            <!-- =====================
+                QUICK ACTION
+            ====================== -->
+            <section class="admin-quick-actions">
+
+                <a href="#" class="admin-action-card">
+                    <span class="admin-action-card__badge">7</span>
+
+                    <div class="admin-action-card__icon"></div>
+
+                    <h3 class="admin-action-card__title">
+                        Quản Lý Tài Khoản
+                    </h3>
+
+                    <p class="admin-action-card__description">
+                        Thêm, sửa, xóa, khóa tài khoản
+                    </p>
+                </a>
+
+                <a href="#" class="admin-action-card">
+
+                    <div class="admin-action-card__icon"></div>
+
+                    <h3 class="admin-action-card__title">
+                        Quản Lý Phân Quyền
+                    </h3>
+
+                    <p class="admin-action-card__description">
+                        Cấu hình vai trò và quyền hạn
+                    </p>
+                </a>
+
+                <a href="#" class="admin-action-card">
+
+                    <div class="admin-action-card__icon"></div>
+
+                    <h3 class="admin-action-card__title">
+                        Cài Đặt Hệ Thống
+                    </h3>
+
+                    <p class="admin-action-card__description">
+                        Cấu hình chung
+                    </p>
+                </a>
+
+            </section>
+
+
+
+            <!-- =====================
+                CHARTS
+            ====================== -->
+            <section class="admin-charts">
+
+                <!-- Pie Chart -->
+                <div class="admin-chart-card">
+
+                    <div class="admin-chart-card__header">
+                        <h2>Phân Bố Loại Tài Khoản</h2>
+                    </div>
+
+                    <div class="admin-chart-card__body">
+                        <canvas id="accountTypeChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Bar Chart -->
+                <div class="admin-chart-card">
+
+                    <div class="admin-chart-card__header">
+                        <h2>Hoạt Động Hệ Thống (6 Tháng)</h2>
+                    </div>
+
+                    <div class="admin-chart-card__body">
+                        <canvas id="systemActivityChart"></canvas>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =====================
+            RECENT ACTIVITY
+            ====================== -->
+            <section class="recent-activity">
+
+                <div class="section-header">
+                    <h2>Hoạt Động Gần Đây</h2>
+                </div>
+
+                <div class="activity-list">
+
+                    <div class="activity-item">
+
+                        <div class="activity-item__left">
+                            <span class="activity-dot activity-dot--blue"></span>
+
+                            <span class="activity-content">
+                                <strong>NV007</strong>
+                                Đăng ký tài khoản mới
+                            </span>
+                        </div>
+
+                        <span class="activity-time">
+                            5 phút trước
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-item__left">
+                            <span class="activity-dot activity-dot--green"></span>
+
+                            <span class="activity-content">
+                                <strong>Admin</strong>
+                                Phê duyệt tài khoản NV006
+                            </span>
+                        </div>
+
+                        <span class="activity-time">
+                            1 giờ trước
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-item__left">
+                            <span class="activity-dot activity-dot--yellow"></span>
+
+                            <span class="activity-content">
+                                <strong>NV004</strong>
+                                Đăng nhập thất bại (3 lần)
+                            </span>
+                        </div>
+
+                        <span class="activity-time">
+                            2 giờ trước
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-item__left">
+                            <span class="activity-dot activity-dot--red"></span>
+
+                            <span class="activity-content">
+                                <strong>Admin</strong>
+                                Khóa tài khoản NV003
+                            </span>
+                        </div>
+
+                        <span class="activity-time">
+                            3 giờ trước
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+    <div th:replace="~{cms/layouts/footer :: footer}"></div>
+</body>
+
+</html>

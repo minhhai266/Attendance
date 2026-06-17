@@ -1,0 +1,193 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách thế giới</title>
+    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div th:replace="~{cms/fragments/sidebar :: sidebar}"></div>
+
+    <div class="container-layout">
+        <div class="absent-header">
+            <h1 class="header-title">Duyệt nghỉ phép</h1>
+            <div class="header-divider"></div>
+        </div>
+
+        <main class="main-section">
+
+            <div class="absent-card">
+
+                <div class="main-absent">
+                    <div class="absent-search">
+
+                        <div class="filter-group">
+
+                            <!-- Tìm theo tên -->
+                            <div class="filter-item">
+                                <label>Tên nhân viên</label>
+                                <input type="text" name="keyword" placeholder="Nhập tên..." />
+                            </div>
+
+                            <!-- Lọc theo trạng thái -->
+                            <div class="filter-item">
+                                <label>Trạng thái</label>
+                                <select name="status">
+                                    <option value="">Tất cả</option>
+                                    <option value="PENDING">Chờ duyệt</option>
+                                    <option value="APPROVED">Đã duyệt</option>
+                                    <option value="REJECTED">Từ chối</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-item">
+                                <label>Tuần</label>
+                                <input type="week" name="week">
+                            </div>
+
+                            <div class="filter-item">
+                                <button type="submit" class="btn btn-primary">
+                                    Tìm kiếm
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <table class="absent-table">
+                        <thead>
+                            <tr>
+                                <th>Tên</th>
+                                <th>Phòng</th>
+                                <th>Lý do</th>
+                                <th>Từ ngày</th>
+                                <th>Đến ngày</th>
+                                <th>Chi tiết</th>
+                                <th>Trạng thái</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <span class="status-active">
+                                        Đang hiển thị
+                                    </span>
+
+                                    <span class="status-deleted">
+                                        Đang ẩn
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-group">
+
+                                        <form method="get">
+                                            <button class="btn btn-primary btn-small">
+                                                Phê duyệt
+                                            </button>
+                                        </form>
+
+                                        <form method="post">
+                                            <button class="btn btn-secondary btn-small">
+                                                Từ chối
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="pagination">
+                    <a class="btn btn-pagination">
+                        ← Trước
+                    </a>
+
+                    <span>
+                        <a></a>
+                        <span></span>
+                    </span>
+
+                    <a class="btn btn-pagination">
+                        Sau →
+                    </a>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+    <div th:replace="~{cms/layouts/footer :: footer}"></div>
+    ```html
+    <div id="accountModal" class="detail-modal">
+
+        <div class="detail-content">
+
+            <div class="detail-header">
+
+                <h2>Thông tin cá nhân</h2>
+
+                <button class="close-btn" onclick="closeAccountDetail()">
+
+                    ✕
+
+                </button>
+
+            </div>
+
+            <div class="detail-body">
+
+                <div class="detail-item">
+                    <label>Họ và tên</label>
+                    <p id="detailFullName"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Email</label>
+                    <p id="detailEmail"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Số điện thoại</label>
+                    <p id="detailPhone"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Phòng ban</label>
+                    <p id="detailDepartment"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Vai trò</label>
+                    <p id="detailRole"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Trạng thái</label>
+                    <span id="detailStatus"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<section id="attendance" class="page">
+    <div class="card attendance-card">
+        <div class="card-header">
+            <h3>Điểm danh</h3>
+            <div>
+                <button onclick="loadAttendanceRecords()">Tải lại</button>
+            </div>
+        </div>
+        <div class="filter-panel">
+            <input id="attendanceSearch" class="search-input" placeholder="Tìm mã SV hoặc họ tên" />
+            <select id="attendanceStatusFilter">
+                <option value="">Tất cả trạng thái</option>
+                <option value="present_on_time">Đúng giờ</option>
+                <option value="late">Đi muộn</option>
+                <option value="early_leave">Về sớm</option>
+                <option value="late_and_early_leave">Muộn + về sớm</option>
+                <option value="missing_checkout">Thiếu check-out</option>
+                <option value="absent">Vắng</option>
+                <option value="pending">Chưa ghi nhận</option>
+                <option value="unfinalized">Chưa chốt</option>
+            </select>
+            <label>Từ ngày<input id="attendanceDateFrom" type="date" /></label>
+            <label>Đến ngày<input id="attendanceDateTo" type="date" /></label>
+            <button onclick="loadAttendanceRecords()">Lọc</button>
+            <button class="secondary" onclick="resetAttendanceFilters()">Hôm nay</button>
+            <span id="attendanceCount" class="filter-count"></span>
+        </div>
+        <div class="table-scroll">
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>Ngày</th>
+                        <th>Sinh viên</th>
+                        <th>Vào</th>
+                        <th>Ra</th>
+                        <th>Trạng thái</th>
+                        <th>Hiện diện</th>
+                        <th>Muộn</th>
+                        <th>Về sớm</th>
+                        <th>Tổng giờ</th>
+                        <th>Ghi chú</th>
+                        <th>Chi tiết</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceTable"></tbody>
+            </table>
+        </div>
+        <div id="attendanceMessage" class="message"></div>
+    </div>
+</section>

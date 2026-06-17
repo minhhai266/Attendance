@@ -1,0 +1,90 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách thế giới</title>
+    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div th:replace="~{cms/layouts/sidebar :: sidebar}"></div>
+
+    <div class="container-layout">
+        <header class="page-header">
+            <h1>Thông tin cá nhân</h1>
+
+            <div class="notification">
+                <i class="fa-regular fa-bell"></i>
+                <span class="dot"></span>
+            </div>
+        </header>
+        <main class="main-section">
+            <!-- Form -->
+            <div class="absent-card">
+
+                <h2>Thông tin cá nhân</h2>
+
+                <div class="form-group">
+                    <div class="information-icon"></div>
+                    <label>Họ và tên</label>
+                    <a>Nguyễn văn x</a>
+                </div>
+
+                <div class="form-group">
+                    <div class="information-icon"></div>
+                    <label>Email</label>
+                    <p>abc@gmail.com</p>
+                </div>
+
+                <div class="form-group">
+                    <div class="information-icon"></div>
+                    <label>Phone</label>
+                    <p>0987654321</p>
+                </div>
+
+                <div class="form-group">
+                    <div class="information-icon"></div>
+                    <label>Phòng ban</label>
+                    <p>Phòng Lab 213</p>
+                </div>
+
+                <div class="form-group">
+                    <div class="information-icon"></div>
+                    <label>Mật khẩu</label>
+                    <p>.................</p>
+                </div>
+
+            </div>
+            <div class="change-password">
+                <div class="change-header">
+                    <i class="change-icon"></i>
+                    <h2>Đổi mật khẩu</h2>
+                </div>
+                <div class="change-body">
+                    <div class="form-group">
+                        <label>Mật khẩu hiện tại</label>
+                        <p type="text" class="change-text">......</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Mật khẩu mới</label>
+                        <p type="text" class="change-text">......</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Xác nhận mật khẩu</label>
+                        <p type="text" class="change-text">......</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+    <div th:replace="~{cms/layouts/footer :: footer}"></div>
+</body>
+
+</html>
