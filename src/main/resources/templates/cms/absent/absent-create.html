@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xin nghỉ phép</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div th:replace="~{cms/fragments/sidebar :: sidebar}"></div>
+    <div class="absent-page">
+        <header class="page-header">
+            <h1>Xin nghỉ phép</h1>
+
+            <div class="notification">
+                <i class="fa-regular fa-bell"></i>
+                <span class="dot"></span>
+            </div>
+        </header>
+        <main class="main-section">
+
+            <!-- Form -->
+            <div class="absent-card">
+
+                <h2>Đơn xin nghỉ phép</h2>
+
+                <!-- Loại nghỉ phép -->
+                <div class="form-group">
+                    <label>Loại nghỉ phép</label>
+
+                    <div class="select-wrapper">
+                        <select>
+                            <option selected disabled>Chọn loại nghỉ phép</option>
+                            <option>Nghỉ có lương</option>
+                            <option>Nghỉ không lương</option>
+                            <option>Nghỉ bệnh</option>
+                            <option>Nghỉ phép năm</option>
+                        </select>
+
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <!-- Từ ngày - Đến ngày -->
+                <div class="date-row">
+
+                    <div class="form-group">
+                        <label>Từ ngày</label>
+
+                        <div class="input-icon">
+                            <input type="date">
+                            <i class="fa-regular fa-calendar"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Đến ngày</label>
+
+                        <div class="input-icon">
+                            <input type="date">
+                            <i class="fa-regular fa-calendar"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Lý do -->
+                <div class="form-group">
+                    <label>Lý do</label>
+
+                    <textarea rows="6" placeholder="Nhập lý do xin nghỉ phép..."></textarea>
+                </div>
+
+                <!-- Button -->
+                <button class="submit-btn">
+                    <i class="fa-regular fa-paper-plane"></i>
+                    Gửi đơn
+                </button>
+
+            </div>
+        </main>
+    </div>
+<div th:replace="~{cms/layouts/footer :: footer}"></div>
+</body>
+
+</html>
