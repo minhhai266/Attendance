@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 public final class RegisterRequestMapper {
     public static User toEntity(RegisterRequest request, String hashPassword) {
         return User.builder()
-                .username(request.username())
-                .email(request.email())
+                .username(request.getUsername())
+                .email(request.getEmail())
                 .password(hashPassword)
-                .fullName(request.fullName())
+                .fullName(request.getFullName())
                 .build();
     }
 }
