@@ -1,7 +1,7 @@
 package com.attendenceSystem.validator;
 
 import com.attendenceSystem.annotation.PasswordMatch;
-import com.attendenceSystem.user.dto.request.RegisterRequest;
+import com.attendenceSystem.module.user.dto.request.RegisterRequest;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -13,13 +13,13 @@ public class PasswordMatchValidator
     public boolean isValid(RegisterRequest request,
             ConstraintValidatorContext context) {
 
-        if (request.getPassword() == null
-                || request.getRePassword() == null) {
+        if (request.password() == null
+                || request.rePassword() == null) {
             return true;
         }
 
-        boolean valid = request.getPassword()
-                .equals(request.getRePassword());
+        boolean valid = request.password()
+                .equals(request.rePassword());
 
         if (!valid) {
             context.disableDefaultConstraintViolation();
