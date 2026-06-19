@@ -21,11 +21,11 @@ public class AuditLogServiceImpl implements AuditLogService {
     @Override
     public void log(AuditLogRequest request) {
         AuditLog auditLog = AuditLog.builder()
-                .user(request.user())
-                .entityType(request.logEntityType())
-                .entityId(request.entityId())
-                .action(request.action())
-                .description(request.description())
+                .user(request.getUser())
+                .entityType(request.getLogEntityType())
+                .entityId(request.getEntityId())
+                .action(request.getAction())
+                .description(request.getDescription())
                 .build();
         auditLogRepository.save(auditLog);
     }

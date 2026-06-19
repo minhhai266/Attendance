@@ -13,13 +13,13 @@ public class PasswordMatchValidator
     public boolean isValid(RegisterRequest request,
             ConstraintValidatorContext context) {
 
-        if (request.password() == null
-                || request.rePassword() == null) {
+        if (request.getPassword() == null
+                || request.getRePassword() == null) {
             return true;
         }
 
-        boolean valid = request.password()
-                .equals(request.rePassword());
+        boolean valid = request.getPassword()
+                .equals(request.getRePassword());
 
         if (!valid) {
             context.disableDefaultConstraintViolation();

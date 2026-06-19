@@ -10,4 +10,7 @@ public final class Routes {
         public static final String LOGIN = "/login";
         public static final String REGISTER = "/register";
     }
+    public static final class User {
+        public static final String ROOT = "/user";
+    }
 }

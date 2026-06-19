@@ -33,13 +33,13 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public void register(RegisterRequest request) {
-        if (existsByKeyword(request.username())) {
+        if (existsByKeyword(request.getUsername())) {
             throw new IllegalArgumentException("Tên đăng nhập đã tồn tại!");
         }
-        if (existsByKeyword(request.email())) {
+        if (existsByKeyword(request.getEmail())) {
             throw new IllegalArgumentException("Email này đã được đăng ký!");
         }
-        String hashPassword = passwordEncoder.encode(request.password());
+        String hashPassword = passwordEncoder.encode(request.getPassword());
         User savedUser = RegisterRequestMapper.toEntity(request, hashPassword);
         userRepository.save(savedUser);
     }
@@ -49,8 +49,8 @@ public class AuthServiceImpl implements AuthService {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.login(),
-                        request.password()));
+                        request.getLogin(),
+                        request.getPassword()));
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
