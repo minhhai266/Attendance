@@ -14,7 +14,6 @@ import com.attendenceSystem.module.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
 @Controller
 @RequestMapping(Routes.User.ROOT)
 @RequiredArgsConstructor
@@ -34,6 +33,10 @@ public class UserController {
         return Views.User.DETAIL;
     }
 
-    
+    @GetMapping(Routes.User.PROFILE)
+    public String toProfilePage(@PathVariable("id") Long id, Model model){
+        model.addAttribute(null, model);
+        return Views.User.PROFILE;
+    }
 
 }

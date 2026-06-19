@@ -56,9 +56,9 @@ public class AuthController {
                     HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                     SecurityContextHolder.getContext());
             return switch (user.role()) {
-                case "ADMIN" -> "redirect:/";
-                case "STAFF" -> "redirect:/";
-                default -> "redirect:/";
+                case "ADMIN" -> Routes.REDIRECT;
+                case "STAFF" -> Routes.REDIRECT;
+                default -> Routes.REDIRECT;
             };
         } catch (AuthenticationException e) {
             model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng.");
@@ -78,7 +78,7 @@ public class AuthController {
         try {
             authService.register(request);
             redirectAttributes.addFlashAttribute("successMessage", "Đăng kí thành công");
-            return "redirect:/" + Routes.Auth.ROOT+ Routes.Auth.LOGIN;
+            return Routes.REDIRECT + Routes.Auth.ROOT+ Routes.Auth.LOGIN;
         } catch (IllegalArgumentException e) {
             request.setPassword("");
             request.setRePassword("null");
