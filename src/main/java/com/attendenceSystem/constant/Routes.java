@@ -27,4 +27,7 @@ public final class Routes {
         public static final String MANAGER = "/manager";
         public static final String EMPLOYEE = "/employee";
     }
+    public static final class Attendance {
+        public static final String ROOT = "/attendance";
+    }
 }
