@@ -21,6 +21,7 @@ public final class Routes {
         public static final String PROFILE = "/profile";
     }
 
+
     public static final class Dashboard {
         public static final String ROOT = "/dashboard";
         public static final String ADMIN = "/admin";

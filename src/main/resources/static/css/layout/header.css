@@ -1,243 +1,131 @@
-@import "../theme.css";
+/* =========================
+   ROOT
+========================= */
+:root {
+    --border: rgba(255, 255, 255, 0.1);
 
+    --text-light: #cbd5e1;
 
+    --indigo: #6366f1;
+    --purple: #8b5cf6;
+}
 
 /* =========================
-    RESET
+   COMMON
 ========================= */
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    font-family: Inter, sans-serif;
+.container {
+    width: min(1280px, 92%);
+    margin: auto;
+}
 
-    min-height: 100vh;
-
-    background: linear-gradient(90deg,
-            #02092e,
-            #1d184d);
+a {
+    text-decoration: none;
 }
 
 /* =========================
-    HEADER
+   NAVBAR
 ========================= */
 
-.header-layout {
-    width: 100%;
-    height: 85px;
-
-    position: fixed;
+.navbar {
+    position: sticky;
     top: 0;
-    left: 0;
-    z-index: 999;
+    z-index: 100;
 
-    background: rgba(3, 7, 30, 0.85);
+    backdrop-filter: blur(20px);
+    background: rgba(2, 6, 23, 0.5);
 
-    backdrop-filter: blur(12px);
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--border);
 }
 
-.header-container {
-    max-width: 1440px;
-    height: 100%;
-
-    margin: 0 auto;
-    padding: 0 50px;
+.navbar-content {
+    height: 72px;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* =========================
-    LEFT
-========================= */
-
-.header-left {
+.brand {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
-.logo-box {
-    width: 56px;
-    height: 56px;
+.brand-icon {
+    width: 42px;
+    height: 42px;
 
-    border-radius: 18px;
+    border-radius: 14px;
 
     display: flex;
+    align-items: center;
     justify-content: center;
-    align-items: center;
 
-    background: linear-gradient(135deg,
-            #5b4dff,
-            #a855f7);
-
-    box-shadow:
-        0 0 20px rgba(139, 92, 246, 0.35);
-
-    color: white;
-    font-size: 24px;
+    background: linear-gradient(
+        135deg,
+        var(--indigo),
+        var(--purple)
+    );
 }
 
-.header-title {
-    font-size: 2rem;
+.brand-icon i {
+    width: 22px;
+    height: 22px;
+    color: white;
+}
+
+.brand-name {
+    font-size: 1.3rem;
     font-weight: 700;
 
-    background: linear-gradient(90deg,
-            #8b7cff,
-            #d68eff);
+    background: linear-gradient(
+        to right,
+        #818cf8,
+        #c084fc
+    );
 
-    background-clip: text;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
-
-    cursor: pointer;
 }
 
-/* =========================
-   RIGHT
-========================= */
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
-
-/* =========================
-   THEME BUTTON
-========================= */
-
-.theme-toggle {
-    display: flex;
-    align-items: center;
-}
-
-.theme-toggle__btn {
-    width: 48px;
-    height: 48px;
-
-    border: none;
-    outline: none;
-
-    cursor: pointer;
-
-    border-radius: 14px;
-
-    background: rgba(255, 255, 255, 0.08);
-
-    color: #ffffff;
-    font-size: 18px;
-
-    transition: all .3s ease;
-}
-
-.theme-toggle__btn:hover {
-    background: rgba(255, 255, 255, 0.15);
-
-    transform: translateY(-2px);
-}
-
-/* =========================
-   AUTH BUTTONS
-========================= */
-
-.header-auth {
+.navbar-actions {
     display: flex;
     align-items: center;
     gap: 16px;
 }
 
-/* Đăng nhập */
-
-.btn-login {
-    border: none;
-    background: transparent;
-
-    color: #d1d5db;
-
-    font-size: 1rem;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition: .3s;
+.nav-link {
+    color: var(--text-light);
+    transition: 0.3s;
 }
 
-.btn-login:hover {
+.nav-link:hover {
     color: white;
 }
 
-/* Bắt đầu ngay */
-
-.btn-register {
-    border: none;
-    outline: none;
-
-    cursor: pointer;
-
-    padding: 14px 30px;
-
-    border-radius: 14px;
+.nav-btn {
+    padding: 12px 20px;
+    border-radius: 12px;
 
     color: white;
-
-    font-size: 1rem;
     font-weight: 600;
 
-    background: linear-gradient(90deg,
-            #5b4dff,
-            #9d00ff);
+    background: linear-gradient(
+        to right,
+        var(--indigo),
+        var(--purple)
+    );
 
-    transition: all .3s ease;
+    transition: 0.3s;
 }
 
-.btn-register:hover {
+.nav-btn:hover {
     transform: translateY(-2px);
-
-    box-shadow:
-        0 10px 25px rgba(128, 90, 255, 0.4);
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 768px) {
-
-    .header-container {
-        padding: 0 20px;
-    }
-
-    .header-title {
-        font-size: 1.4rem;
-    }
-
-    .logo-box {
-        width: 46px;
-        height: 46px;
-
-        font-size: 20px;
-    }
-
-    .btn-register {
-        padding: 12px 20px;
-    }
-}
-
-@media (max-width: 600px) {
-
-    .header-auth {
-        display: none;
-    }
-
-    .header-title {
-        font-size: 1.2rem;
-    }
 }

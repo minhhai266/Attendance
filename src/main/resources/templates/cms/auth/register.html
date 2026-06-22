@@ -5,19 +5,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Ký - Face ID Attendance</title>
-    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="/css/auths/register.css">
 </head>
 
 <body>
     <div class="bg-img"></div>
-    <div th:replace="~{cms/layouts/header :: header}"></div>
+    <div th:replace="~{cms/layout/header :: header}"></div>
 
     <div class="layout">
+        <div class="left">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="hero-title-gradient">
+                        SMART ATTENDANCE
+                    </span>
+                    <br>
+                    <span class="hero-title-white">
+                        SYSTEM
+                    </span>
+                </h1>
+
+                <p class="hero-description">
+                    Tạo tài khoản để sử dụng cá nhân để tối ưu hóa trải nghiệm!
+                </p>
+
+            </div>
+        </div>
         <div class="card">
-            
+
             <div class="card-header">
-                <h1 class="card-title">Đăng nhập</h1>
-                <p class="card-description">Nhập thông tin để truy cập!</p>
+                <h1 class="card-title">Đăng ký tài khoản</h1>
+                <p class="card-description">
+                    Tạo tài khoản để sử dụng hệ thống điểm danh Face ID
+                </p>
             </div>
 
             <div class="divider"></div>
@@ -83,7 +103,7 @@
         </div>
     </div>
 
-    <div th:replace="~{cms/layouts/footer :: footer}"></div>
+    <div th:replace="~{cms/layout/footer :: footer}"></div>
 
 </body>
 
