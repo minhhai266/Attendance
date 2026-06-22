@@ -15,6 +15,7 @@ public class AttendanceResponseMapper {
                 .id(attendance.getId())
                 .userId(attendance.getUser().getId())
                 .fullName(attendance.getUser().getFullName())
+                .attendanceDate(attendance.getAttendanceDate())
                 .checkInTime(attendance.getCheckInTime())
                 .checkOutTime(attendance.getCheckOutTime())
                 .status(attendance.getStatus())

@@ -1,40 +1,21 @@
-<!DOCTYPE html>
-<html lang="vi">
+<!doctype html>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Đăng Nhập - Face ID Attendance</title>
-    <link rel="stylesheet" href="/css/auths/login.css">
+    <link rel="stylesheet" href="../../../static/css/auth.css">
 
+    <link rel="stylesheet" th:href="@{/css/auth.css}" />
+  </head>
 
-</head>
-
-<body>
+  <body>
     <div class="bg-img"></div>
 
     <div th:replace="~{cms/layout/header :: header}"></div>
 
     <div class="layout">
-        <div class="left">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    <span class="hero-title-gradient">
-                        SMART ATTENDANCE
-                    </span>
-                    <br>
-                    <span class="hero-title-white">
-                        SYSTEM
-                    </span>
-                </h1>
-
-                <p class="hero-description">
-                    Đăng nhập để sử dụng một cách hiệu quả và chính xác nhất nha !
-                </p>
-
-            </div>
-        </div>
-
         <div class="card">
 
             <div class="card-header">
@@ -42,49 +23,65 @@
                 <p class="card-description">Nhập thông tin để truy cập!</p>
             </div>
 
-            <div class="divider"></div>
+        <div class="divider"></div>
 
-            <div class="card-body">
-                <p class="error-message"></p>
+        <div class="card-body">
+          <!-- Global Error -->
+          <div
+            th:if="${errorMessage}"
+            class="error-message"
+            th:text="${errorMessage}"
+          ></div>
 
-                <!-- form -->
-                <form method="post">
+          <form
+            th:action="@{/auth/login}"
+            th:object="${loginRequest}"
+            method="post"
+          >
+            <!-- Username / Email -->
+            <div class="auth-group">
+              <label for="login"> Username hoặc Email </label>
 
-                    <!-- username/email -->
-                    <div class="auth-group">
-                        <label>Username hoặc Email</label>
-                        <input type="text" />
-                        <div class="error-message"></div>
-                    </div>
+              <input id="login" type="text" th:field="*{login}" />
 
-                    <!-- password -->
-                    <div class="auth-group">
-                        <label>Password</label>
-                        <input type="password" />
-                        <div class="error-message"></div>
-                    </div>
-
-                    <button class="auth-btn" type="submit">
-                        Đăng nhập
-                    </button>
-                </form>
-
-                <hr style="margin: 1rem 0; opacity: 0.2;" />
-                <div class="other-option">
-                    <a href="#" class="register-link">
-                        Tạo tài khoản mới
-                    </a>
-
-                    <a href="#" class="forgotPass-link">
-                        Quên mật khẩu
-                    </a>
-                </div>
+              <div
+                class="error-message"
+                th:if="${#fields.hasErrors('login')}"
+                th:errors="*{login}"
+              ></div>
             </div>
+
+            <!-- Password -->
+            <div class="auth-group">
+              <label for="password"> Password </label>
+
+              <input id="password" type="password" th:field="*{password}" />
+
+              <div
+                class="error-message"
+                th:if="${#fields.hasErrors('password')}"
+                th:errors="*{password}"
+              ></div>
+            </div>
+
+            <button class="auth-btn" type="submit">Đăng nhập</button>
+          </form>
+
+          <hr style="margin: 1rem 0; opacity: 0.2" />
+
+          <div class="other-option">
+            <a th:href="@{/auth/register}" class="register-link">
+              Tạo tài khoản mới
+            </a>
+
+            <a th:href="@{/auth/forgot-password}" class="forgotPass-link">
+              Quên mật khẩu
+            </a>
+          </div>
         </div>
+      </div>
     </div>
 
     <div th:replace="~{cms/layout/footer :: footer}"></div>
-
-</body>
-
+  </body>
 </html>

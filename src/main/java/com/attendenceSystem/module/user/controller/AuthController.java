@@ -81,11 +81,10 @@ public class AuthController {
             return Routes.REDIRECT + Routes.Auth.ROOT+ Routes.Auth.LOGIN;
         } catch (IllegalArgumentException e) {
             request.setPassword("");
-            request.setRePassword("null");
+            request.setRePassword("");
             model.addAttribute("errorMessage", "Đăng kí tài khoản thất bại");
             return Views.Auth.REGISTER;
         }
     }
     
-
 }

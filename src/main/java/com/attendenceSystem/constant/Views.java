@@ -20,4 +20,12 @@ public final class Views {
         public static final String MANAGER = "cms/dashboard/dashboard-manage";
         public static final String EMPLOYEE = "/cms/dashboard/dashboard-employee";
     }
+
+    public static final class Attendance {
+        public static final String ROOT = "cms/attendance/attendance";
+        public static final String LIST = "cms/attendance/attendance-list";
+        public static final String LEAVE_CREATE = "cms/absent/absent-create";
+        public static final String LEAVE_LIST = "cms/absent/absent-list";
+        public static final String LEAVE_HISTORY = "cms/absent/absent-history";
+    }
 }
