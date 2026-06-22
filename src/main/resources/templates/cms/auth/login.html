@@ -5,13 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập - Face ID Attendance</title>
-    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="/css/auth.css">
+
+
 </head>
 
 <body>
     <div class="bg-img"></div>
 
-    <div th:replace="~{cms/layouts/header :: header}"></div>
+    <div th:replace="~{cms/layout/header :: header}"></div>
 
     <div class="layout">
         <div class="card">
@@ -22,7 +24,7 @@
             </div>
 
             <div class="divider"></div>
-            
+
             <div class="card-body">
                 <p class="error-message"></p>
 
@@ -50,11 +52,11 @@
 
                 <hr style="margin: 1rem 0; opacity: 0.2;" />
                 <div class="other-option">
-                    <a class="register-link">
+                    <a href="#" class="register-link">
                         Tạo tài khoản mới
                     </a>
 
-                    <a class="forgotPass-link">
+                    <a href="#" class="forgotPass-link">
                         Quên mật khẩu
                     </a>
                 </div>
@@ -62,7 +64,7 @@
         </div>
     </div>
 
-    <div th:replace="~{cms/layouts/footer :: footer}"></div>
+    <div th:replace="~{cms/layout/footer :: footer}"></div>
 
 </body>
 
