@@ -18,5 +18,6 @@ public final class Views {
         public static final class Dashboard {
         public static final String ADMIN = "cms/dashboard/dashboard-admin";
         public static final String MANAGER = "cms/dashboard/dashboard-manage";
+        public static final String EMPLOYEE = "/cms/dashboard/dashboard-employee";
     }
 }
