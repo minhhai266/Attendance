@@ -4,14 +4,14 @@
 
 footer {
     width: 100%;
-    margin-top: 100px;
+    
 }
 
 .footer-layout {
-    max-width: 1440px;
+    max-width: 1550px;
 
-    margin: 0 auto;
-    padding: 50px;
+    margin: 0px;
+    padding:40px 60px 30px 60px;
 
     display: flex;
     justify-content: space-between;
@@ -91,8 +91,8 @@ footer {
 
     padding: 20px;
 
-    color: #6b7280;
-
+    color: #aeb5c4;
+    background-color: #070d20;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 

@@ -1,81 +1,65 @@
-<div class="sidebar">
+<div class="sidebar" th:fragment="sidebar">
 
     <div class="sidebar-header">
-        <i class="sidebar-icon"></i>
-        <h2> Smart Attendance</h2>
-        <div class="header-description">Quản lý</div>
+        <div class="logo">
+            📷
+        </div>
+
+        <div>
+            <h2>Smart Attendance</h2>
+            <div class="header-description">Quản lý</div>
+        </div>
     </div>
+
     <div class="sidebar-line"></div>
 
     <ul class="sidebar-menu">
 
         <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
+            <a href="#" class="sidebar-link">
+                <span>📊</span>
                 Dashboard
             </a>
         </li>
 
-        <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
+        <li class="sidebar-option active">
+            <a href="#" class="sidebar-link">
+                <span>🕒</span>
                 Quản lý điểm danh
             </a>
         </li>
 
         <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
-                Duyệt nghỉ phép
-            </a>
-        </li>
-        <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
+            <a href="#" class="sidebar-link">
+                <span>👤</span>
                 Duyệt Face ID
             </a>
         </li>
+
         <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
-                Báo cáo tháng
+            <a href="#" class="sidebar-link">
+                <span>📅</span>
+                Duyệt nghỉ phép
             </a>
         </li>
-        <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
-                Danh sách báo cáo
-            </a>
-        </li>
-        <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
-                Quản lý tài khoản
-            </a>
-        </li>
-        <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
-                Quản lý tài khoản
-            </a>
-        </li>
-        <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
-                Thông tin cá nhân
-            </a>
-        </li>
+
     </ul>
-    <div class="sidebar-line"></div>
+
     <div class="sidebar-footer">
+
         <div class="footer-user">
-            <i class="sidebar-icon"></i>
-            <h3> Smart Attendance</h3>
-            <div class="header-description">Nhân viên</div>
+            <div class="avatar">N</div>
+
+            <div>
+                <h3>Nguyễn Thị B</h3>
+                <div class="header-description">Quản lý</div>
+            </div>
         </div>
+
         <div class="logout">
-            <i class="logout-icon"></i>
-            <div class="logout-text">Đăng xuất</div>
+            🚪 Đăng xuất
         </div>
+
     </div>
+
 </div>
