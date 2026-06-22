@@ -12,68 +12,77 @@
     <div class="bg-img"></div>
     <div th:replace="~{cms/layouts/header :: header}"></div>
 
-    <div class="card-auth layout">
-        <div class="card-header">
+    <div class="layout">
+        <div class="card">
+            
+            <div class="card-header">
+                <h1 class="card-title">Đăng nhập</h1>
+                <p class="card-description">Nhập thông tin để truy cập!</p>
+            </div>
 
-            <h1 class="card-title">Đăng nhập</h1>
-            <p class="card-description">Nhập thông tin để truy cập!</p>
-        </div>
-        <div class="card-body">
-            <p class="error-message"></p>
+            <div class="divider"></div>
 
-            <!-- form -->
-            <form method="post">
+            <div class="card-body">
+                <p class="error-message"></p>
 
-                <div class="auth-group">
-                    <label>Username hoặc Email</label>
-                    <input type="text" />
-                    <div class="error-message"></div>
+                <!-- form -->
+                <form method="post">
+
+                    <div class="auth-group">
+                        <label>Username hoặc Email</label>
+                        <input type="text" />
+                        <div class="error-message"></div>
+                    </div>
+
+                    <div class="auth-group">
+                        <label class="auth-label">Họ và tên *</label>
+                        <input type="text" class="auth-control" placeholder="Nguyễn Văn A" required>
+                        <div class="error-message"></div>
+                    </div>
+
+                    <div class="auth-group">
+                        <label class="auth-label">Email *</label>
+                        <input type="email" class="auth-control" placeholder="your.email@company.com" required>
+                        <div class="error-message"></div>
+                    </div>
+
+                    <div class="auth-group">
+                        <label class="auth-label">Số điện thoại *</label>
+                        <input type="tel" class="auth-control" placeholder="0901234567" required>
+                        <div class="error-message"></div>
+                    </div>
+
+                    <div class="auth-group">
+                        <label class="auth-label">Mật khẩu *</label>
+                        <input type="password" class="auth-control" placeholder="••••••••" required>
+                        <div class="error-message"></div>
+                    </div>
+
+                    <div class="auth-group">
+                        <label class="auth-label">Xác nhận mật khẩu *</label>
+                        <input type="password" class="auth-control" placeholder="••••••••" required>
+                        <div class="error-message"></div>
+                    </div>
+
+                    <button class="auth-btn" type="submit">
+                        Đăng ký
+                    </button>
+                </form>
+
+                <hr style="margin: 1rem 0; opacity: 0.2;" />
+                <div class="other-option">
+                    <a class="register-link">
+                        Đã có tài khoản
+                    </a>
+
+                    <a class="forgotPass-link">
+                        Quên mật khẩu
+                    </a>
                 </div>
-                <div class="auth-group">
-                    <label class="auth-label">Họ và tên *</label>
-                    <input type="text" class="auth-control" placeholder="Nguyễn Văn A" required>
-                    <div class="error-message"></div>
-                </div>
-
-                <div class="auth-group">
-                    <label class="auth-label">Email *</label>
-                    <input type="email" class="auth-control" placeholder="your.email@company.com" required>
-                                    <div class="error-message"></div>
-
-                </div>
-
-                <div class="auth-group">
-                    <label class="auth-label">Số điện thoại *</label>
-                    <input type="tel"class="auth-control" placeholder="0901234567" required>
-                </div>
-
-                <div class="auth-group">
-                    <label class="auth-label">Mật khẩu *</label>
-                    <input type="password" class="auth-control" placeholder="••••••••"
-                        required>
-                </div>
-
-                <div class="auth-group">
-                    <label class="auth-label">Xác nhận mật khẩu *</label>
-                    <input type="password"class="auth-control" placeholder="••••••••" required>
-                </div>
-
-                <button class="auth-btn" type="submit">
-                    Đăng ký
-                </button>
-            </form>
-
-            <hr style="margin: 1rem 0; opacity: 0.2;" />
-
-            <a class="register-link">
-                Đã có tài khoản
-            </a>
-
-            <a class="forgotPass-link">
-                Quên mật khẩu
-            </a>
+            </div>
         </div>
     </div>
+
     <div th:replace="~{cms/layouts/footer :: footer}"></div>
 
 </body>

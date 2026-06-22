@@ -1,44 +1,50 @@
-<header class="header-layout">
-    <div class="header-container">
-        <div class="header-left">
-            <h3 class="header-title">Smart Attendance</h3>
-        </div>
-        <div class="header-right">
-            <div class="change-light">
-                <button>Icon</button>
-            </div>
-            <div class="header-auth">
-                <div class="btn btn-register">Đăng ký</div>
-                <div class="btn btn-login">Đăng nhập</div>
-            </div>
-            <div class="user-dropdown">
-                <summary class="user-summary">
-                    <span th:text="${#authentication.name}"></span>
-                    <span class="arrow">▾</span>
-                </summary>
+<!DOCTYPE html>
+<html lang="vi">
 
-                <div class="dropdown-menu">
-                    <a th:href="@{/user/moonblight/change-password}">
-                        🔒 Đổi mật khẩu
-                    </a>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký - Face ID Attendance</title>
+    <link rel="stylesheet" href="css/auths/header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
 
-                    <form th:action="@{/user/moonblight/logout}" method="post">
-                        <button type="submit">
-                            🚪 Logout
-                        </button>
-                    </form>
+<body>
+    <header class="header-layout">
+        <div class="header-container">
+
+            <div class="header-left">
+                <div class="logo-box">
+                    <i class="fa-solid fa-camera"></i>
                 </div>
+
+                <h3 class="header-title">
+                    Smart Attendance
+                </h3>
+            </div>
+
+            <div class="header-right">
+
+                <div class="theme-toggle">
+                    <button class="theme-toggle__btn">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                </div>
+
+                <div class="header-auth">
+                    <button class="btn-login">
+                        Đăng nhập
+                    </button>
+
+                    <button class="btn-register">
+                        Bắt đầu ngay
+                    </button>
+                </div>
+
             </div>
 
         </div>
-    </div>
-    <script>
-        document.addEventListener('click', function (e) {
-            const dropdown = document.querySelector('.user-dropdown');
+    </header>
+</body>
 
-            if (!dropdown.contains(e.target)) {
-                dropdown.removeAttribute('open');
-            }
-        });
-    </script>
-</header>
+</html>
