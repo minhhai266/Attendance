@@ -1,0 +1,345 @@
+
+/* =========================
+   HOME PAGE
+========================= */
+
+.home-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left,
+            rgba(99, 102, 241, .15),
+            transparent 30%),
+        radial-gradient(circle at bottom right,
+            rgba(139, 92, 246, .12),
+            transparent 40%),
+        #020617;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: auto;
+    padding: 0 24px;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(2, 6, 23, .7);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.navbar-content {
+    height: 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--primary-gradient);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.brand-name {
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.navbar-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.nav-link {
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 10px 18px;
+    transition: .3s;
+}
+
+.nav-link:hover {
+    color: white;
+}
+
+.nav-btn {
+    text-decoration: none;
+    background: var(--primary-gradient);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.nav-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    padding: 100px 0;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.hero-title {
+    line-height: 1.05;
+    margin-bottom: 24px;
+}
+
+.hero-title-gradient {
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 800;
+    background: linear-gradient(to right,
+            #818cf8,
+            #a78bfa,
+            #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-title-white {
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 800;
+    color: white;
+}
+
+.hero-description {
+    color: #94a3b8;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    max-width: 650px;
+    margin-bottom: 40px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 16px;
+}
+
+.primary-btn {
+    text-decoration: none;
+    background: var(--primary-gradient);
+    color: white;
+    padding: 14px 26px;
+    border-radius: 14px;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+}
+
+.secondary-btn {
+    text-decoration: none;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, .15);
+    padding: 14px 26px;
+    border-radius: 14px;
+    transition: .3s;
+}
+
+.secondary-btn:hover {
+    background: rgba(255, 255, 255, .05);
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats-panel {
+    padding: 30px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, .04);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.stats-card {
+    background: rgba(15, 23, 42, .7);
+    border: 1px solid rgba(255, 255, 255, .06);
+    border-radius: 20px;
+    padding: 28px;
+    text-align: center;
+    transition: .3s;
+}
+
+.stats-card:hover {
+    transform: translateY(-4px);
+}
+
+.stats-card i {
+    color: #818cf8;
+    margin-bottom: 14px;
+}
+
+.stats-value {
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.stats-label {
+    margin-top: 6px;
+    color: #94a3b8;
+}
+
+/* =========================
+   FEATURES
+========================= */
+
+.features {
+    padding: 100px 0;
+    background: rgba(15, 23, 42, .4);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.section-title {
+    color: white;
+    font-size: 3rem;
+    margin-bottom: 12px;
+}
+
+.section-description {
+    color: #94a3b8;
+    font-size: 1.15rem;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.feature-card {
+    background: rgba(15, 23, 42, .55);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 24px;
+    padding: 30px;
+    transition: .3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, .15);
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background: var(--primary-gradient);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.feature-title {
+    color: white;
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+}
+
+.feature-description {
+    color: #94a3b8;
+    line-height: 1.7;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+    border-top: 1px solid rgba(255, 255, 255, .08);
+    padding: 40px 0;
+    text-align: center;
+}
+
+.footer p {
+    color: #94a3b8;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+    .hero-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+
+    .navbar-content {
+        flex-direction: column;
+        gap: 16px;
+        height: auto;
+        padding: 16px 0;
+    }
+
+    .hero {
+        padding: 60px 0;
+    }
+
+    .feature-grid,
+    .stats-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+}
