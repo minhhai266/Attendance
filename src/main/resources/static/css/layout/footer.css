@@ -1,0 +1,115 @@
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    width: 100%;
+    margin-top: 100px;
+}
+
+.footer-layout {
+    max-width: 1440px;
+
+    margin: 0 auto;
+    padding: 50px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    background: rgba(3, 7, 30, 0.85);
+
+    backdrop-filter: blur(12px);
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* =========================
+   LEFT
+========================= */
+
+.footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.left-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+
+    background: linear-gradient(90deg,
+            #8b7cff,
+            #d68eff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.left-description {
+    color: #9ca3af;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* =========================
+   RIGHT
+========================= */
+
+.footer-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.right-title {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+
+    margin-bottom: 8px;
+}
+
+.right-description {
+    text-decoration: none;
+
+    color: #9ca3af;
+
+    transition: .3s;
+}
+
+.right-description:hover {
+    color: #b794ff;
+}
+
+/* =========================
+   COPYRIGHT
+========================= */
+
+.footer-bottom {
+    text-align: center;
+
+    padding: 20px;
+
+    color: #6b7280;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+    .footer-layout {
+        flex-direction: column;
+        gap: 40px;
+
+        padding: 30px 20px;
+    }
+
+    .left-title {
+        font-size: 1.5rem;
+    }
+}

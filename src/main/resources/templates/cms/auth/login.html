@@ -10,54 +10,58 @@
 
 <body>
     <div class="bg-img"></div>
+
     <div th:replace="~{cms/layouts/header :: header}"></div>
 
-    <div class="card-auth layout">
-        <div class="card-header">
+    <div class="layout">
+        <div class="card">
 
-            <h1 class="card-title">Đăng nhập</h1>
-            <p class="card-description">Nhập thông tin để truy cập!</p>
-        </div>
-        <div class="card-body">
-            <p class="error-message"></p>
+            <div class="card-header">
+                <h1 class="card-title">Đăng nhập</h1>
+                <p class="card-description">Nhập thông tin để truy cập!</p>
+            </div>
 
-            <!-- form -->
-            <form method="post">
+            <div class="divider"></div>
+            
+            <div class="card-body">
+                <p class="error-message"></p>
 
-                <!-- username/email -->
-                <div class="auth-group">
-                    <label>Username hoặc Email</label>
-                    <input type="text" />
+                <!-- form -->
+                <form method="post">
 
-                    <div class="error-message">
+                    <!-- username/email -->
+                    <div class="auth-group">
+                        <label>Username hoặc Email</label>
+                        <input type="text" />
+                        <div class="error-message"></div>
                     </div>
-                </div>
 
-                <!-- password -->
-                <div class="auth-group">
-                    <label>Password</label>
-                    <input type="password" />
-
-                    <div class="error-message">
+                    <!-- password -->
+                    <div class="auth-group">
+                        <label>Password</label>
+                        <input type="password" />
+                        <div class="error-message"></div>
                     </div>
+
+                    <button class="auth-btn" type="submit">
+                        Đăng nhập
+                    </button>
+                </form>
+
+                <hr style="margin: 1rem 0; opacity: 0.2;" />
+                <div class="other-option">
+                    <a class="register-link">
+                        Tạo tài khoản mới
+                    </a>
+
+                    <a class="forgotPass-link">
+                        Quên mật khẩu
+                    </a>
                 </div>
-
-                <button class="auth-btn" type="submit">
-                    Đăng nhập
-                </button>
-            </form>
-
-            <hr style="margin: 1rem 0; opacity: 0.2;" />
-
-            <a class="register-link">
-                Tạo tài khoản mới
-            </a>
-
-            <a class="forgotPass-link">
-                Quên mật khẩu
-            </a>
+            </div>
         </div>
     </div>
+
     <div th:replace="~{cms/layouts/footer :: footer}"></div>
 
 </body>
