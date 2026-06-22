@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xác nhận OTP</title>
+
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Cormorant+Garamond+Decorative:wght@700&family=Crimson+Text:wght@400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="bg-image"></div>
+    <div th:replace="~{cms/layouts/header :: header}"></div>
+
+    <div class="layouts">
+        <div class="card">
+
+            <div class="card-header">
+
+                <h1 class="card-title">Xác nhận OTP</h1>
+                <p class="card-description"></p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="card-body">
+
+                <p class="error-message"></p>
+
+                <!-- form -->
+                <form method="post">
+
+                    <!-- hidden email -->
+                    <input type="hidden" />
+
+                    <div class="register-group">
+                        <label>OTP</label>
+                        <input type="text" placeholder="Nhập mã OTP" />
+
+                        <div class="error-message">
+                        </div>
+                    </div>
+
+                    <button class="register-btn" type="submit">
+                        Xác nhận OTP
+                    </button>
+
+                </form>
+
+                <hr style="margin: 1rem 0; opacity: 0.2;" />
+
+                <a class="register-link">
+                    Quay lại đăng nhập
+                </a>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{cms/layouts/footer :: footer}"></div>
+
+</body>
+
+</html>
