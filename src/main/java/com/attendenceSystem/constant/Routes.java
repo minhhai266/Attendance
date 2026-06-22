@@ -11,6 +11,9 @@ public final class Routes {
         public static final String ROOT = "/auth";
         public static final String LOGIN = "/login";
         public static final String REGISTER = "/register";
+        public static final String FORGOT_PASSWORD = "/forgot_password";
+        public static final String VERIFY_OTP = "verify-otp";
+        public static final String CHANGE_PASSWORD = "/change_password";
     }
 
     public static final class User {
@@ -22,5 +25,6 @@ public final class Routes {
         public static final String ROOT = "/dashboard";
         public static final String ADMIN = "/admin";
         public static final String MANAGER = "/manager";
+        public static final String EMPLOYEE = "/employee";
     }
 }
