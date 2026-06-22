@@ -17,5 +17,7 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
 
     Page<AttendanceRecord> findByUser(User user, Pageable pageable);
 
-    
+    long countByAttendanceDate(LocalDate attendanceDate);
+
+    Page<AttendanceRecord> findAllByOrderByAttendanceDateDesc(Pageable pageable);
 }
