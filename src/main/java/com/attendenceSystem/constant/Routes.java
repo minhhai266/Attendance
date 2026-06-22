@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Routes {
     public static final String REDIRECT = "/redirect:";
+    public static final String API = "/api";
 
     public static final class Auth {
         public static final String ROOT = "/auth";
@@ -20,7 +21,6 @@ public final class Routes {
         public static final String ROOT = "/user";
         public static final String PROFILE = "/profile";
     }
-
 
     public static final class Dashboard {
         public static final String ROOT = "/dashboard";
