@@ -2,6 +2,7 @@ package com.attendenceSystem.module.attendance.service.impl;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,10 +41,9 @@ public class AttendanceServiceImpl implements AttendanceService {
         User user = getCurrentUser();
 
         LocalDate today = LocalDate.now();
-        AttendanceRecord attendance = attendanceRecordRepository
-                .findByUserAndAttendanceDate(user, today)
-                .orElse(null);
-        if (attendance != null) {
+        Optional<AttendanceRecord> existing = attendanceRecordRepository
+                .findByUserAndAttendanceDateWithLock(user, today);
+        if (existing.isPresent()) {
             throw new IllegalArgumentException("Bạn đã điểm danh hôm nay");
         }
         AttendanceRecord attendanceRecord = AttendanceRecord.builder()
@@ -69,7 +69,11 @@ public class AttendanceServiceImpl implements AttendanceService {
         if (attendance.getCheckOutTime() != null) {
             throw new IllegalArgumentException("Bạn đã checkout rồi");
         }
+        if (attendance.getStatus() != AttendanceStatus.PRESENT) {
+            throw new IllegalArgumentException("Trạng thái điểm danh không hợp lệ");
+        }
         attendance.setCheckOutTime(Instant.now());
+        attendanceRecordRepository.save(attendance);
         return attendanceResponseMapper.fromEntity(attendance);
     }
 
@@ -87,6 +91,12 @@ public class AttendanceServiceImpl implements AttendanceService {
     public LeaveRequestResponse createLeaveRequest(CreateLeaveRequest request) {
         if (request == null) {
             throw new IllegalArgumentException("Yêu cầu không hợp lệ");
+        }
+        if (request.getStartDate() == null || request.getEndDate() == null) {
+            throw new IllegalArgumentException("Ngày bắt đầu và ngày kết thúc không được để trống");
+        }
+        if (request.getStartDate().isAfter(request.getEndDate())) {
+            throw new IllegalArgumentException("Ngày bắt đầu phải trước ngày kết thúc");
         }
         User user = getCurrentUser();
         LeaveRequest leave = LeaveRequest.builder()
@@ -109,7 +119,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     private User getCurrentUser() {
         String currentUser = SecurityUtil.getCurrentUserName();
-        if (currentUser == null) {
+        if (currentUser == null || currentUser.isEmpty() || currentUser.isBlank()) {
             throw new IllegalArgumentException("Không tìm thấy người dùng");
         }
         return userRepository

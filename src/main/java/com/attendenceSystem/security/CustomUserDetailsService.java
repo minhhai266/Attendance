@@ -1,4 +1,4 @@
-package com.attendenceSystem.module.user.service.impl;
+package com.attendenceSystem.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
