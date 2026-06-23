@@ -14,6 +14,7 @@ import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
+import com.attendenceSystem.module.attendance.mapper.request.CreateLeaveRequestMapper;
 import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
 import com.attendenceSystem.module.attendance.entity.LeaveRequest;
 import com.attendenceSystem.module.attendance.mapper.response.LeaveRequestResponseMapper;
@@ -99,13 +100,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             throw new IllegalArgumentException("Ngày bắt đầu phải trước ngày kết thúc");
         }
         User user = getCurrentUser();
-        LeaveRequest leave = LeaveRequest.builder()
-                .user(user)
-                .startDate(request.getStartDate())
-                .endDate(request.getEndDate())
-                .reason(request.getReason())
-                .status(AttendanceStatus.LEAVE)
-                .build();
+        LeaveRequest leave = CreateLeaveRequestMapper.toEntity(request, user);
         LeaveRequest saved = leaveRequestRepository.save(leave);
         return leaveRequestResponseMapper.fromEntity(saved);
     }

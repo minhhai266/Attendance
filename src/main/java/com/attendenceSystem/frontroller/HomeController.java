@@ -63,10 +63,10 @@ public class HomeController {
     public String verifyOTP() {
         return "cms/auth/verify-otp";
     }
-    @GetMapping("/attendance")
-    public String attendance() {
-        return "cms/attendance/attendance";
-    }
+    // @GetMapping("/attendance")
+    // public String attendance() {
+    //     return "cms/attendance/attendance";
+    // }
     @GetMapping("/attendanceList")
     public String attendanceList() {
         return "cms/attendance/attendance-list";
