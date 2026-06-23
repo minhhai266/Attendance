@@ -9,12 +9,15 @@ import lombok.Builder;
 
 @Builder
 public record AttendanceResponse(
-        Long id,
-        Long userId,
-        String fullName,
-        LocalDate attendanceDate,
-        Instant checkInTime,
-        Instant checkOutTime,
-        AttendanceStatus status,
-        String note) {
+                Long id,
+                Long userId,
+                String fullName,
+                LocalDate attendanceDate,
+                Instant checkInTime,
+                Instant checkOutTime,
+                AttendanceStatus status,
+                boolean late,
+                boolean earlyLeave,
+                long workingMinutes,
+                String note) {
 }

@@ -15,6 +15,15 @@ public class AttendanceStatusConverter implements AttributeConverter<AttendanceS
 
     @Override
     public AttendanceStatus convertToEntityAttribute(Integer dbData) {
-        return dbData == null ? null : AttendanceStatus.fromValue(dbData);
+        if (dbData == null) {
+            return null;
+        }
+        try {
+            return AttendanceStatus.fromValue(dbData);
+        } catch (IllegalArgumentException e) {
+            // Log và trả về PRESENT nếu giá trị không hợp lệ
+            System.err.println("Invalid AttendanceStatus value: " + dbData + ", using PRESENT as default");
+            return AttendanceStatus.PRESENT;
+        }
     }
 }
