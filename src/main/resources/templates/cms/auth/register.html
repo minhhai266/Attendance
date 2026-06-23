@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Ký - Face ID Attendance</title>
-    <link rel="stylesheet" href="/css/auths/register.css">
+    <link rel="stylesheet" href="/css/auths/register.css" />
 </head>
 
 <body>
@@ -43,45 +43,42 @@
             <div class="divider"></div>
 
             <div class="card-body">
-                <p class="error-message"></p>
+                <div
+                    th:if="${errorMessage}"
+                    class="error-message"
+                    th:text="${errorMessage}">
+                </div>
 
-                <!-- form -->
-                <form method="post">
+                <form th:action="@{/auth/register}" th:object="${registerRequest}" method="post">
 
                     <div class="auth-group">
-                        <label>Username hoặc Email</label>
-                        <input type="text" />
-                        <div class="error-message"></div>
+                        <label class="auth-label">Tên đăng nhập *</label>
+                        <input id="username" type="text" th:field="*{username}" class="auth-control" placeholder="Tên đăng nhập" required />
+                        <div class="error-message" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
                     </div>
 
                     <div class="auth-group">
                         <label class="auth-label">Họ và tên *</label>
-                        <input type="text" class="auth-control" placeholder="Nguyễn Văn A" required>
-                        <div class="error-message"></div>
+                        <input id="fullName" type="text" th:field="*{fullName}" class="auth-control" placeholder="Nguyễn Văn A" required />
+                        <div class="error-message" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
                     </div>
 
                     <div class="auth-group">
                         <label class="auth-label">Email *</label>
-                        <input type="email" class="auth-control" placeholder="your.email@company.com" required>
-                        <div class="error-message"></div>
-                    </div>
-
-                    <div class="auth-group">
-                        <label class="auth-label">Số điện thoại *</label>
-                        <input type="tel" class="auth-control" placeholder="0901234567" required>
-                        <div class="error-message"></div>
+                        <input id="email" type="email" th:field="*{email}" class="auth-control" placeholder="your.email@company.com" required />
+                        <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                     </div>
 
                     <div class="auth-group">
                         <label class="auth-label">Mật khẩu *</label>
-                        <input type="password" class="auth-control" placeholder="••••••••" required>
-                        <div class="error-message"></div>
+                        <input id="password" type="password" th:field="*{password}" class="auth-control" placeholder="••••••••" required />
+                        <div class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
                     </div>
 
                     <div class="auth-group">
                         <label class="auth-label">Xác nhận mật khẩu *</label>
-                        <input type="password" class="auth-control" placeholder="••••••••" required>
-                        <div class="error-message"></div>
+                        <input id="rePassword" type="password" th:field="*{rePassword}" class="auth-control" placeholder="••••••••" required />
+                        <div class="error-message" th:if="${#fields.hasErrors('rePassword')}" th:errors="*{rePassword}"></div>
                     </div>
 
                     <button class="auth-btn" type="submit">

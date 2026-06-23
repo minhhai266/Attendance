@@ -26,12 +26,17 @@
         <div class="divider"></div>
 
         <div class="card-body">
-          <!-- Global Error -->
+          <!-- Success / Global Error -->
+          <div
+            th:if="${successMessage}"
+            class="success-message"
+            th:text="${successMessage}">
+          </div>
           <div
             th:if="${errorMessage}"
             class="error-message"
-            th:text="${errorMessage}"
-          ></div>
+            th:text="${errorMessage}">
+          </div>
 
           <form
             th:action="@{/auth/login}"
