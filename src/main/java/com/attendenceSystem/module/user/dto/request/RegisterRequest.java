@@ -38,4 +38,7 @@ public class RegisterRequest {
     @NotBlank(message = "Họ tên không được để trống")
     @Size(max = 255, message = "Họ tên không được vượt quá 255 ký tự")
     private String fullName;
+
+    private String role;
+    private Boolean must_change_password;
 }
