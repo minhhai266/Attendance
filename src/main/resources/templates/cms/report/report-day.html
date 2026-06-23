@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điểm danh hằng ngày</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="bg-image"></div>
+
+    <div class="layout">
+
+        <!-- Sidebar -->
+        <div th:replace="~{cms/sidebar/sidebar-employee :: sidebar}"></div>
+
+        <!-- Content -->
+        <div class="container-layout">
+
+            <!-- Header -->
+            <header class="page-header">
+                <h1>Điểm danh hằng ngày</h1>
+
+                <div class="notification">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="dot"></span>
+                </div>
+            </header>
+
+            <!-- Card -->
+            <div class="attendance-card">
+
+                <div class="card-header">
+                    <h2>Danh sách điểm danh</h2>
+                </div>
+
+                <!-- Bộ lọc -->
+                <div class="filter-section">
+
+                    <div class="filter-group">
+                        <label>Tên nhân viên</label>
+                        <input type="text" placeholder="Nhập tên nhân viên...">
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Phòng ban</label>
+                        <select>
+                            <option>Tất cả</option>
+                            <option>IT</option>
+                            <option>Marketing</option>
+                            <option>Nhân sự</option>
+                            <option>Kế toán</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Trạng thái</label>
+                        <select>
+                            <option>Tất cả</option>
+                            <option>Có mặt</option>
+                            <option>Đi muộn</option>
+                            <option>Nghỉ</option>
+                        </select>
+                    </div>
+
+                    <button class="filter-btn">
+                        Tìm kiếm
+                    </button>
+
+                </div>
+
+                <!-- Table -->
+                <div class="table-wrapper">
+
+                    <table class="attendance-table">
+
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Họ và tên</th>
+                                <th>Phòng ban</th>
+                                <th>Check In</th>
+                                <th>Check Out</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>1</td>
+                                <td>Nguyễn Văn A</td>
+                                <td>IT</td>
+                                <td>08:00</td>
+                                <td>17:30</td>
+                                <td>
+                                    <span class="status present">
+                                        Có mặt
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>2</td>
+                                <td>Trần Thị B</td>
+                                <td>Marketing</td>
+                                <td>08:25</td>
+                                <td>17:30</td>
+                                <td>
+                                    <span class="status late">
+                                        Đi muộn
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>3</td>
+                                <td>Lê Văn C</td>
+                                <td>Nhân sự</td>
+                                <td>--</td>
+                                <td>--</td>
+                                <td>
+                                    <span class="status absent">
+                                        Nghỉ
+                                    </span>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div th:replace="~{cms/layout/footer :: footer}"></div>
+
+</body>
+
+</html>

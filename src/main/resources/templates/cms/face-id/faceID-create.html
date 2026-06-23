@@ -1,196 +1,117 @@
-```html
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Face Recognition Dashboard</title>
 
-    <link rel="stylesheet" href="../style.css">
-
+    <link rel="stylesheet" th:href="@{/css/world/world.css}">
 </head>
 
 <body>
-    <div class="bg-image"></div>
-    <div th:replace="~{cms/fragments/sidebar-employee :: sidebar}"></div>
 
+    <div class="bg-image"></div>
+
+    <!-- SIDEBAR -->
+    <div th:replace="~{cms/sidebar/sidebar-employee :: sidebar}"></div>
+
+    <!-- MAIN LAYOUT -->
     <div class="container-layout">
+
+        <!-- HEADER -->
         <header class="page-header">
-            <h1>Nộp báo cáo công việc</h1>
+            <div>
+                <h1>Đăng kí face ID</h1>
+                <p>Quản lý đăng ký khuôn mặt & điểm danh realtime</p>
+            </div>
 
             <div class="notification">
                 <i class="fa-regular fa-bell"></i>
                 <span class="dot"></span>
             </div>
         </header>
-        <!-- FACE REGISTER -->
-        <section class="card">
 
-            <div class="section-header">
+        <!-- =========================
+         FACE REGISTER
+    ========================== -->
+        <section class="dashboard-card">
+
+            <div class="card-header">
                 <h2>Đăng ký khuôn mặt</h2>
             </div>
 
-            <div class="student-select">
+            <div class="card-body">
 
-                <label>Sinh viên</label>
-
-                <select id="faceStudentSelect">
-                    <option>Chọn sinh viên</option>
-                </select>
-
-                <button id="faceSampleCount" class="sample-btn">
-                    0 / 10 mẫu
-                </button>
-
-            </div>
-
-            <div class="face-register-grid">
-
-                <!-- CAMERA -->
-                <div class="panel">
-
-                    <div class="panel-header">
-                        <h3>Camera đăng ký</h3>
-
-                        <button id="faceRegisterToggleBtn">
-                            Bật camera
-                        </button>
-                    </div>
-
-                    <div class="mode-tabs">
-
-                        <button class="active">
-                            Thêm mẫu
-                        </button>
-
-                        <button>
-                            Quét lại
-                        </button>
-
-                    </div>
-
-                    <div class="guide-box">
-
-                        <div id="scanGuideCurrent">
-                            Nhìn thẳng vào camera
-                        </div>
-
-                        <div id="scanGuideSteps">
-                            Bước 1 / 5
-                        </div>
-
-                    </div>
-
-                    <div class="video-wrap">
-                        <video autoplay muted></video>
-                        <canvas></canvas>
-                    </div>
-
-                    <div class="action-row">
-
-                        <button>
-                            📷 Chụp mẫu
-                        </button>
-
-                        <button class="secondary">
-                            Làm lại
-                        </button>
-
-                    </div>
-
+                <!-- ROOM CODE -->
+                <div class="room-code-input">
+                    <label>Mã phòng</label>
+                    <input type="text" id="roomCode" placeholder="Nhập mã phòng (VD: P101)">
                 </div>
 
-                <!-- UPLOAD -->
-                <div class="panel">
+                <!-- STUDENT SELECT -->
+                <div class="student-select">
 
-                    <div class="panel-header">
-                        <h3>Thêm ảnh từ máy</h3>
-                    </div>
+                    <label>Sinh viên</label>
 
-                    <input type="file" multiple accept="image/*">
+                    <select id="faceStudentSelect">
+                        <option value="">Chọn sinh viên</option>
+                    </select>
 
-                    <button class="upload-btn">
-                        Upload ảnh
+                    <button id="faceSampleCount" class="sample-btn">
+                        0 / 10 mẫu
                     </button>
 
-                    <div class="info-box">
-                        Ảnh cần chứa đúng 1 khuôn mặt, rõ nét và đủ sáng.
+                </div>
+
+                <!-- GRID -->
+                <div class="face-register-grid">
+
+                    <!-- CAMERA -->
+                    <div class="panel">
+
+                        <div class="panel-header">
+                            <h3>Camera đăng ký</h3>
+                            <button id="faceRegisterToggleBtn">Bật camera</button>
+                        </div>
+
+                        <div class="mode-tabs">
+                            <button class="active">Thêm mẫu</button>
+                            <button>Quét lại</button>
+                        </div>
+
+                        <div class="guide-box">
+                            <div id="scanGuideCurrent">Nhìn thẳng vào camera</div>
+                            <div id="scanGuideSteps">Bước 1 / 5</div>
+                        </div>
+
+                        <div class="video-wrap">
+                            <video autoplay muted></video>
+                            <canvas></canvas>
+                        </div>
+
+                        <!-- ACTION -->
+                        <div class="action-row">
+
+                            <button type="button" id="captureFaceBtn">
+                                📷 Đăng ký Face ID
+                            </button>
+
+                            <button type="button" class="secondary">
+                                Làm lại
+                            </button>
+
+                        </div>
+
                     </div>
 
                 </div>
 
             </div>
-
-        </section>
-
-        <!-- REALTIME CAMERA -->
-
-        <section class="card">
-
-            <div class="section-header">
-                <h2>Điểm danh Realtime</h2>
-            </div>
-
-            <div class="camera-actions">
-
-                <button>
-                    Check In ON
-                </button>
-
-                <button>
-                    Check Out ON
-                </button>
-
-                <button class="secondary">
-                    Tắt tất cả
-                </button>
-
-            </div>
-
-            <div class="dual-camera-grid">
-
-                <div class="camera-panel">
-
-                    <div class="camera-panel-header">
-                        <h3>Check In</h3>
-                        <span>Đang tắt</span>
-                    </div>
-
-                    <div class="video-wrap">
-                        <video autoplay muted></video>
-                        <canvas></canvas>
-                    </div>
-
-                    <div class="camera-result">
-                        Chưa bật camera
-                    </div>
-
-                </div>
-
-                <div class="camera-panel">
-
-                    <div class="camera-panel-header">
-                        <h3>Check Out</h3>
-                        <span>Đang tắt</span>
-                    </div>
-
-                    <div class="video-wrap">
-                        <video autoplay muted></video>
-                        <canvas></canvas>
-                    </div>
-
-                    <div class="camera-result">
-                        Chưa bật camera
-                    </div>
-
-                </div>
-
-            </div>
-
         </section>
 
     </div>
+    <div th:replace="~{cms/layout/footer :: footer}"></div>
 
 </body>
 

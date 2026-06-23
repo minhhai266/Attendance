@@ -1,81 +1,112 @@
-<section class="page">
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 
-    <div class="card">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition Dashboard</title>
 
-        <div class="card-header">
-            <h2>Danh sách Face ID</h2>
+    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+</head>
 
-            <input
-                type="text"
-                placeholder="Tìm kiếm sinh viên..."
-                class="search-input">
-        </div>
+<body>
 
-        <table class="face-table">
+    <div class="bg-image"></div>
 
-            <thead>
-                <tr>
-                    <th>Mã SV</th>
-                    <th>Họ tên</th>
-                    <th>Face ID</th>
-                    <th>Số mẫu</th>
-                    <th>Phòng</th>
-                    <th>Cập nhật</th>
-                    <th>Chi tiết</th>
-                </tr>
-            </thead>
+    <!-- SIDEBAR -->
+    <div th:replace="~{cms/sidebar/sidebar-employee :: sidebar}"></div>
 
-            <tbody>
+    <!-- MAIN LAYOUT -->
+    <div class="container-layout">
 
-                <tr>
-                    <td>SV001</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>#face_001</td>
-                    <td>
-                        <span class="sample-badge">
-                            10 / 10
-                        </span>
-                    </td>
-                    <td>21/02/2025</td>
+        <!-- HEADER -->
+        <header class="page-header">
+            <div>
+                <h1>Đăng kí face ID</h1>
+                <p>Quản lý đăng ký khuôn mặt & điểm danh realtime</p>
+            </div>
 
-                    <td>
-                        <button
-                            class="detail-btn"
-                            onclick="openFaceGallery()">
+            <div class="notification">
+                <i class="fa-regular fa-bell"></i>
+                <span class="dot"></span>
+            </div>
+        </header>
 
-                            Xem ảnh
+        <!-- =========================
+        FACE REGISTER
+        ========================== -->
+        <section class="page">
 
-                        </button>
-                    </td>
-                </tr>
+            <div class="card">
 
-                <tr>
-                    <td>SV002</td>
-                    <td>Trần Văn B</td>
-                    <td>#face_002</td>
-                    <td>
-                        <span class="sample-badge">
-                            7 / 10
-                        </span>
-                    </td>
-                    <td>DE214</td>
-                    <td>20/02/2025</td>
+                <table class="face-table">
 
-                    <td>
-                        <button
-                            class="detail-btn"
-                            onclick="openFaceGallery()">
+                    <thead>
+                        <tr>
+                            <th>Mã SV</th>
+                            <th>Họ tên</th>
+                            <th>Face ID</th>
+                            <th>Số mẫu</th>
+                            <th>Phòng</th>
+                            <th>Cập nhật</th>
+                            <th>Chi tiết</th>
+                        </tr>
+                    </thead>
 
-                            Xem ảnh
+                    <tbody>
 
-                        </button>
-                    </td>
-                </tr>
+                        <tr>
+                            <td>SV001</td>
+                            <td>Nguyễn Văn A</td>
+                            <td>#face_001</td>
+                            <td>
+                                <span class="sample-badge">
+                                    10 / 10
+                                </span>
+                            </td>
+                            <td>21/02/2025</td>
 
-            </tbody>
+                            <td>
+                                <button class="detail-btn" onclick="openFaceGallery()">
 
-        </table>
+                                    Xem ảnh
+
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>SV002</td>
+                            <td>Trần Văn B</td>
+                            <td>#face_002</td>
+                            <td>
+                                <span class="sample-badge">
+                                    7 / 10
+                                </span>
+                            </td>
+                            <td>DE214</td>
+                            <td>20/02/2025</td>
+
+                            <td>
+                                <button class="detail-btn" onclick="openFaceGallery()">
+
+                                    Xem ảnh
+
+                                </button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
 
     </div>
+    <div th:replace="~{cms/layout/footer :: footer}"></div>
 
-</section>
+</body>
+
+</html>
