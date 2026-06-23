@@ -1,0 +1,128 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div class="layout">
+        <div th:replace="~{cms/sidebar/sidebar-manage :: sidebar}"></div>
+
+        <div class="container-layout">
+
+            <div class="attendance-header">
+                <h1>Quản lý điểm danh</h1>
+                <p>Theo dõi tình trạng điểm danh sinh viên theo thời gian thực</p>
+            </div>
+
+            <main class="dashboard-manager">
+
+                <!-- THỐNG KÊ -->
+                <section class="dashboard-overview">
+
+                    <div class="stat-card total">
+                        <h3>50</h3>
+                        <p>Tổng nhân viên</p>
+                    </div>
+
+                    <div class="stat-card present">
+                        <h3>42</h3>
+                        <p>Có mặt hôm nay</p>
+                    </div>
+
+                    <div class="stat-card late">
+                        <h3>8</h3>
+                        <p>Đi muộn hôm nay</p>
+                    </div>
+
+                    <div class="stat-card absent">
+                        <h3>10</h3>
+                        <p>Vắng mặt hôm nay</p>
+                    </div>
+
+                </section>
+
+                <!-- BIỂU ĐỒ -->
+                <section class="charts-grid">
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2>Thống kê điểm danh tuần này</h2>
+                        </div>
+
+                        <div class="card-body">
+                            <div id="weeklyAttendanceChart"></div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h2>Xu hướng chuyên cần 6 tháng</h2>
+                        </div>
+
+                        <div class="card-body">
+                            <canvas id="attendanceTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- HOẠT ĐỘNG -->
+                <section class="dashboard-card activity-card">
+
+                    <div class="card-header">
+                        <h2>Hoạt động gần đây</h2>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="activity-item">
+
+                            <div class="activity-left">
+                                <span class="activity-dot"></span>
+
+                                <div>
+                                    <h4>Nguyễn Văn A</h4>
+                                    <p>Check-in thành công</p>
+                                </div>
+                            </div>
+
+                            <span class="activity-time">08:01 AM</span>
+
+                        </div>
+
+                        <div class="activity-item">
+
+                            <div class="activity-left">
+                                <span class="activity-dot warning"></span>
+
+                                <div>
+                                    <h4>Trần Thị B</h4>
+                                    <p>Đi muộn 10 phút</p>
+                                </div>
+                            </div>
+
+                            <span class="activity-time">08:12 AM</span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+        </div>
+    </div>
+    <div th:replace="~{cms/layouts/footer :: footer}"></div>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script th:src="@{/js/Chart.js}"></script>
+</body>
+
+</html>

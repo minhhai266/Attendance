@@ -1,0 +1,175 @@
+.container-layout{
+    margin-left:320px;
+    padding:30px;
+}
+
+/* =====================
+   OVERVIEW
+===================== */
+
+.dashboard-overview{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:#020c2e;
+    border:1px solid #291c56;
+
+    border-radius:22px;
+
+    padding:25px;
+
+    transition:.3s;
+}
+
+.stat-card:hover{
+    transform:translateY(-4px);
+}
+
+.stat-card h3{
+    font-size:2rem;
+    font-weight:800;
+
+    margin-bottom:8px;
+}
+
+.stat-card p{
+    color:#94a3b8;
+}
+
+.total h3{
+    color:#8b5cf6;
+}
+
+.present h3{
+    color:#22c55e;
+}
+
+.late h3{
+    color:#f59e0b;
+}
+
+.absent h3{
+    color:#ef4444;
+}
+
+/* =====================
+   CHARTS
+===================== */
+
+.charts-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+
+    margin-bottom:25px;
+}
+
+.dashboard-card{
+    background:#020c2e;
+
+    border:1px solid #291c56;
+
+    border-radius:22px;
+
+    overflow:hidden;
+}
+
+.card-header{
+    padding:28px 28px 10px;
+}
+
+.card-header h2{
+    font-size:1.8rem;
+    font-weight:700;
+}
+
+.card-body{
+    padding:20px 30px 30px;
+}
+
+canvas{
+    width:100% !important;
+    height:380px !important;
+}
+
+/* =====================
+   ACTIVITY
+===================== */
+
+.activity-card{
+    min-height:220px;
+}
+
+.activity-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:18px 0;
+
+    border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+.activity-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.activity-dot{
+    width:12px;
+    height:12px;
+
+    border-radius:50%;
+
+    background:#22c55e;
+}
+
+.activity-dot.warning{
+    background:#f59e0b;
+}
+
+.activity-left h4{
+    font-size:1.1rem;
+    margin-bottom:5px;
+}
+
+.activity-left p{
+    color:#94a3b8;
+}
+
+.activity-time{
+    color:#94a3b8;
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+
+@media(max-width:1200px){
+
+    .dashboard-overview{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .charts-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:768px){
+
+    .container-layout{
+        margin-left:0;
+        padding:15px;
+    }
+
+    .dashboard-overview{
+        grid-template-columns:1fr;
+    }
+}
