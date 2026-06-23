@@ -18,7 +18,7 @@ import com.attendenceSystem.module.attendance.service.AttendanceService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api" + Routes.Attendance.ROOT)
+@RequestMapping(Routes.API + Routes.Attendance.ROOT)
 @RequiredArgsConstructor
 public class AttendanceApiController {
 

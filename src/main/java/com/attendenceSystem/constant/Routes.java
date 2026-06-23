@@ -5,16 +5,16 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Routes {
-    public static final String REDIRECT = "/redirect:";
+    public static final String REDIRECT = "redirect:";
     public static final String API = "/api";
 
     public static final class Auth {
         public static final String ROOT = "/auth";
         public static final String LOGIN = "/login";
         public static final String REGISTER = "/register";
-        public static final String FORGOT_PASSWORD = "/forgot_password";
-        public static final String VERIFY_OTP = "verify-otp";
-        public static final String CHANGE_PASSWORD = "/change_password";
+        public static final String FORGOT_PASSWORD = "/forgot-password";
+        public static final String VERIFY_OTP = "/verify-otp";
+        public static final String CHANGE_PASSWORD = "/change-password";
     }
 
     public static final class User {
@@ -32,6 +32,7 @@ public final class Routes {
         public static final String ROOT = "/attendance";
         public static final String HISTORY = "/history";
         public static final String LEAVE = "/leave";
+        public static final String LEAVE_CREATE = "/leave/create";
         public static final String CHECK_IN = "/check-in";
         public static final String CHECK_OUT = "/check-out";
     

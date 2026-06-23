@@ -61,7 +61,7 @@ public class AttendanceController {
     @GetMapping(Routes.Attendance.HISTORY)
     public String attendanceHistory(@PageableDefault(size = 10) Pageable pageable, Model model) {
         model.addAttribute("attendanceHistory", attendanceService.getAttendanceHistory(pageable));
-        return Views.Attendance.ROOT;
+        return Views.Attendance.LIST;
     }
 
     @GetMapping(Routes.Attendance.LEAVE)
@@ -70,13 +70,13 @@ public class AttendanceController {
         return Views.Attendance.LEAVE_LIST;
     }
 
-    @GetMapping(Routes.Attendance.LEAVE + "/create")
+    @GetMapping(Routes.Attendance.LEAVE_CREATE)
     public String toLeaveRequestPage(Model model) {
         model.addAttribute("leaveRequest", new CreateLeaveRequest());
         return Views.Attendance.LEAVE_CREATE;
     }
 
-    @PostMapping(Routes.Attendance.LEAVE + "/create")
+    @PostMapping(Routes.Attendance.LEAVE_CREATE)
     public String createLeaveRequest(
             @Valid @ModelAttribute CreateLeaveRequest leaveRequest,
             BindingResult result,
@@ -94,7 +94,7 @@ public class AttendanceController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra: " + e.getMessage());
         }
-        return Routes.REDIRECT + Routes.Attendance.ROOT + "/leave";
+        return Routes.REDIRECT + Routes.Attendance.ROOT + Routes.Attendance.LEAVE;
     }
 
 }

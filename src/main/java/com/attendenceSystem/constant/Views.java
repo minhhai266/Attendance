@@ -8,17 +8,21 @@ public final class Views {
     public static final class Auth {
         public static final String LOGIN = "cms/auth/login";
         public static final String REGISTER = "cms/auth/register";
+        public static final String FORGOT_PASSWORD = "cms/password/forgot-password";
+        public static final String VERIFY_OTP = "cms/auth/verify-otp";
+        public static final String CHANGE_PASSWORD = "cms/password/change-password";
     }
 
     public static final class User {
         public static final String LIST = "cms/account/account-list";
-        public static final String DETAIL = "cms/account/account-detail";
-        public static final String PROFILE = "cms/account/account-profile";
+        public static final String DETAIL = "cms/user/user-information";
+        public static final String PROFILE = "cms/user/user-information";
     }
-        public static final class Dashboard {
+
+    public static final class Dashboard {
         public static final String ADMIN = "cms/dashboard/dashboard-admin";
         public static final String MANAGER = "cms/dashboard/dashboard-manage";
-        public static final String EMPLOYEE = "/cms/dashboard/dashboard-employee";
+        public static final String EMPLOYEE = "cms/dashboard/dashboard-employee";
     }
 
     public static final class Attendance {
