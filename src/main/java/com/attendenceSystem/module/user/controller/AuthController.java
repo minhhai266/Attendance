@@ -41,6 +41,21 @@ public class AuthController {
         return Views.Auth.REGISTER;
     }
 
+    @GetMapping(Routes.Auth.FORGOT_PASSWORD)
+    public String toForgotPasswordPage() {
+        return Views.Auth.FORGOT_PASSWORD;
+    }
+
+    @GetMapping(Routes.Auth.VERIFY_OTP)
+    public String toVerifyOtpPage() {
+        return Views.Auth.VERIFY_OTP;
+    }
+
+    @GetMapping(Routes.Auth.CHANGE_PASSWORD)
+    public String toChangePasswordPage() {
+        return Views.Auth.CHANGE_PASSWORD;
+    }
+
     @PostMapping(Routes.Auth.LOGIN)
     public String login(
             @Valid @ModelAttribute LoginRequest request,
@@ -56,9 +71,10 @@ public class AuthController {
                     HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                     SecurityContextHolder.getContext());
             return switch (user.role()) {
-                case "ADMIN" -> Routes.REDIRECT;
-                case "STAFF" -> Routes.REDIRECT;
-                default -> Routes.REDIRECT;
+                case "ADMIN" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.ADMIN;
+                case "MANAGER" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.MANAGER;
+                case "STAFF" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.EMPLOYEE;
+                default -> Routes.REDIRECT + Routes.Dashboard.ROOT;
             };
         } catch (AuthenticationException e) {
             model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng.");

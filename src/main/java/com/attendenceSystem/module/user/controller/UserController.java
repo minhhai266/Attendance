@@ -28,14 +28,13 @@ public class UserController {
 
     @GetMapping("/{id}")
     public String toDetailPage(@PathVariable("id") Long id, Model model) {
-        UserResponse account = null; // findAccountById
+        UserResponse account = userService.getById(id);
         model.addAttribute("account", account);
         return Views.User.DETAIL;
     }
 
     @GetMapping(Routes.User.PROFILE)
-    public String toProfilePage(@PathVariable("id") Long id, Model model){
-        model.addAttribute(null, model);
+    public String toProfilePage() {
         return Views.User.PROFILE;
     }
 
