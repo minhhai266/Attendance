@@ -35,6 +35,9 @@ public final class Routes {
         public static final String LEAVE_CREATE = "/leave/create";
         public static final String CHECK_IN = "/check-in";
         public static final String CHECK_OUT = "/check-out";
+    }
     
+    public static final class FaceId {
+        public static final String ROOT = "/face-id";
     }
 }
