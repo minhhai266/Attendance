@@ -11,39 +11,40 @@
 
 <body>
     <div class="bg-image"></div>
-    <div th:replace="~{cms/fragments/sidebar :: sidebar}"></div>
+    <div class="layout">
+        <div th:replace="~{cms/sidebar/sidebar-manage :: sidebar}"></div>
 
-    <div class="container-layout">
-        <div class="absent-header">
-            <h1 class="header-title">Danh sách báo cáo</h1>
-            <div class="header-divider"></div>
-        </div>
+        <div class="container-layout">
+            <div class="absent-header">
+                <h1 class="header-title">Danh sách báo cáo</h1>
+                <div class="header-divider"></div>
+            </div>
 
-        <main class="main-section">
+            <main class="main-section">
 
-            <div class="document-card">
+                <div class="document-card">
 
-                <div class="main-document">
+                    <div class="main-document">
 
-                    <table class="document-table">
-                        <thead>
-                            <tr>
-                                <th>Nhân viên</th>
-                                <th>Tiêu đề</th>
-                                <th>Ngày nộp</th>
-                                <th>File đính kèm</th>
-                                <th>Link tài liệu</th>
-                                <th>Trạng thái</th>
-                                <th>Chi tiết</th>
-                                <th>Thao tác</th>
-                            </tr>
-                        </thead>
+                        <table class="document-table">
+                            <thead>
+                                <tr>
+                                    <th>Nhân viên</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Ngày nộp</th>
+                                    <th>File đính kèm</th>
+                                    <th>Link tài liệu</th>
+                                    <th>Trạng thái</th>
+                                    <th>Chi tiết</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
 
-                        <tbody>
+                            <tbody>
 
-                            <tr >
+                                <tr>
 
-                                <td ">
+                                    <td ">
                                     Nguyễn Văn A
                                 </td>
 
@@ -57,97 +58,97 @@
 
                                 <td>
                                     <a 
-                                        class="file-link">
+                                        class=" file-link">
                                         📎 Tải file
-                                    </a>
+                                        </a>
 
-                                    <span >
-                                        Không có
-                                    </span>
-                                </td>
+                                        <span>
+                                            Không có
+                                        </span>
+                                    </td>
 
-                                <td>
-                                    <a 
-                                        target="_blank" class="file-link">
-                                        🔗 Mở link
-                                    </a>
+                                    <td>
+                                        <a target="_blank" class="file-link">
+                                            🔗 Mở link
+                                        </a>
 
-                                    <span >
-                                        Không có
-                                    </span>
-                                </td>
+                                        <span>
+                                            Không có
+                                        </span>
+                                    </td>
 
-                                <td>
+                                    <td>
 
-                                    <span th:if="${report.status == 'PENDING'}" class="status-pending">
-                                        Chờ duyệt
-                                    </span>
+                                        <span th:if="${report.status == 'PENDING'}" class="status-pending">
+                                            Chờ duyệt
+                                        </span>
 
-                                    <span th:if="${report.status == 'APPROVED'}" class="status-approved">
-                                        Đã duyệt
-                                    </span>
+                                        <span th:if="${report.status == 'APPROVED'}" class="status-approved">
+                                            Đã duyệt
+                                        </span>
 
-                                    <span th:if="${report.status == 'REJECTED'}" class="status-rejected">
-                                        Từ chối
-                                    </span>
+                                        <span th:if="${report.status == 'REJECTED'}" class="status-rejected">
+                                            Từ chối
+                                        </span>
 
-                                </td>
+                                    </td>
 
-                                <td>
-                                    <a class="btn btn-detail">
-                                        Xem
-                                    </a>
-                                </td>
+                                    <td>
+                                        <a class="btn btn-detail">
+                                            Xem
+                                        </a>
+                                    </td>
 
-                                <td>
+                                    <td>
 
-                                    <div class="action-group" th:if="${report.status == 'PENDING'}">
+                                        <div class="action-group" th:if="${report.status == 'PENDING'}">
 
-                                        <form method="post">
+                                            <form method="post">
 
-                                            <button class="btn btn-success">
-                                                Duyệt
-                                            </button>
+                                                <button class="btn btn-success">
+                                                    Duyệt
+                                                </button>
 
-                                        </form>
+                                            </form>
 
-                                        <form method="post">
+                                            <form method="post">
 
-                                            <button class="btn btn-danger">
-                                                Từ chối
-                                            </button>
+                                                <button class="btn btn-danger">
+                                                    Từ chối
+                                                </button>
 
-                                        </form>
+                                            </form>
 
-                                    </div>
+                                        </div>
 
-                                </td>
+                                    </td>
 
-                            </tr>
+                                </tr>
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="pagination">
+                        <a class="btn btn-pagination">
+                            ← Trước
+                        </a>
+
+                        <span>
+                            <a></a>
+                            <span></span>
+                        </span>
+
+                        <a class="btn btn-pagination">
+                            Sau →
+                        </a>
+                    </div>
                 </div>
 
+            </main>
 
-                <div class="pagination">
-                    <a class="btn btn-pagination">
-                        ← Trước
-                    </a>
-
-                    <span>
-                        <a></a>
-                        <span></span>
-                    </span>
-
-                    <a class="btn btn-pagination">
-                        Sau →
-                    </a>
-                </div>
-            </div>
-
-        </main>
-
+        </div>
     </div>
     <div th:replace="~{cms/layouts/footer :: footer}"></div>
 </body>

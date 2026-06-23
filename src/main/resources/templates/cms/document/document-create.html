@@ -1,70 +1,140 @@
-<!DOCTYPE html>
-<html lang="vi">
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Báo cáo công việc</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Nộp báo cáo công việc</title>
+
+    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
+
     <div class="bg-image"></div>
-    <div th:replace="~{cms/fragments/sidebar-employee :: sidebar}"></div>
 
-    <div class="container-layout">
-        <header class="page-header">
-            <h1>Nộp báo cáo công việc</h1>
+    <div class="layout">
 
-            <div class="notification">
-                <i class="fa-regular fa-bell"></i>
-                <span class="dot"></span>
+        <!-- SIDEBAR -->
+        <div th:replace="~{cms/sidebar/sidebar-employee :: sidebar}"></div>
+
+        <!-- CONTENT -->
+        <div class="container-layout">
+
+            <!-- HEADER -->
+            <div class="attendance-header">
+                <h1>Nộp báo cáo công việc</h1>
+                <p>Gửi báo cáo và chia sẻ cho phòng ban</p>
             </div>
-        </header>
 
+            <main class="dashboard-manager">
 
-        <div class="report-card">
+                <!-- FORM CARD -->
+                <section class="dashboard-card">
 
-            <h2>Gửi báo cáo công việc</h2>
+                    <div class="card-header">
+                        <h2>Gửi báo cáo</h2>
+                    </div>
 
-            <form>
+                    <div class="card-body">
 
-                <!-- Nội dung -->
-                <div class="form-group">
-                    <label>Nội dung báo cáo</label>
-                    <textarea placeholder="Nhập nội dung báo cáo công việc của bạn..."></textarea>
-                </div>
+                        <form method="post" th:action="@{/report/create}" enctype="multipart/form-data">
 
-                <!-- Upload file -->
-                <div class="form-group">
-                    <label>Tệp đính kèm</label>
+                            <!-- Nội dung -->
+                            <div class="form-group">
+                                <label>Nội dung báo cáo</label>
+                                <textarea name="content" rows="5" placeholder="Nhập nội dung báo cáo..."
+                                    required></textarea>
+                            </div>
 
-                    <label class="upload-box">
-                        <input type="file" multiple>
-                        <span>📎 Chọn file hoặc kéo thả vào đây</span>
-                        <small>
-                            Hỗ trợ PDF, DOCX, XLSX, JPG, PNG, ZIP
-                        </small>
-                    </label>
-                </div>
+                            <!-- Phòng ban -->
+                            <div class="form-group">
+                                <label>Phòng ban</label>
 
-                <!-- Link tài liệu -->
-                <div class="form-group">
-                    <label>Hoặc đính kèm liên kết</label>
+                                <select name="departmentId" id="departmentSelect" required>
+                                    <option value="" disabled selected>Chọn phòng ban</option>
 
-                    <input type="url" placeholder="https://drive.google.com/..." class="link-input">
-                </div>
+                                    <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.name}">
+                                    </option>
+                                </select>
+                            </div>
 
-                <button type="submit" class="submit-btn">
-                    ✈ Gửi báo cáo
-                </button>
+                            <!-- Người được xem -->
+                            <div class="form-group">
+                                <label>Người được chia sẻ</label>
 
-            </form>
+                                <select name="sharedUserIds" id="userSelect" multiple class="multi-select">
+                                    <option value="">Chọn phòng ban trước</option>
+                                </select>
+                            </div>
+
+                            <!-- Upload file -->
+                            <div class="form-group">
+                                <label>Tệp đính kèm</label>
+
+                                <input type="file" name="files" multiple>
+                            </div>
+
+                            <!-- Link -->
+                            <div class="form-group">
+                                <label>Hoặc liên kết</label>
+
+                                <input type="url" name="link" placeholder="https://drive.google.com/...">
+                            </div>
+
+                            <!-- BUTTON -->
+                            <div class="form-actions">
+
+                                <button type="submit" class="btn-primary">
+                                    <i class="fa-regular fa-paper-plane"></i>
+                                    Gửi báo cáo
+                                </button>
+
+                                <button type="reset" class="btn-secondary">
+                                    Reset
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </section>
+
+            </main>
 
         </div>
-
     </div>
+
+    <!-- FOOTER -->
     <div th:replace="~{cms/layouts/footer :: footer}"></div>
+
+    <!-- JS load user theo phòng -->
+    <script>
+        document.getElementById("departmentSelect").addEventListener("change", function () {
+
+            const departmentId = this.value;
+
+            fetch(`/api/users/by-department/${departmentId}`)
+                .then(res => res.json())
+                .then(data => {
+
+                    const userSelect = document.getElementById("userSelect");
+                    userSelect.innerHTML = "";
+
+                    data.forEach(user => {
+                        const option = document.createElement("option");
+                        option.value = user.id;
+                        option.text = user.fullName;
+                        userSelect.appendChild(option);
+                    });
+
+                });
+
+        });
+    </script>
 
 </body>
 

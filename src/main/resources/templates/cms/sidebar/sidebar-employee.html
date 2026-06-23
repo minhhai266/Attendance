@@ -1,63 +1,85 @@
-<div class="sidebar">
+<div class="sidebar" th:fragment="sidebar">
 
     <div class="sidebar-header">
-        <i class="sidebar-icon"></i>
-        <h2> Smart Attendance</h2>
-        <div class="header-description">Nhân viên</div>
+        <div class="logo">
+            📷
+        </div>
+
+        <div>
+            <h2>Smart Attendance</h2>
+            <div class="header-description">Quản lý</div>
+        </div>
     </div>
+
     <div class="sidebar-line"></div>
 
     <ul class="sidebar-menu">
 
         <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
+            <a href="/dashboardEmployee" class="sidebar-link">
+                <span>📊</span>
                 Dashboard
             </a>
         </li>
 
         <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
-                Quản lý điểm danh
+            <a href="/absentHistory" class="sidebar-link">
+                <span>🕒</span>
+                Lịch sử điểm danh
             </a>
         </li>
 
         <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
-                Đăng kí nghỉ phép
+            <a href="/absentCreate" class="sidebar-link">
+                <span>📅</span>
+                Xin nghỉ phép
             </a>
         </li>
+
         <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
+            <a href="/faceIDCreate" class="sidebar-link">
+                <span>👤</span>
                 Đăng kí Face ID
             </a>
         </li>
+
         <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
+            <a href="/documentCreate" class="sidebar-link">
+                <span>📄</span>
                 Nộp báo cáo
             </a>
         </li>
+
         <li class="sidebar-option">
-            <i class="icon"></i>
-            <a class="sidebar-link">
+            <a href="/userInformation" class="sidebar-link">
+                <span>🪪</span>
                 Thông tin cá nhân
             </a>
         </li>
+        <li class="sidebar-option">
+            <a href="/changePassword" class="sidebar-link">
+                <span>🔒</span>
+                Đổi mật khẩu
+            </a>
+        </li>
     </ul>
+
     <div class="sidebar-line"></div>
+
     <div class="sidebar-footer">
+
         <div class="footer-user">
-            <i class="sidebar-icon"></i>
-            <h3> Smart Attendance</h3>
-            <div class="header-description">Nhân viên</div>
+            <div class="avatar">N</div>
+
+            <div>
+                <h3>Nguyễn Thị B</h3>
+                <div class="header-description">Quản lý</div>
+            </div>
         </div>
-        <div class="logout">
-            <i class="logout-icon"></i>
-            <div class="logout-text">Đăng xuất</div>
-        </div>
+
+        <a  href="/" class="logout">
+            🚪 Đăng xuất
+        </a>
+
     </div>
 </div>

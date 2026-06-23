@@ -1,193 +1,179 @@
 <!doctype html>
-
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8" />
-    <title>Danh sách thế giới</title>
-    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+    <title>Duyệt nghỉ phép</title>
 
+    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
+
     <div class="bg-image"></div>
-    <div th:replace="~{cms/fragments/sidebar :: sidebar}"></div>
 
-    <div class="container-layout">
-        <div class="absent-header">
-            <h1 class="header-title">Duyệt nghỉ phép</h1>
-            <div class="header-divider"></div>
-        </div>
+    <div class="layout">
 
-        <main class="main-section">
+        <!-- SIDEBAR -->
+        <div th:replace="~{cms/fragments/sidebar :: sidebar}"></div>
 
-            <div class="absent-card">
+        <!-- CONTENT -->
+        <div class="container-layout">
 
-                <div class="main-absent">
-                    <div class="absent-search">
+            <!-- HEADER -->
+            <div class="attendance-header">
+                <h1>Duyệt nghỉ phép</h1>
+                <p>Quản lý và phê duyệt đơn xin nghỉ của nhân viên</p>
+            </div>
 
-                        <div class="filter-group">
+            <main class="dashboard-manager">
 
-                            <!-- Tìm theo tên -->
-                            <div class="filter-item">
-                                <label>Tên nhân viên</label>
-                                <input type="text" name="keyword" placeholder="Nhập tên..." />
+                <!-- FILTER CARD -->
+                <section class="dashboard-card">
+
+                    <div class="card-header">
+                        <h2>Bộ lọc tìm kiếm</h2>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form class="filter-form">
+
+                            <div class="filter-grid">
+
+                                <!-- Tên -->
+                                <div class="form-group">
+                                    <label>Tên nhân viên</label>
+                                    <input type="text" name="keyword" placeholder="Nhập tên..." />
+                                </div>
+
+                                <!-- Trạng thái -->
+                                <div class="form-group">
+                                    <label>Trạng thái</label>
+                                    <select name="status">
+                                        <option value="">Tất cả</option>
+                                        <option value="PENDING">Chờ duyệt</option>
+                                        <option value="APPROVED">Đã duyệt</option>
+                                        <option value="REJECTED">Từ chối</option>
+                                    </select>
+                                </div>
+
+                                <!-- Tuần -->
+                                <div class="form-group">
+                                    <label>Tuần</label>
+                                    <input type="week" name="week">
+                                </div>
+
                             </div>
 
-                            <!-- Lọc theo trạng thái -->
-                            <div class="filter-item">
-                                <label>Trạng thái</label>
-                                <select name="status">
-                                    <option value="">Tất cả</option>
-                                    <option value="PENDING">Chờ duyệt</option>
-                                    <option value="APPROVED">Đã duyệt</option>
-                                    <option value="REJECTED">Từ chối</option>
-                                </select>
-                            </div>
-
-                            <div class="filter-item">
-                                <label>Tuần</label>
-                                <input type="week" name="week">
-                            </div>
-
-                            <div class="filter-item">
-                                <button type="submit" class="btn btn-primary">
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
                                     Tìm kiếm
                                 </button>
+
+                                <button type="reset" class="btn-secondary">
+                                    Reset
+                                </button>
                             </div>
+
+                        </form>
+
+                    </div>
+
+                </section>
+
+                <!-- TABLE CARD -->
+                <section class="dashboard-card">
+
+                    <div class="card-header">
+                        <h2>Danh sách đơn nghỉ phép</h2>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="table-wrapper">
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nhân viên</th>
+                                        <th>Phòng ban</th>
+                                        <th>Lý do</th>
+                                        <th>Từ ngày</th>
+                                        <th>Đến ngày</th>
+                                        <th>Chi tiết</th>
+                                        <th>Trạng thái</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                        <td>
+                                            <span class="status pending">Chờ duyệt</span>
+                                        </td>
+
+                                        <td>
+                                            <div class="action-group">
+
+                                                <form method="post">
+                                                    <button class="btn-primary btn-small">
+                                                        Phê duyệt
+                                                    </button>
+                                                </form>
+
+                                                <form method="post">
+                                                    <button class="btn-secondary btn-small">
+                                                        Từ chối
+                                                    </button>
+                                                </form>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
 
                         </div>
 
                     </div>
-                    <table class="absent-table">
-                        <thead>
-                            <tr>
-                                <th>Tên</th>
-                                <th>Phòng</th>
-                                <th>Lý do</th>
-                                <th>Từ ngày</th>
-                                <th>Đến ngày</th>
-                                <th>Chi tiết</th>
-                                <th>Trạng thái</th>
-                                <th></th>
-                            </tr>
-                        </thead>
 
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <span class="status-active">
-                                        Đang hiển thị
-                                    </span>
+                </section>
 
-                                    <span class="status-deleted">
-                                        Đang ẩn
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="action-group">
-
-                                        <form method="get">
-                                            <button class="btn btn-primary btn-small">
-                                                Phê duyệt
-                                            </button>
-                                        </form>
-
-                                        <form method="post">
-                                            <button class="btn btn-secondary btn-small">
-                                                Từ chối
-                                            </button>
-                                        </form>
-
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-
+                <!-- PAGINATION -->
                 <div class="pagination">
-                    <a class="btn btn-pagination">
-                        ← Trước
-                    </a>
 
-                    <span>
+                    <a class="btn btn-pagination">← Trước</a>
+
+                    <span class="page-info">
                         <a></a>
                         <span></span>
                     </span>
 
-                    <a class="btn btn-pagination">
-                        Sau →
-                    </a>
-                </div>
-            </div>
+                    <a class="btn btn-pagination">Sau →</a>
 
-        </main>
-
-    </div>
-    <div th:replace="~{cms/layouts/footer :: footer}"></div>
-    ```html
-    <div id="accountModal" class="detail-modal">
-
-        <div class="detail-content">
-
-            <div class="detail-header">
-
-                <h2>Thông tin cá nhân</h2>
-
-                <button class="close-btn" onclick="closeAccountDetail()">
-
-                    ✕
-
-                </button>
-
-            </div>
-
-            <div class="detail-body">
-
-                <div class="detail-item">
-                    <label>Họ và tên</label>
-                    <p id="detailFullName"></p>
                 </div>
 
-                <div class="detail-item">
-                    <label>Email</label>
-                    <p id="detailEmail"></p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Số điện thoại</label>
-                    <p id="detailPhone"></p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Phòng ban</label>
-                    <p id="detailDepartment"></p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Vai trò</label>
-                    <p id="detailRole"></p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Trạng thái</label>
-                    <span id="detailStatus"></span>
-                </div>
-
-            </div>
+            </main>
 
         </div>
-
     </div>
+
+    <!-- FOOTER -->
+    <div th:replace="~{cms/layouts/footer :: footer}"></div>
+
 </body>
 
 </html>
