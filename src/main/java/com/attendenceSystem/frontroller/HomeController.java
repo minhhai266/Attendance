@@ -63,22 +63,23 @@ public class HomeController {
     public String verifyOTP() {
         return "cms/auth/verify-otp";
     }
-    // @GetMapping("/attendance")
-    // public String attendance() {
-    //     return "cms/attendance/attendance";
+    @GetMapping("/attendances")
+    public String attendance() {
+        return "cms/attendance/attendance";
+    }
+
+    // @GetMapping("/attendanceLists")
+    // public String attendanceList() {
+    //     return "cms/attendance/attendance-list";
     // }
-    @GetMapping("/attendanceList")
-    public String attendanceList() {
-        return "cms/attendance/attendance-list";
-    }
-    @GetMapping("/accountList")
-    public String accountList() {
-        return "cms/account/account-list";
-    }
-    @GetMapping("/absentCreate")
-    public String absentCreate() {
-        return "cms/absent/absent-create";
-    }
+    // @GetMapping("/adccountList")
+    // public String accountList() {
+    //     return "cms/account/account-list";
+    // }
+    // @GetMapping("/absentCreate")
+    // public String absentCreate() {
+    //     return "cms/absent/absent-create";
+    // }
     @GetMapping("/absentHistory")
     public String absentHistory() {
         return "cms/absent/absent-history";

@@ -5,7 +5,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Đăng Nhập - Face ID Attendance</title>
-    <link rel="stylesheet" href="../../../static/css/auth.css">
 
     <link rel="stylesheet" th:href="@{/css/auth.css}" />
   </head>
@@ -40,7 +39,7 @@
 
           <form
             th:action="@{/auth/login}"
-            th:object="${loginRequest}"
+            
             method="post"
           >
             <!-- Username / Email -->

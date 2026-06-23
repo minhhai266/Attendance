@@ -11,132 +11,134 @@
 
 <body>
 
-<div class="bg-image"></div>
+    <div class="bg-image"></div>
 
-<div class="layout">
+    <div class="layout">
 
-    <div th:replace="~{cms/sidebar/sidebar-manager :: sidebar}"></div>
+        <div th:replace="~{cms/sidebar/sidebar-manager :: sidebar}"></div>
 
-    <div class="container-layout">
+        <div class="container-layout">
 
-        <header class="page-header">
-            <h1>Báo cáo tháng</h1>
+            <header class="page-header">
+                <h1>Báo cáo tháng</h1>
 
-            <div class="notification">
-                <i class="fa-regular fa-bell"></i>
-                <span class="dot"></span>
-            </div>
-        </header>
+                <div class="notification">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="dot"></span>
+                </div>
+            </header>
 
-        <div class="report-card">
+            <div class="report-card">
 
-            <!-- Filter -->
-            <div class="filter-bar">
+                <!-- Filter -->
+                <div class="filter-bar">
 
-                <div class="filter-group">
-                    <label>Phòng ban</label>
-                    <select>
-                        <option>IT</option>
-                        <option>Marketing</option>
-                        <option>Nhân sự</option>
-                        <option>Kế toán</option>
-                    </select>
+                    <div class="filter-group">
+                        <label>Phòng ban</label>
+                        <select>
+                            <option>IT</option>
+                            <option>Marketing</option>
+                            <option>Nhân sự</option>
+                            <option>Kế toán</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Tháng</label>
+                        <input type="month">
+                    </div>
+
+                    <button class="export-btn">
+                        Xuất Excel
+                    </button>
+
                 </div>
 
-                <div class="filter-group">
-                    <label>Tháng</label>
-                    <input type="month">
+                <!-- Overview -->
+                <div class="overview-grid">
+
+                    <div class="stat-card">
+                        <h3>Đi muộn</h3>
+                        <span>23</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>Đúng giờ</h3>
+                        <span>154</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>Về sớm</h3>
+                        <span>12</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>Nghỉ phép</h3>
+                        <span>8</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>Báo cáo đã nộp</h3>
+                        <span>46</span>
+                    </div>
+
                 </div>
 
-                <button class="export-btn">
-                    Xuất Excel
-                </button>
+                <!-- Chart -->
+                <div class="chart-card">
 
-            </div>
+                    <h2>Thống kê phòng ban</h2>
 
-            <!-- Overview -->
-            <div class="overview-grid">
+                    <div id="monthlyChart"></div>
 
-                <div class="stat-card">
-                    <h3>Đi muộn</h3>
-                    <span>23</span>
                 </div>
 
-                <div class="stat-card">
-                    <h3>Đúng giờ</h3>
-                    <span>154</span>
+                <!-- Table -->
+                <div class="table-card">
+
+                    <h2>Chi tiết thành viên</h2>
+
+                    <table class="report-table">
+
+                        <thead>
+                            <tr>
+                                <th>Tên</th>
+                                <th>Phòng</th>
+                                <th>Đi muộn</th>
+                                <th>Đúng giờ</th>
+                                <th>Về sớm</th>
+                                <th>Nghỉ phép</th>
+                                <th>Báo cáo nộp</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>Nguyễn Văn A</td>
+                                <td>IT</td>
+                                <td>3</td>
+                                <td>22</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>5</td>
+                            </tr>
+
+                            <tr>
+                                <td>Trần Thị B</td>
+                                <td>IT</td>
+                                <td>1</td>
+                                <td>24</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>4</td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
                 </div>
-
-                <div class="stat-card">
-                    <h3>Về sớm</h3>
-                    <span>12</span>
-                </div>
-
-                <div class="stat-card">
-                    <h3>Nghỉ phép</h3>
-                    <span>8</span>
-                </div>
-
-                <div class="stat-card">
-                    <h3>Báo cáo đã nộp</h3>
-                    <span>46</span>
-                </div>
-
-            </div>
-
-            <!-- Chart -->
-            <div class="chart-card">
-
-                <h2>Thống kê phòng ban</h2>
-
-                <div id="monthlyChart"></div>
-
-            </div>
-
-            <!-- Table -->
-            <div class="table-card">
-
-                <h2>Chi tiết thành viên</h2>
-
-                <table class="report-table">
-
-                    <thead>
-                        <tr>
-                            <th>Tên</th>
-                            <th>Phòng</th>
-                            <th>Đi muộn</th>
-                            <th>Đúng giờ</th>
-                            <th>Về sớm</th>
-                            <th>Nghỉ phép</th>
-                            <th>Báo cáo nộp</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                            <td>Nguyễn Văn A</td>
-                            <td>IT</td>
-                            <td>3</td>
-                            <td>22</td>
-                            <td>1</td>
-                            <td>0</td>
-                            <td>5</td>
-                        </tr>
-
-                        <tr>
-                            <td>Trần Thị B</td>
-                            <td>IT</td>
-                            <td>1</td>
-                            <td>24</td>
-                            <td>0</td>
-                            <td>1</td>
-                            <td>4</td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
 
             </div>
 
@@ -144,45 +146,43 @@
 
     </div>
 
-</div>
+    <div th:replace="~{cms/layout/footer :: footer}"></div>
 
-<div th:replace="~{cms/layouts/footer :: footer}"></div>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
 
-<script>
+        var options = {
+            chart: {
+                type: 'bar',
+                height: 350
+            },
 
-var options = {
-    chart: {
-        type: 'bar',
-        height: 350
-    },
+            series: [{
+                name: 'Số lần',
+                data: [23, 154, 12, 8, 46]
+            }],
 
-    series: [{
-        name: 'Số lần',
-        data: [23,154,12,8,46]
-    }],
+            xaxis: {
+                categories: [
+                    'Đi muộn',
+                    'Đúng giờ',
+                    'Về sớm',
+                    'Nghỉ phép',
+                    'Báo cáo'
+                ]
+            }
+        };
 
-    xaxis: {
-        categories: [
-            'Đi muộn',
-            'Đúng giờ',
-            'Về sớm',
-            'Nghỉ phép',
-            'Báo cáo'
-        ]
-    }
-};
+        var chart = new ApexCharts(
+            document.querySelector("#monthlyChart"),
+            options
+        );
 
-var chart = new ApexCharts(
-    document.querySelector("#monthlyChart"),
-    options
-);
+        chart.render();
 
-chart.render();
-
-</script>
+    </script>
 
 </body>
+
 </html>
-```
