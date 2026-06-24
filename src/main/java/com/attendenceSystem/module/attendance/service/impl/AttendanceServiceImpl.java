@@ -112,6 +112,11 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .map(leaveRequestResponseMapper::fromEntity);
     }
 
+    @Override
+    public Page<LeaveRequestResponse> getAllLeaveRequests(Pageable pageable) {
+        return leaveRequestRepository.findAll(pageable).map(leaveRequestResponseMapper::fromEntity);
+    }
+
     private User getCurrentUser() {
         String currentUser = SecurityUtil.getCurrentUserName();
         if (currentUser == null || currentUser.isEmpty() || currentUser.isBlank()) {
@@ -121,4 +126,5 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .findByUsername(currentUser)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng"));
     }
+
 }

@@ -38,43 +38,18 @@
 
                     <div class="card-body">
 
-                        <form class="absent-form" method="post" th:action="@{/absent/create}">
-                            <!-- Phòng ban -->
-                            <div class="form-group">
-                                <label>Phòng ban</label>
-
-                                <select name="departmentId" required>
-                                    <option value="" disabled selected>Chọn phòng ban</option>
-
-                                    <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.name}">
-                                    </option>
-
-                                </select>
-                            </div>
-                            <!-- Loại nghỉ -->
-                            <div class="form-group">
-                                <label>Loại nghỉ phép</label>
-
-                                <select name="type" required>
-                                    <option value="" disabled selected>Chọn loại nghỉ phép</option>
-                                    <option value="PAID">Nghỉ có lương</option>
-                                    <option value="UNPAID">Nghỉ không lương</option>
-                                    <option value="SICK">Nghỉ bệnh</option>
-                                    <option value="ANNUAL">Nghỉ phép năm</option>
-                                </select>
-                            </div>
-
+                        <form class="absent-form" method="post" th:action="@{/attendance/leave/create}" th:object="${createLeaveRequest}">
                             <!-- Date -->
                             <div class="form-grid">
 
                                 <div class="form-group">
                                     <label>Từ ngày</label>
-                                    <input type="date" name="startDate" required>
+                                    <input type="date" th:field="*{startDate}" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Đến ngày</label>
-                                    <input type="date" name="endDate" required>
+                                    <input type="date" th:field="*{endDate}" required>
                                 </div>
 
                             </div>
@@ -82,7 +57,7 @@
                             <!-- Lý do -->
                             <div class="form-group">
                                 <label>Lý do</label>
-                                <textarea name="reason" rows="5" placeholder="Nhập lý do xin nghỉ..."
+                                <textarea th:field="*{reason}" rows="5" placeholder="Nhập lý do xin nghỉ..."
                                     required></textarea>
                             </div>
 

@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
+import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
 import com.attendenceSystem.module.dashboard.dto.response.AdminDashboardResponse;
-import com.attendenceSystem.module.dashboard.dto.response.EmployeeDashboardResponse;
+import com.attendenceSystem.module.dashboard.dto.response.StudentDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.ManagerDashboardResponse;
+import com.attendenceSystem.module.dashboard.mapper.response.DashboardResponseMapper;
 import com.attendenceSystem.module.dashboard.service.DashboardService;
+import com.attendenceSystem.module.dashboard.util.DashboardCalculator;
 import com.attendenceSystem.module.report.entity.enums.ReportStatus;
 import com.attendenceSystem.module.report.repository.ReportRepository;
 import com.attendenceSystem.module.user.entity.User;
@@ -29,6 +32,7 @@ public class DashboardServiceImpl implements DashboardService {
     private final AttendanceRecordRepository attendanceRecordRepository;
     private final ReportRepository reportRepository;
     private final AttendanceResponseMapper attendanceResponseMapper;
+    private final DashboardResponseMapper dashboardResponseMapper;
 
     @Override
     public AdminDashboardResponse getAdminDashboard() {
@@ -36,7 +40,8 @@ public class DashboardServiceImpl implements DashboardService {
         long activeAccounts = userRepository.countByIsActiveTrue();
         long inactiveAccounts = userRepository.countByIsActiveFalse();
         long pendingAccounts = userRepository.countByMustChangePasswordTrue();
-        return new AdminDashboardResponse(totalAccounts, activeAccounts, inactiveAccounts, pendingAccounts);
+        return dashboardResponseMapper.toAdminDashboardResponse(totalAccounts, activeAccounts, inactiveAccounts,
+                pendingAccounts);
     }
 
     @Override
@@ -48,19 +53,24 @@ public class DashboardServiceImpl implements DashboardService {
         Page<AttendanceResponse> attendanceHistory = attendanceRecordRepository
                 .findAllByOrderByAttendanceDateDesc(PageRequest.of(0, 10))
                 .map(attendanceResponseMapper::fromEntity);
-        return new ManagerDashboardResponse(totalEmployees, attendedEmployees, absentEmployees, attendanceHistory);
+        return dashboardResponseMapper.toManagerDashboardResponse(totalEmployees, attendedEmployees, absentEmployees,
+                attendanceHistory);
     }
 
     @Override
-    public EmployeeDashboardResponse getEmployeeDashboard() {
+    public StudentDashboardResponse getStudentDashboard() {
         User user = getCurrentUser();
         long totalReports = reportRepository.countByEmployee(user);
         long acceptedReports = reportRepository.countByEmployeeAndStatus(user, ReportStatus.ACCEPTED);
         long rejectedReports = reportRepository.countByEmployeeAndStatus(user, ReportStatus.REJECTED);
+        long totalDays = attendanceRecordRepository.count();
+        long attendedDays = attendanceRecordRepository.countByCheckInTimeNotNullAndCheckOutTimeNotNull();
+        String attendenceRate = DashboardCalculator.showResultStr(attendedDays, totalDays);
         Page<AttendanceResponse> attendanceHistory = attendanceRecordRepository
                 .findByUser(user, PageRequest.of(0, 10))
                 .map(attendanceResponseMapper::fromEntity);
-        return new EmployeeDashboardResponse(totalReports, acceptedReports, rejectedReports, attendanceHistory);
+        return dashboardResponseMapper.toStudentDashboardResponse(totalReports, acceptedReports, rejectedReports,
+                attendenceRate, attendanceHistory);
     }
 
     private User getCurrentUser() {

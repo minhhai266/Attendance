@@ -109,17 +109,22 @@
                                 </thead>
 
                                 <tbody>
-
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-
+                                    <!-- Không có dữ liệu -->
+                                    <tr th:if="${leaveRequests == null or leaveRequests.content.isEmpty()}">
+                                        <td colspan="7" class="text-center">
+                                            Chưa có đơn nghỉ phép nào.
+                                        </td>
+                                    </tr>
+                                    <tr th:each="leave : ${leaveRequests.content}">
+                                        <td th:text="${leave.fullName()}">Nhân viên</td>
+                                        <td>Phòng ban</td>
+                                        <td>CỘT NÀY SAI NGHIỆP VỤ. NÓ NÊN NẰM Ở DETAILS</td>
+                                        <td th:text="${leave.startDate()}">Từ ngày</td>
+                                        <td th:text="${leave.endDate()}">Đến ngày</td>
+                                        <td>Cột này nên nhét vào hành động. Phê duyệt và từ chối nên nhét vào details</td>
+                                        
                                         <td>
-                                            <span class="status pending">Chờ duyệt</span>
+                                            <span class="status pending">Trạng thái</span>
                                         </td>
 
                                         <td>

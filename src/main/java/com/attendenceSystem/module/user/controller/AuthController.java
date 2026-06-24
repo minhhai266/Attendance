@@ -1,7 +1,9 @@
 package com.attendenceSystem.module.user.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,12 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.constant.Views;
+import com.attendenceSystem.module.log.entity.enums.LogAction;
+import com.attendenceSystem.module.log.entity.enums.LogEntityType;
 import com.attendenceSystem.module.user.dto.request.LoginRequest;
 import com.attendenceSystem.module.user.dto.request.RegisterRequest;
 import com.attendenceSystem.module.user.dto.response.UserResponse;
 import com.attendenceSystem.module.user.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,7 +78,7 @@ public class AuthController {
             return switch (user.role()) {
                 case "ADMIN" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.ADMIN;
                 case "MANAGER" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.MANAGER;
-                case "STAFF" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.EMPLOYEE;
+                case "STUDENT" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.STUDENT;
                 default -> Routes.REDIRECT + Routes.Dashboard.ROOT;
             };
         } catch (AuthenticationException e) {
@@ -84,17 +89,17 @@ public class AuthController {
 
     @PostMapping(Routes.Auth.REGISTER)
     public String register(
-        @Valid @ModelAttribute RegisterRequest request,
-        BindingResult result,
-        Model model,
-        RedirectAttributes redirectAttributes) {
-        if(result.hasErrors()){
+            @Valid @ModelAttribute RegisterRequest request,
+            BindingResult result,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
             return Views.Auth.REGISTER;
         }
         try {
             authService.register(request);
             redirectAttributes.addFlashAttribute("successMessage", "Đăng kí thành công");
-            return Routes.REDIRECT + Routes.Auth.ROOT+ Routes.Auth.LOGIN;
+            return Routes.REDIRECT + Routes.Auth.ROOT + Routes.Auth.LOGIN;
         } catch (IllegalArgumentException e) {
             request.setPassword("");
             request.setRePassword("");
@@ -102,5 +107,17 @@ public class AuthController {
             return Views.Auth.REGISTER;
         }
     }
-    
+
+    @PostMapping(Routes.Auth.LOGOUT)
+    public String logout(
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            new SecurityContextLogoutHandler()
+                    .logout(request, response, authentication);
+        }
+
+        return Routes.REDIRECT+"/";
+    }
 }

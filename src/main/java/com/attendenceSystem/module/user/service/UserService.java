@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import com.attendenceSystem.module.user.dto.response.UserResponse;
 
 public interface UserService {
-    Page<UserResponse> getAccounts(Pageable pageable);
+    Page<UserResponse> getUsers(Pageable pageable);
     UserResponse getById(Long id);
     void deleteUser(Long id);
 }

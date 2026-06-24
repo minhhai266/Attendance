@@ -13,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 
 // import com.attendenceSystem.constant.Routes;
 // import com.attendenceSystem.entity.enums.Role;
@@ -46,7 +48,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**", "/login/**", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/dashboard/**").authenticated()
                         .anyRequest().permitAll())
+
                 .csrf(csrf -> csrf.disable());
         return http.build();
     }
@@ -54,6 +59,11 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public SecurityContextRepository securityContextRepository() {
+        return new HttpSessionSecurityContextRepository();
     }
     // Chỉ dùng để test admin
     // @Bean

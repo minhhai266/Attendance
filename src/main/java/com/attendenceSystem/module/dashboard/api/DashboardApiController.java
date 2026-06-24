@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.module.dashboard.dto.response.AdminDashboardResponse;
-import com.attendenceSystem.module.dashboard.dto.response.EmployeeDashboardResponse;
+import com.attendenceSystem.module.dashboard.dto.response.StudentDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.ManagerDashboardResponse;
 import com.attendenceSystem.module.dashboard.service.DashboardService;
 
@@ -34,9 +34,9 @@ public class DashboardApiController {
         return ResponseEntity.ok(resp);
     }
 
-    @GetMapping(Routes.Dashboard.EMPLOYEE)
-    public ResponseEntity<EmployeeDashboardResponse> employee(Pageable pageable) {
-        EmployeeDashboardResponse resp = dashboardService.getEmployeeDashboard();
+    @GetMapping(Routes.Dashboard.STUDENT)
+    public ResponseEntity<StudentDashboardResponse> employee(Pageable pageable) {
+        StudentDashboardResponse resp = dashboardService.getStudentDashboard();
         return ResponseEntity.ok(resp);
     }
 }

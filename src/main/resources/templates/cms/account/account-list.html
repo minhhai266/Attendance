@@ -45,16 +45,19 @@
                         </thead>
 
                         <tbody>
-                            <tr>
+                            <tr th:if="${users == null or users.content.isEmpty()}">
+                                <td colspan="5">Chưa có tài khoản nào.</td>
+                            </tr>
+                            <tr th:each="users : ${users.content}">
                                 <td>
                                     <div class="user">
                                         <div class="avatar">A</div>
-                                        <strong>Nguyễn Văn A</strong>
+                                        <strong th:text="${users.fullName()}">Nguyễn Văn A</strong>
                                     </div>
                                 </td>
-                                <td>nguyenvana@company.com</td>
-                                <td><span class="role">Nhân viên</span></td>
-                                <td><span class="status active">Hoạt động</span></td>
+                                <td th:text="${users.email()}">nguyenvana@company.com</td>
+                                <td ><span th:text="${users.role()}" class="role">Nhân viên</span></td>
+                                <td><span th:text="${users.isActive()} == true?'Hoạt động':'Ngừng hoạt động'" class="status active">Hoạt động</span></td>
                                 <td>
                                     <div class="actions">
                                         <button class="icon-btn btn-role">Đổi quyền</button>

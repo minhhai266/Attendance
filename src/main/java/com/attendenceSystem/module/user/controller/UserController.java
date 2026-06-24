@@ -22,14 +22,14 @@ public class UserController {
 
     @GetMapping
     public String toListPage(@PageableDefault(size = 10) Pageable pageable, Model model) {
-        model.addAttribute("accounts", userService.getAccounts(pageable));
+        model.addAttribute("users", userService.getUsers(pageable));
         return Views.User.LIST;
     }
 
     @GetMapping("/{id}")
     public String toDetailPage(@PathVariable("id") Long id, Model model) {
-        UserResponse account = userService.getById(id);
-        model.addAttribute("account", account);
+        UserResponse user = userService.getById(id);
+        model.addAttribute("user", user);
         return Views.User.DETAIL;
     }
 

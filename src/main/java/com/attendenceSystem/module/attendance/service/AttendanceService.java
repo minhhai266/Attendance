@@ -18,4 +18,6 @@ public interface AttendanceService {
     LeaveRequestResponse createLeaveRequest(CreateLeaveRequest request);
 
     Page<LeaveRequestResponse> getLeaveRequests(Pageable pageable);
+
+    Page<LeaveRequestResponse> getAllLeaveRequests(Pageable pageable);
 }

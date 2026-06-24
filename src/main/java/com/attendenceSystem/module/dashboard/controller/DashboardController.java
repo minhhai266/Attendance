@@ -1,5 +1,7 @@
 package com.attendenceSystem.module.dashboard.controller;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +31,17 @@ public class DashboardController {
         return Views.Dashboard.MANAGER;
     }
 
-    @GetMapping(Routes.Dashboard.EMPLOYEE)
+    @GetMapping(Routes.Dashboard.STUDENT)
     public String toEmployeeDashboardPage(Model model) {
-        model.addAttribute("dashboard", dashboardService.getEmployeeDashboard());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("=== DASHBOARD AUTH ===");
+        System.out.println(auth);
+        if (auth != null) {
+            System.out.println("name = " + auth.getName());
+            System.out.println("authorities = " + auth.getAuthorities());
+            System.out.println("authenticated = " + auth.isAuthenticated());
+        }
+        model.addAttribute("dashboard", dashboardService.getStudentDashboard());
         return Views.Dashboard.EMPLOYEE;
     }
 }

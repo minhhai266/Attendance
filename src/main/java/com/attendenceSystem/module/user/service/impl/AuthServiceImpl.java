@@ -29,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    
 
     @Transactional
     @Override
@@ -44,6 +45,7 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(savedUser);
     }
 
+    @Transactional
     @Override
     public UserResponse login(LoginRequest request) {
 

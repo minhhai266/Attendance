@@ -16,28 +16,28 @@
     <ul class="sidebar-menu">
 
         <li class="sidebar-option">
-            <a href="/dashboardEmployee" class="sidebar-link">
+            <a href="/dashboard/student" class="sidebar-link">
                 <span>📊</span>
                 Dashboard
             </a>
         </li>
 
         <li class="sidebar-option">
-            <a href="/attendanceHistory" class="sidebar-link">
+            <a href="/attendance/history" class="sidebar-link">
                 <span>🕒</span>
                 Lịch sử điểm danh
             </a>
         </li>
 
         <li class="sidebar-option">
-            <a href="/absentCreate" class="sidebar-link">
+            <a href="/attendance/leave/create" class="sidebar-link">
                 <span>📅</span>
                 Xin nghỉ phép
             </a>
         </li>
 
         <li class="sidebar-option">
-            <a href="/faceIDCreate" class="sidebar-link">
+            <a href="/face-id/create" class="sidebar-link">
                 <span>👤</span>
                 Đăng kí Face ID
             </a>
@@ -72,14 +72,18 @@
             <div class="avatar"></div>
 
             <div>
-                <h3>Nguyễn Thị B</h3>
-                <div class="header-description">Quản lý</div>
+                <h3 th:text="${#authentication.principal.fullName}"></h3>
+                <div class="header-description" th:text="${#authentication.principal.role}">
+                    Vai trò
+                </div>
             </div>
         </div>
 
-        <a  href="/" class="logout">
-            🚪 Đăng xuất
-        </a>
+        <form th:action="@{/auth/logout}" method="post" class="logout-form">
+            <button type="submit" class="logout">
+                🚪 Đăng xuất
+            </button>
+        </form>
 
     </div>
 </div>

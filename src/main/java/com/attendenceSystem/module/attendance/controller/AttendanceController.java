@@ -27,9 +27,9 @@ public class AttendanceController {
     private final AttendanceService attendanceService;
 
     @GetMapping
-    public String toAttendancePage(@PageableDefault(size = 10) Pageable pageable, Model model) {
+    public String toAttendanceListPage(@PageableDefault(size = 10) Pageable pageable, Model model) {
         model.addAttribute("attendanceHistory", attendanceService.getAttendanceHistory(pageable));
-        return Views.Attendance.ROOT;
+        return Views.Attendance.LIST;
     }
 
     @PostMapping(Routes.Attendance.CHECK_IN)
@@ -61,33 +61,33 @@ public class AttendanceController {
     @GetMapping(Routes.Attendance.HISTORY)
     public String attendanceHistory(@PageableDefault(size = 10) Pageable pageable, Model model) {
         model.addAttribute("attendanceHistory", attendanceService.getAttendanceHistory(pageable));
-        return Views.Attendance.LIST;
+        return Views.Attendance.HISTORY;
     }
 
     @GetMapping(Routes.Attendance.LEAVE)
     public String leaveRequestList(@PageableDefault(size = 10) Pageable pageable, Model model) {
-        model.addAttribute("leaveRequests", attendanceService.getLeaveRequests(pageable));
+        model.addAttribute("leaveRequests", attendanceService.getAllLeaveRequests(pageable));
         return Views.Attendance.LEAVE_LIST;
     }
 
     @GetMapping(Routes.Attendance.LEAVE_CREATE)
     public String toLeaveRequestPage(Model model) {
-        model.addAttribute("leaveRequest", new CreateLeaveRequest());
+        model.addAttribute("createLeaveRequest", new CreateLeaveRequest());
         return Views.Attendance.LEAVE_CREATE;
     }
 
     @PostMapping(Routes.Attendance.LEAVE_CREATE)
     public String createLeaveRequest(
-            @Valid @ModelAttribute CreateLeaveRequest leaveRequest,
+            @Valid @ModelAttribute CreateLeaveRequest createLeaveRequest,
             BindingResult result,
             RedirectAttributes redirectAttributes,
             Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("leaveRequest", leaveRequest);
+            model.addAttribute("createLeaveRequest", createLeaveRequest);
             return Views.Attendance.LEAVE_CREATE;
         }
         try {
-            attendanceService.createLeaveRequest(leaveRequest);
+            attendanceService.createLeaveRequest(createLeaveRequest);
             redirectAttributes.addFlashAttribute("successMessage", "Yêu cầu nghỉ phép đã được gửi.");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
