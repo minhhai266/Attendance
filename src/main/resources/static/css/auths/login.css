@@ -45,7 +45,6 @@ body {
     color: white;
 }
 
-
 /* =========================
    HERO CONTENT
 ========================= */
@@ -53,7 +52,7 @@ body {
 .hero-content {
     position: relative;
     z-index: 2;
-    max-width:800px ;
+    max-width: 800px;
 }
 
 .hero-title {
@@ -105,6 +104,10 @@ body {
         font-size: 1.1rem;
     }
 }
+/* =========================
+   RESPONSIVE
+========================= */
+
 
 /* =========================
    BACKGROUND EFFECT

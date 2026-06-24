@@ -6,61 +6,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Xác nhận OTP</title>
 
-    <link rel="stylesheet" th:href="@{/css/auth.css}">
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Cormorant+Garamond+Decorative:wght@700&family=Crimson+Text:wght@400;600&display=swap"
-        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/auths/register.css}">
 </head>
 
 <body>
 
-    <div class="bg-image"></div>
+    <div class="bg-img"></div>
     <div th:replace="~{cms/layout/header :: header}"></div>
 
-    <div class="layouts">
+    <div class="layout">
+
+        <!-- HERO LEFT (có thể bỏ nếu không cần, nhưng CSS có left sticky) -->
+        <div class="left">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="hero-title-gradient">Xác nhận</span>
+                    <span class="hero-title-white"> OTP</span>
+                </h1>
+                <p class="hero-description">
+                    Nhập mã OTP được gửi đến email của bạn để xác thực tài khoản.
+                </p>
+            </div>
+        </div>
+
+        <!-- CARD -->
         <div class="card">
 
             <div class="card-header">
-
                 <h1 class="card-title">Xác nhận OTP</h1>
-                <p class="card-description"></p>
+                <p class="card-description">Vui lòng nhập mã OTP để tiếp tục</p>
             </div>
 
             <div class="divider"></div>
 
             <div class="card-body">
 
-                <p class="error-message"></p>
+                <!-- error -->
+                <div class="error-message"></div>
 
-                <!-- form -->
                 <form method="post">
 
                     <!-- hidden email -->
-                    <input type="hidden" />
+                    <input type="hidden" name="email" />
 
-                    <div class="register-group">
+                    <!-- OTP -->
+                    <div class="auth-group">
                         <label>OTP</label>
-                        <input type="text" placeholder="Nhập mã OTP" />
-
-                        <div class="error-message">
-                        </div>
+                        <input type="text" name="otp" placeholder="Nhập mã OTP" />
+                        <div class="error-message"></div>
                     </div>
 
-                    <button class="register-btn" type="submit">
+                    <!-- button -->
+                    <button class="auth-btn" type="submit">
                         Xác nhận OTP
                     </button>
 
                 </form>
 
-                <hr style="margin: 1rem 0; opacity: 0.2;" />
+                <hr />
 
-                <a class="register-link">
-                    Quay lại đăng nhập
-                </a>
+                <div class="other-option">
+                    <a class="register-link" href="/login">
+                        Quay lại đăng nhập
+                    </a>
+                </div>
+
             </div>
         </div>
+
     </div>
+
     <div th:replace="~{cms/layout/footer :: footer}"></div>
 
 </body>

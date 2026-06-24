@@ -1,0 +1,312 @@
+@import url("../base.css");
+
+/* ===================================
+   PROFILE CARD
+=================================== */
+
+.profile-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    padding: 20px;
+
+    margin-bottom: 20px;
+
+    border-radius: 24px;
+
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+
+    backdrop-filter: blur(20px);
+}
+
+.avatar img {
+    width: 64px;
+    height: 64px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 2px solid rgba(255, 255, 255, .1);
+}
+
+.profile-info h3 {
+    color: white;
+
+    font-size: 1.1rem;
+    font-weight: 700;
+
+    margin-bottom: 4px;
+}
+
+.profile-info span {
+    color: var(--text-gray);
+    font-size: .9rem;
+}
+
+/* ===================================
+   STATS (reuse system style)
+=================================== */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+}
+
+.stats-card {
+    padding: 20px;
+
+    border-radius: 24px;
+
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+
+    backdrop-filter: blur(20px);
+
+    transition: .25s;
+}
+
+.stats-card:hover {
+    transform: translateY(-3px);
+}
+
+.stats-value {
+    display: block;
+
+    font-size: 2rem;
+    font-weight: 800;
+
+    margin-bottom: 6px;
+
+    color: white;
+}
+
+.stats-label {
+    color: var(--text-gray);
+}
+
+/* màu trạng thái */
+.present .stats-value {
+    color: var(--success);
+}
+
+.late .stats-value {
+    color: var(--warning);
+}
+
+.warning .stats-value {
+    color: var(--purple);
+}
+
+.total .stats-value {
+    color: var(--indigo);
+}
+
+/* ===================================
+   FILTER CARD
+=================================== */
+
+.filter-card {
+    margin-bottom: 20px;
+}
+
+.filter-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.filter-panel input,
+.filter-panel select {
+    height: 48px;
+
+    padding: 0 14px;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    background: rgba(255, 255, 255, .05);
+
+    color: white;
+
+    transition: .25s;
+}
+
+.filter-panel input:focus,
+.filter-panel select:focus {
+    outline: none;
+
+    border-color: var(--indigo);
+
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, .15);
+}
+
+.filter-panel button {
+    height: 48px;
+
+    padding: 0 20px;
+
+    border: none;
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+    color: white;
+
+    background: linear-gradient(to right, var(--indigo), var(--purple));
+
+    transition: .25s;
+}
+
+.filter-panel button:hover {
+    transform: translateY(-2px);
+}
+
+/* ===================================
+   TABLE CARD
+=================================== */
+.card {
+    background: var(--bg-card);
+
+    backdrop-filter: blur(20px);
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+}
+
+.table-card {
+    overflow: hidden;
+}
+
+
+.table-header {
+    padding: 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.table-header h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+
+    color: white;
+}
+
+.table-header span {
+    color: var(--text-gray);
+}
+
+/* scroll */
+.table-scroll {
+    overflow-x: auto;
+}
+
+/* table system unified */
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.attendance-table thead {
+    background: rgba(255, 255, 255, .03);
+}
+
+.attendance-table th {
+    padding: 16px;
+
+    text-align: left;
+
+    color: var(--text-light);
+
+    border-bottom: 1px solid var(--border);
+}
+
+.attendance-table td {
+    padding: 16px;
+
+    color: #e2e8f0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, .04);
+}
+
+.attendance-table tbody tr:hover {
+    background: rgba(255, 255, 255, .03);
+}
+
+/* ===================================
+   BADGE SYSTEM
+=================================== */
+
+.badge {
+    display: inline-flex;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.badge.success {
+    background: rgba(34, 197, 94, .15);
+    color: var(--success);
+}
+
+.badge.late {
+    background: rgba(245, 158, 11, .15);
+    color: var(--warning);
+}
+
+.badge.warning {
+    background: rgba(139, 92, 246, .15);
+    color: var(--purple);
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:1200px) {
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media(max-width:768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-panel {
+        flex-direction: column;
+    }
+
+    .filter-panel input,
+    .filter-panel select,
+    .filter-panel button {
+        width: 100%;
+    }
+
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}

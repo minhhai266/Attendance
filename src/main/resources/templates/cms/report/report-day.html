@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Điểm danh hằng ngày</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/css/report/report-day.css">
 </head>
 
 <body>
@@ -21,17 +21,13 @@
         <div class="container-layout">
 
             <!-- Header -->
-            <header class="page-header">
-                <h1>Điểm danh hằng ngày</h1>
-
-                <div class="notification">
-                    <i class="fa-regular fa-bell"></i>
-                    <span class="dot"></span>
-                </div>
-            </header>
+            <div class="container-header">
+                <h1>Báo cáo hằng ngày</h1>
+                <p>Báo cáo điểm danh hằng ngày</p>
+            </div>
 
             <!-- Card -->
-            <div class="attendance-card">
+            <main class="main-container">
 
                 <div class="card-header">
                     <h2>Danh sách điểm danh</h2>
@@ -135,13 +131,13 @@
 
                 </div>
 
-            </div>
+            </main>
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
 
         </div>
 
     </div>
 
-    <div th:replace="~{cms/layout/footer :: footer}"></div>
 
 </body>
 

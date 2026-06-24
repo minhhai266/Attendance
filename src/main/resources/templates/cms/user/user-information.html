@@ -5,120 +5,120 @@
     <meta charset="UTF-8" />
     <title>Thông tin cá nhân</title>
 
-    <link rel="stylesheet" th:href="@{/css/world/world.css}">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/user/user-information.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
 
-<div class="bg-image"></div>
+    <div class="bg-image"></div>
 
-<div class="layout">
+    <div class="layout">
 
-    <!-- SIDEBAR -->
-    <div th:replace="~{cms/sidebar/sidebar :: sidebar}"></div>
+        <!-- SIDEBAR -->
+        <div th:replace="~{cms/sidebar/sidebar-manage :: sidebar}"></div>
 
-    <!-- CONTENT -->
-    <div class="container-layout">
+        <!-- CONTENT -->
+        <div class="container-layout">
 
-        <!-- HEADER -->
-        <div class="attendance-header">
-            <h1>Thông tin cá nhân</h1>
-            <p>Quản lý thông tin tài khoản của bạn</p>
-        </div>
+            <!-- HEADER -->
+            <div class="container-header">
+                <h1>Thông tin cá nhân</h1>
+                <p>Quản lý thông tin tài khoản của bạn</p>
+            </div>
 
-        <main class="dashboard-manager">
+            <main class="main-container">
 
-            <!-- PROFILE CARD -->
-            <section class="dashboard-card">
+                <!-- PROFILE CARD -->
+                <section class="container-card">
 
-                <div class="card-header">
-                    <h2>Thông tin cá nhân</h2>
-                </div>
+                    <div class="card-header">
+                        <h2>Thông tin cá nhân</h2>
+                    </div>
 
-                <div class="card-body">
+                    <div class="card-body">
 
-                    <div class="info-grid">
+                        <div class="info-grid">
 
-                        <div class="info-item">
-                            <label>Họ và tên</label>
-                            <p th:text="${user.fullName}">Nguyễn Văn A</p>
-                        </div>
+                            <div class="info-item">
+                                <label>Họ và tên</label>
+                                <p>Nguyễn Văn A</p>
+                            </div>
 
-                        <div class="info-item">
-                            <label>Email</label>
-                            <p th:text="${user.email}">abc@gmail.com</p>
-                        </div>
+                            <div class="info-item">
+                                <label>Email</label>
+                                <p>abc@gmail.com</p>
+                            </div>
 
-                        <div class="info-item">
-                            <label>Số điện thoại</label>
-                            <p th:text="${user.phone}">0987654321</p>
-                        </div>
+                            <div class="info-item">
+                                <label>Số điện thoại</label>
+                                <p>0987654321</p>
+                            </div>
 
-                        <div class="info-item">
-                            <label>Phòng ban</label>
-                            <p th:text="${user.departmentName}">Phòng Lab 213</p>
+                            <div class="info-item">
+                                <label>Phòng ban</label>
+                                <p>Phòng Lab 213</p>
+                            </div>
+
                         </div>
 
                     </div>
 
-                </div>
+                </section>
 
-            </section>
+                <!-- CHANGE PASSWORD CARD -->
+                <section class="dashboard-card">
 
-            <!-- CHANGE PASSWORD CARD -->
-            <section class="dashboard-card">
+                    <div class="card-header">
+                        <h2>Đổi mật khẩu</h2>
+                    </div>
 
-                <div class="card-header">
-                    <h2>Đổi mật khẩu</h2>
-                </div>
+                    <div class="card-body">
 
-                <div class="card-body">
+                        <form method="post" th:action="@{/profile/change-password}">
 
-                    <form method="post" th:action="@{/profile/change-password}">
+                            <div class="form-group">
+                                <label>Mật khẩu hiện tại</label>
+                                <input type="password" name="oldPassword" required>
+                            </div>
 
-                        <div class="form-group">
-                            <label>Mật khẩu hiện tại</label>
-                            <input type="password" name="oldPassword" required>
-                        </div>
+                            <div class="form-group">
+                                <label>Mật khẩu mới</label>
+                                <input type="password" name="newPassword" required>
+                            </div>
 
-                        <div class="form-group">
-                            <label>Mật khẩu mới</label>
-                            <input type="password" name="newPassword" required>
-                        </div>
+                            <div class="form-group">
+                                <label>Xác nhận mật khẩu</label>
+                                <input type="password" name="confirmPassword" required>
+                            </div>
 
-                        <div class="form-group">
-                            <label>Xác nhận mật khẩu</label>
-                            <input type="password" name="confirmPassword" required>
-                        </div>
+                            <div class="form-actions">
 
-                        <div class="form-actions">
+                                <button type="submit" class="btn-primary">
+                                    <i class="fa-solid fa-key"></i>
+                                    Đổi mật khẩu
+                                </button>
 
-                            <button type="submit" class="btn-primary">
-                                <i class="fa-solid fa-key"></i>
-                                Đổi mật khẩu
-                            </button>
+                                <button type="reset" class="btn-secondary">
+                                    Reset
+                                </button>
 
-                            <button type="reset" class="btn-secondary">
-                                Reset
-                            </button>
+                            </div>
 
-                        </div>
+                        </form>
 
-                    </form>
+                    </div>
 
-                </div>
+                </section>
 
-            </section>
+            </main>
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
 
-        </main>
-
+        </div>
     </div>
-</div>
 
-<!-- FOOTER -->
-<div th:replace="~{cms/layout/footer :: footer}"></div>
+    <!-- FOOTER -->
 
 </body>
+
 </html>

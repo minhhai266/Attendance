@@ -1,0 +1,157 @@
+@import url("../base.css");
+
+/* ===================================
+   CARD SYSTEM
+=================================== */
+
+.card{
+    background:var(--bg-card);
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    backdrop-filter:blur(20px);
+
+    overflow:hidden;
+}
+
+/* ===================================
+   TABLE WRAPPER
+=================================== */
+
+.face-table{
+    width:100%;
+
+    border-collapse:collapse;
+
+    color:#e2e8f0;
+}
+
+.face-table thead{
+    background:rgba(255,255,255,.03);
+}
+
+.face-table th{
+    text-align:left;
+
+    padding:16px;
+
+    font-size:.9rem;
+
+    color:var(--text-light);
+
+    border-bottom:1px solid var(--border);
+}
+
+.face-table td{
+    padding:16px;
+
+    border-bottom:1px solid rgba(255,255,255,.04);
+
+    font-size:.95rem;
+}
+
+.face-table tbody tr{
+    transition:.2s;
+}
+
+.face-table tbody tr:hover{
+    background:rgba(255,255,255,.03);
+}
+
+/* ===================================
+   BADGE
+=================================== */
+
+.sample-badge{
+    display:inline-block;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:.85rem;
+
+    font-weight:600;
+
+    background:rgba(99,102,241,.15);
+
+    color:var(--indigo);
+
+    border:1px solid rgba(99,102,241,.25);
+}
+
+/* ===================================
+   BUTTONS
+=================================== */
+
+.detail-btn{
+    padding:8px 12px;
+
+    border-radius:12px;
+
+    border:1px solid rgba(255,255,255,.1);
+
+    background:rgba(255,255,255,.05);
+
+    color:var(--text-light);
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.detail-btn:hover{
+    background:rgba(99,102,241,.2);
+
+    border-color:var(--indigo);
+
+    color:white;
+}
+
+/* ===================================
+   ACTION TEXT STATES
+=================================== */
+
+.status-accept{
+    color:var(--success);
+
+    font-weight:600;
+}
+
+.status-reject{
+    color:var(--danger);
+
+    font-weight:600;
+}
+
+/* ===================================
+   TABLE WRAPPER IMPROVEMENT
+=================================== */
+
+.card{
+    padding:0;
+}
+
+.card table{
+    width:100%;
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:768px){
+
+    .face-table{
+        display:block;
+
+        overflow-x:auto;
+    }
+
+    .face-table th,
+    .face-table td{
+        white-space:nowrap;
+    }
+}

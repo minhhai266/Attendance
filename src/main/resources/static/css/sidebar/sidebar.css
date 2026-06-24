@@ -1,8 +1,8 @@
 /* ===== SIDEBAR ===== */
 
 .sidebar {
-    width: 200px;
-    height: 100vh;
+    
+    min-height: 100vh;
 
     background: #020c2e;
 
@@ -11,6 +11,7 @@
 
     color: white;
     font-family: "Segoe UI", sans-serif;
+    padding-bottom: 30px;
 }
 
 /* ===== HEADER ===== */
@@ -118,6 +119,7 @@
 
 .sidebar-footer {
     padding: 16px;
+    padding-bottom: 30px;
 }
 
 .footer-user {

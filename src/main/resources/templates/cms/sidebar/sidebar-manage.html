@@ -1,9 +1,9 @@
 <div class="sidebar" th:fragment="sidebar">
 
     <div class="sidebar-header">
-        <div class="logo">
+        <a href="/" class="logo">
             📷
-        </div>
+        </a>
 
         <div>
             <h2>Smart Attendance</h2>
@@ -43,11 +43,17 @@
             </a>
         </li>
         <li class="sidebar-option">
+            <a href="/userInformation" class="sidebar-link">
+                <span>🪪</span>
+                Thông tin cá nhân
+            </a>
+        </li>
+        <!-- <li class="sidebar-option">
             <a href="/changePassword" class="sidebar-link">
                 <span>🔒</span>
                 Đổi mật khẩu
             </a>
-        </li>
+        </li> -->
     </ul>
     <div class="sidebar-line"></div>
     <div class="sidebar-footer">
@@ -61,7 +67,7 @@
             </div>
         </div>
 
-        <a herf="/" class="logout">
+        <a href="/" class="logout">
             🚪 Đăng xuất
         </a>
 

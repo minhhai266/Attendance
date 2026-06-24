@@ -1,0 +1,342 @@
+@import url("../base.css");
+
+/* ===================================
+   FORM CARD SYSTEM
+=================================== */
+
+.dashboard-card{
+    background:var(--bg-card);
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    backdrop-filter:blur(20px);
+
+    overflow:hidden;
+}
+
+.card-header{
+    padding:18px;
+
+    border-bottom:1px solid var(--border);
+}
+
+.card-header h2{
+    font-size:1.1rem;
+
+    font-weight:700;
+
+    color:white;
+}
+
+.card-body{
+    padding:18px;
+}
+
+/* ===================================
+   ROOM INPUT
+=================================== */
+
+.room-code-input{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+
+    margin-bottom:16px;
+}
+
+.room-code-input label{
+    color:var(--text-light);
+
+    font-size:.9rem;
+
+    font-weight:600;
+}
+
+.room-code-input input{
+    padding:12px 14px;
+
+    border-radius:14px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    background:rgba(255,255,255,.05);
+
+    color:white;
+
+    outline:none;
+
+    transition:.25s;
+}
+
+.room-code-input input:focus{
+    border-color:var(--indigo);
+
+    box-shadow:0 0 0 4px rgba(99,102,241,.15);
+}
+
+/* ===================================
+   STUDENT SELECT AREA
+=================================== */
+
+.student-select{
+    display:flex;
+
+    align-items:end;
+
+    gap:12px;
+
+    margin-bottom:20px;
+}
+
+.student-select label{
+    display:block;
+
+    color:var(--text-light);
+
+    font-size:.9rem;
+
+    font-weight:600;
+}
+
+.student-select select{
+    flex:1;
+
+    padding:12px 14px;
+
+    border-radius:14px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    background:rgba(255,255,255,.05);
+
+    color:white;
+
+    outline:none;
+}
+
+.sample-btn{
+    padding:10px 14px;
+
+    border-radius:14px;
+
+    border:1px solid rgba(255,255,255,.1);
+
+    background:rgba(255,255,255,.05);
+
+    color:var(--text-light);
+
+    font-weight:600;
+}
+
+/* ===================================
+   FACE GRID
+=================================== */
+
+.face-register-grid{
+    display:grid;
+
+    grid-template-columns:1fr;
+
+    gap:16px;
+}
+
+/* ===================================
+   PANEL (CAMERA BOX)
+=================================== */
+
+.panel{
+    background:rgba(255,255,255,.03);
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    padding:16px;
+}
+
+.panel-header{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:12px;
+}
+
+.panel-header h3{
+    font-size:1rem;
+
+    color:white;
+}
+
+.panel-header button{
+    padding:8px 12px;
+
+    border-radius:12px;
+
+    border:none;
+
+    cursor:pointer;
+
+    background:linear-gradient(to right, var(--indigo), var(--purple));
+
+    color:white;
+
+    font-weight:600;
+}
+
+/* ===================================
+   MODE TABS
+=================================== */
+
+.mode-tabs{
+    display:flex;
+
+    gap:10px;
+
+    margin-bottom:12px;
+}
+
+.mode-tabs button{
+    flex:1;
+
+    padding:8px 10px;
+
+    border-radius:12px;
+
+    border:1px solid rgba(255,255,255,.1);
+
+    background:rgba(255,255,255,.05);
+
+    color:var(--text-light);
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.mode-tabs button.active{
+    background:rgba(99,102,241,.2);
+
+    border-color:var(--indigo);
+
+    color:white;
+}
+
+/* ===================================
+   GUIDE BOX
+=================================== */
+
+.guide-box{
+    padding:12px;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.03);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    margin-bottom:12px;
+
+    color:var(--text-gray);
+
+    font-size:.9rem;
+}
+
+/* ===================================
+   VIDEO
+=================================== */
+
+.video-wrap{
+    position:relative;
+
+    width:100%;
+
+    height:320px;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    background:#000;
+
+    margin-bottom:12px;
+}
+
+.video-wrap video,
+.video-wrap canvas{
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+}
+
+/* ===================================
+   ACTION ROW
+=================================== */
+
+.action-row{
+    display:flex;
+
+    gap:12px;
+}
+
+.action-row button{
+    flex:1;
+
+    padding:12px;
+
+    border-radius:14px;
+
+    border:none;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    color:white;
+}
+
+/* PRIMARY */
+#captureFaceBtn{
+    background:linear-gradient(to right, var(--indigo), var(--purple));
+}
+
+/* SECONDARY */
+.action-row .secondary{
+    background:rgba(255,255,255,.05);
+
+    border:1px solid rgba(255,255,255,.1);
+
+    color:var(--text-light);
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:768px){
+
+    .student-select{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .action-row{
+        flex-direction:column;
+    }
+
+    .video-wrap{
+        height:240px;
+    }
+}

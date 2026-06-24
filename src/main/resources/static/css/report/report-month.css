@@ -1,0 +1,278 @@
+@import url("../base.css");
+
+/* ===================================
+   HEADER SYSTEM
+=================================== */
+
+.container-header {
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    padding: 18px 20px;
+
+    margin-bottom: 20px;
+
+    backdrop-filter: blur(20px);
+}
+
+.container-header h1 {
+    font-size: 1.6rem;
+
+    font-weight: 800;
+
+    color: white;
+}
+
+.container-header p {
+    color: var(--text-gray);
+
+    margin-top: 6px;
+}
+
+/* ===================================
+   FILTER SYSTEM (STANDARDIZED)
+=================================== */
+
+.filter-bar {
+    display: flex;
+
+    gap: 14px;
+
+    align-items: end;
+
+    flex-wrap: wrap;
+
+    padding: 16px;
+
+    margin-bottom: 16px;
+
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    backdrop-filter: blur(20px);
+}
+
+.filter-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.filter-group label {
+    font-size: .9rem;
+
+    color: var(--text-light);
+
+    font-weight: 600;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 12px 14px;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    background: rgba(255, 255, 255, .05);
+
+    color: white;
+
+    outline: none;
+
+    min-width: 160px;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: var(--indigo);
+
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, .15);
+}
+
+/* EXPORT BUTTON */
+
+.export-btn {
+    padding: 12px 18px;
+
+    border-radius: 14px;
+
+    border: none;
+
+    cursor: pointer;
+
+    font-weight: 700;
+
+    color: white;
+
+    background: linear-gradient(to right, var(--indigo), var(--purple));
+
+    transition: .25s;
+}
+
+.export-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* ===================================
+   OVERVIEW GRID
+=================================== */
+
+.overview-grid {
+    display: grid;
+
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 14px;
+
+    margin: 20px 0;
+}
+
+.stat-card {
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    padding: 18px;
+
+    backdrop-filter: blur(20px);
+
+    transition: .25s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-card h3 {
+    color: var(--text-gray);
+
+    font-size: .9rem;
+
+    font-weight: 600;
+
+    margin-bottom: 8px;
+}
+
+.stat-card span {
+    font-size: 1.8rem;
+
+    font-weight: 800;
+
+    color: white;
+}
+
+/* ===================================
+   CHART CARD
+=================================== */
+
+.chart-card {
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    padding: 18px;
+
+    margin-top: 20px;
+
+    backdrop-filter: blur(20px);
+}
+
+.chart-card h2 {
+    font-size: 1.1rem;
+
+    font-weight: 700;
+
+    color: white;
+
+    margin-bottom: 12px;
+}
+
+/* ===================================
+   TABLE SYSTEM
+=================================== */
+
+.table-card {
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    padding: 18px;
+
+    margin-top: 20px;
+
+    backdrop-filter: blur(20px);
+}
+
+.table-card h2 {
+    font-size: 1.1rem;
+
+    color: white;
+
+    margin-bottom: 12px;
+}
+
+.report-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    color: #e2e8f0;
+}
+
+.report-table th {
+    text-align: left;
+
+    padding: 14px;
+
+    font-size: .9rem;
+
+    color: var(--text-light);
+
+    border-bottom: 1px solid var(--border);
+}
+
+.report-table td {
+    padding: 14px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, .04);
+}
+
+.report-table tbody tr:hover {
+    background: rgba(255, 255, 255, .03);
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:1100px) {
+
+    .overview-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        width: 100%;
+    }
+}
