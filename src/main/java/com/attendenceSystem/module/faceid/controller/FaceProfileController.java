@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.attendenceSystem.constant.Routes;
+import com.attendenceSystem.constant.Views;
 import com.attendenceSystem.module.faceid.dto.request.CreateFaceProfileRequest;
 import com.attendenceSystem.module.faceid.service.FaceProfileService;
 
@@ -19,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/faceid")
+@RequestMapping(Routes.FaceId.ROOT)
 public class FaceProfileController {
 
     private final FaceProfileService faceProfileService;
@@ -29,22 +30,22 @@ public class FaceProfileController {
             @PageableDefault(size = 10) Pageable pageable,
             Model model) {
         model.addAttribute("faceProfiles", faceProfileService.searchFaceProfiles(query, pageable));
-        return "cms/face-id/faceID-list";
+        return Views.FaceId.LIST;
     }
 
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("createFaceProfileRequest", new CreateFaceProfileRequest());
-        return "cms/face-id/faceID-create";
+        return Views.FaceId.CREATE;
     }
 
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute CreateFaceProfileRequest request,
             BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "cms/face-id/faceID-create";
+            return Views.FaceId.CREATE;
         }
         faceProfileService.createFaceProfile(request);
-        return Routes.REDIRECT + "/faceid";
+        return Routes.REDIRECT + Routes.FaceId.ROOT;
     }
 }

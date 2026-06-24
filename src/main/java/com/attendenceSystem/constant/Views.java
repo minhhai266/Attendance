@@ -21,15 +21,20 @@ public final class Views {
 
     public static final class Dashboard {
         public static final String ADMIN = "cms/dashboard/dashboard-admin";
-        public static final String MANAGER = "cms/dashboard/dashboard-manage";
+        public static final String MANAGER = "cms/dashboard/dashboard-manager";
         public static final String EMPLOYEE = "cms/dashboard/dashboard-employee";
     }
 
     public static final class Attendance {
-        public static final String ROOT = "cms/attendance/attendance";
-        public static final String LIST = "cms/attendance/attendance-list";
+        public static final String LIST = "cms/attendance/attendance";
+        public static final String HISTORY = "cms/attendance/attendance-history";
         public static final String LEAVE_CREATE = "cms/absent/absent-create";
         public static final String LEAVE_LIST = "cms/absent/absent-list";
         public static final String LEAVE_HISTORY = "cms/absent/absent-history";
+    }
+
+    public static final class FaceId {
+        public static final String CREATE = "cms/face-id/faceID-create";
+        public static final String LIST = "cms/face-id/faceID-list";
     }
 }

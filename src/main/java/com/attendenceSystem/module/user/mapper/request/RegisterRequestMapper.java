@@ -15,7 +15,7 @@ public final class RegisterRequestMapper {
                 .email(request.getEmail())
                 .password(hashPassword)
                 .fullName(request.getFullName())
-                .role(Role.STAFF)
+                .role(Role.STUDENT)
                 .mustChangePassword(false)
                 .build();
     }

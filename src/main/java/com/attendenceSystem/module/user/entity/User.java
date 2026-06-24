@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Role;
 
 import jakarta.persistence.Column;
@@ -35,6 +36,8 @@ public class User {
     private String username;
     @Column(name = "email", unique = true, nullable = false, length = 255)
     private String email;
+    @Column(name = "phone", unique = true)
+    private String phone;
     @Column(name = "password", nullable = false, length = 255)
     private String password;
     @Column(name = "role", nullable = false)
@@ -44,13 +47,14 @@ public class User {
     private boolean isActive = true;
     @Column(name = "full_name", nullable = false, length = 255)
     private String fullName;
+    @Column(name = "department")
+    private Department department;
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
-
     @Column(name = "must_change_password", nullable = false)
     @Builder.Default
     private boolean mustChangePassword = false;

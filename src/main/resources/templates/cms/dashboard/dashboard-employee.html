@@ -217,17 +217,17 @@
 
                             <div class="profile-item">
                                 <label>Email</label>
-                                <span>nguyenvana@company.com</span>
+                                <span th:text="${#authentication.principal.email}"></span>
                             </div>
 
                             <div class="profile-item">
                                 <label>Số điện thoại</label>
-                                <span>0123456789</span>
+                                <span th:text="${#authentication.principal.phone}"></span>
                             </div>
 
                             <div class="profile-item">
                                 <label>Phòng ban</label>
-                                <span>IT Department</span>
+                                <span th:text="${#authentication.principal.department}">IT Department</span>
                             </div>
 
                             <div class="profile-item">

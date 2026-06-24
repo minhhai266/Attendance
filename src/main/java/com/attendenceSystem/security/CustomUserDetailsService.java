@@ -12,23 +12,17 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService
-        implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+        private final UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository
-                .findUserByUsernameOrEmail(username, username)
-                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy User"));
+                User user = userRepository
+                                .findUserByUsernameOrEmail(username, username)
+                                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy User"));
 
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername())
-                .password(user.getPassword())
-                .roles(user.getRole().name())
-                .build();
-    }
+                return CustomUserDetails.fromUser(user);
+        }
 }
