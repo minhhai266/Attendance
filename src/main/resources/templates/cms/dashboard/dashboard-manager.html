@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Dashboard</title>
-    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard/dashboard-manager.css}">
 
 </head>
 
@@ -16,12 +16,12 @@
 
         <div class="container-layout">
 
-            <div class="attendance-header">
-                <h1>Quản lý điểm danh</h1>
-                <p>Theo dõi tình trạng điểm danh sinh viên theo thời gian thực</p>
+            <div class="container-header">
+                <h1>Dashboard</h1>
+                <p>Chào mừng bạn đã đến với hệ thống của chúng tôi</p>
             </div>
 
-            <main class="dashboard-manager">
+            <main class="main-container">
 
                 <!-- THỐNG KÊ -->
                 <section class="dashboard-overview">
@@ -117,12 +117,12 @@
                 </section>
 
             </main>
-
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
         </div>
     </div>
-    <div th:replace="~{cms/layout/footer :: footer}"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script th:src="@{/js/Chart.js}"></script>
+    <script th:src="@{/js/Chart.js}"></script>
 </body>
 
 </html>

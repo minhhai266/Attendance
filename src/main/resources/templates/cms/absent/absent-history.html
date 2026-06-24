@@ -5,180 +5,180 @@
     <meta charset="UTF-8" />
     <title>Lịch sử nghỉ phép</title>
 
-    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+    <link rel="stylesheet" th:href="@{/css/absent/absent-history.css}">
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
 
-<div class="bg-image"></div>
+    <div class="bg-image"></div>
 
-<div class="layout">
+    <div class="layout">
 
-    <!-- SIDEBAR -->
-    <div th:replace="~{cms/sidebar/sidebar-manage :: sidebar}"></div>
+        <!-- SIDEBAR -->
+        <div th:replace="~{cms/sidebar/sidebar-manage :: sidebar}"></div>
 
-    <!-- CONTENT -->
-    <div class="container-layout">
+        <!-- CONTENT -->
+        <div class="container-layout">
 
-        <!-- HEADER -->
-        <div class="attendance-header">
-            <h1>Lịch sử nghỉ phép</h1>
-            <p>Theo dõi các đơn xin nghỉ của nhân viên</p>
-        </div>
+            <!-- HEADER -->
+            <div class="container-header">
+                <h1>Lịch sử nghỉ phép</h1>
+                <p>Theo dõi các đơn xin nghỉ của nhân viên</p>
+            </div>
 
-        <main class="dashboard-manager">
+            <main class="main-container">
 
-            <!-- FILTER -->
-            <section class="dashboard-card">
+                <!-- FILTER -->
+                <section class="dashboard-card">
 
-                <div class="card-header">
-                    <h2>Bộ lọc</h2>
-                </div>
+                    <div class="card-header">
+                        <h2>Bộ lọc</h2>
+                    </div>
 
-                <div class="card-body">
+                    <div class="card-body">
 
-                    <form class="filter-form">
+                        <form class="filter-form">
 
-                        <div class="filter-grid">
+                            <div class="filter-grid">
 
-                            <div class="form-group">
-                                <label>Trạng thái</label>
-                                <select name="status">
-                                    <option value="">Tất cả</option>
-                                    <option>Chờ duyệt</option>
-                                    <option>Đã duyệt</option>
-                                    <option>Từ chối</option>
-                                </select>
+                                <div class="form-group">
+                                    <label>Trạng thái</label>
+                                    <select name="status">
+                                        <option value="">Tất cả</option>
+                                        <option>Chờ duyệt</option>
+                                        <option>Đã duyệt</option>
+                                        <option>Từ chối</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Loại nghỉ</label>
+                                    <select name="type">
+                                        <option value="">Tất cả</option>
+                                        <option>Nghỉ có lương</option>
+                                        <option>Nghỉ không lương</option>
+                                        <option>Nghỉ bệnh</option>
+                                        <option>Nghỉ phép năm</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Từ ngày</label>
+                                    <input type="date" name="fromDate">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Đến ngày</label>
+                                    <input type="date" name="toDate">
+                                </div>
+
                             </div>
 
-                            <div class="form-group">
-                                <label>Loại nghỉ</label>
-                                <select name="type">
-                                    <option value="">Tất cả</option>
-                                    <option>Nghỉ có lương</option>
-                                    <option>Nghỉ không lương</option>
-                                    <option>Nghỉ bệnh</option>
-                                    <option>Nghỉ phép năm</option>
-                                </select>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">
+                                    <i class="fa-solid fa-filter"></i>
+                                    Lọc
+                                </button>
+
+                                <button type="reset" class="btn-secondary">
+                                    Reset
+                                </button>
                             </div>
 
-                            <div class="form-group">
-                                <label>Từ ngày</label>
-                                <input type="date" name="fromDate">
-                            </div>
+                        </form>
 
-                            <div class="form-group">
-                                <label>Đến ngày</label>
-                                <input type="date" name="toDate">
-                            </div>
+                    </div>
+                </section>
+
+                <!-- TABLE -->
+                <section class="dashboard-card">
+
+                    <div class="card-header">
+                        <h2>Danh sách đơn nghỉ phép</h2>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="table-wrapper">
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nhân viên</th>
+                                        <th>Loại nghỉ</th>
+                                        <th>Từ ngày</th>
+                                        <th>Đến ngày</th>
+                                        <th>Lý do</th>
+                                        <th>Trạng thái</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+                                        <td>Nguyễn Văn A</td>
+                                        <td>Nghỉ bệnh</td>
+                                        <td>2026-06-20</td>
+                                        <td>2026-06-22</td>
+                                        <td>Ốm</td>
+
+                                        <td>
+                                            <span class="status pending">Chờ duyệt</span>
+                                        </td>
+
+                                        <td>
+                                            <button class="btn-view">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </button>
+
+                                            <button class="btn-approve">
+                                                <i class="fa-solid fa-check"></i>
+                                            </button>
+
+                                            <button class="btn-reject">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Trần Thị B</td>
+                                        <td>Nghỉ phép năm</td>
+                                        <td>2026-06-18</td>
+                                        <td>2026-06-19</td>
+                                        <td>Du lịch</td>
+
+                                        <td>
+                                            <span class="status approved">Đã duyệt</span>
+                                        </td>
+
+                                        <td>
+                                            <button class="btn-view">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
 
                         </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="btn-primary">
-                                <i class="fa-solid fa-filter"></i>
-                                Lọc
-                            </button>
-
-                            <button type="reset" class="btn-secondary">
-                                Reset
-                            </button>
-                        </div>
-
-                    </form>
-
-                </div>
-            </section>
-
-            <!-- TABLE -->
-            <section class="dashboard-card">
-
-                <div class="card-header">
-                    <h2>Danh sách đơn nghỉ phép</h2>
-                </div>
-
-                <div class="card-body">
-
-                    <div class="table-wrapper">
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Nhân viên</th>
-                                    <th>Loại nghỉ</th>
-                                    <th>Từ ngày</th>
-                                    <th>Đến ngày</th>
-                                    <th>Lý do</th>
-                                    <th>Trạng thái</th>
-                                    <th>Hành động</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-
-                                <tr>
-                                    <td>Nguyễn Văn A</td>
-                                    <td>Nghỉ bệnh</td>
-                                    <td>2026-06-20</td>
-                                    <td>2026-06-22</td>
-                                    <td>Ốm</td>
-
-                                    <td>
-                                        <span class="status pending">Chờ duyệt</span>
-                                    </td>
-
-                                    <td>
-                                        <button class="btn-view">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </button>
-
-                                        <button class="btn-approve">
-                                            <i class="fa-solid fa-check"></i>
-                                        </button>
-
-                                        <button class="btn-reject">
-                                            <i class="fa-solid fa-xmark"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>Trần Thị B</td>
-                                    <td>Nghỉ phép năm</td>
-                                    <td>2026-06-18</td>
-                                    <td>2026-06-19</td>
-                                    <td>Du lịch</td>
-
-                                    <td>
-                                        <span class="status approved">Đã duyệt</span>
-                                    </td>
-
-                                    <td>
-                                        <button class="btn-view">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-
-                            </tbody>
-                        </table>
 
                     </div>
 
-                </div>
+                </section>
 
-            </section>
-
-        </main>
-
+            </main>
+            <!-- FOOTER -->
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
+        </div>
     </div>
-</div>
 
-<!-- FOOTER -->
-<div th:replace="~{cms/layout/footer :: footer}"></div>
+
 
 </body>
+
 </html>

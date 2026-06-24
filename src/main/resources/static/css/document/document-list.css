@@ -1,0 +1,221 @@
+@import url("../base.css");
+
+/* ===================================
+   CARD WRAPPER
+=================================== */
+
+.document-card {
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    backdrop-filter: blur(20px);
+
+    overflow: hidden;
+}
+
+.document-container {
+    overflow-x: auto;
+}
+
+/* ===================================
+   TABLE SYSTEM (UNIFIED)
+=================================== */
+
+.document-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 900px;
+}
+
+.document-table thead {
+    background: rgba(255, 255, 255, .03);
+}
+
+.document-table th {
+    padding: 16px;
+
+    text-align: left;
+
+    color: var(--text-light);
+
+    font-size: .9rem;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.document-table td {
+    padding: 16px;
+
+    color: #e2e8f0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, .04);
+}
+
+.document-table tbody tr:hover {
+    background: rgba(255, 255, 255, .03);
+}
+
+/* ===================================
+   FILE LINK
+=================================== */
+
+.file-link {
+    color: var(--indigo);
+
+    text-decoration: none;
+
+    font-weight: 600;
+}
+
+.file-link:hover {
+    text-decoration: underline;
+}
+
+/* ===================================
+   STATUS BADGE (SYSTEM UNIFIED)
+=================================== */
+
+.status-pending,
+.status-approved,
+.status-rejected {
+    display: inline-flex;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    font-size: .85rem;
+
+    font-weight: 600;
+}
+
+.status-pending {
+    background: rgba(245, 158, 11, .15);
+    color: var(--warning);
+}
+
+.status-approved {
+    background: rgba(34, 197, 94, .15);
+    color: var(--success);
+}
+
+.status-rejected {
+    background: rgba(239, 68, 68, .15);
+    color: var(--danger);
+}
+
+/* ===================================
+   BUTTON SYSTEM
+=================================== */
+
+.btn {
+    padding: 8px 14px;
+
+    border-radius: 12px;
+
+    border: none;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+    font-size: .85rem;
+
+    transition: .25s;
+}
+
+/* DETAIL */
+.btn-detail {
+    background: rgba(59, 130, 246, .15);
+
+    color: #3b82f6;
+}
+
+.btn-detail:hover {
+    background: rgba(59, 130, 246, .25);
+}
+
+/* SUCCESS */
+.btn-success {
+    background: rgba(34, 197, 94, .15);
+
+    color: var(--success);
+}
+
+.btn-success:hover {
+    background: rgba(34, 197, 94, .25);
+}
+
+/* DANGER */
+.btn-danger {
+    background: rgba(239, 68, 68, .15);
+
+    color: var(--danger);
+}
+
+.btn-danger:hover {
+    background: rgba(239, 68, 68, .25);
+}
+
+/* ACTION GROUP */
+.action-group {
+    display: flex;
+
+    gap: 10px;
+}
+
+/* ===================================
+   PAGINATION
+=================================== */
+
+.pagination {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 16px;
+
+    border-top: 1px solid var(--border);
+}
+
+.btn-pagination {
+    background: rgba(255, 255, 255, .05);
+
+    color: var(--text-light);
+
+    padding: 8px 14px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    transition: .25s;
+}
+
+.btn-pagination:hover {
+    background: rgba(255, 255, 255, .08);
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:768px) {
+
+    .action-group {
+        flex-direction: column;
+    }
+
+    .pagination {
+        flex-direction: column;
+
+        gap: 10px;
+    }
+}

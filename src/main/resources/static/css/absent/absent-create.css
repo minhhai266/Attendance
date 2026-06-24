@@ -1,0 +1,192 @@
+@import url("../base.css");
+
+/* =========================
+   CARD
+========================= */
+
+.dashboard-card {
+    background: var(--bg-card);
+
+    backdrop-filter: blur(20px);
+
+    border: 1px solid var(--border);
+    border-radius: 24px;
+
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 24px 28px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.card-header h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+
+    color: var(--text-white);
+}
+
+.card-body {
+    padding: 30px;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.absent-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group label {
+    color: var(--text-light);
+    font-weight: 600;
+    font-size: .95rem;
+}
+
+/* =========================
+   INPUT
+========================= */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+
+    background: rgba(255, 255, 255, .04);
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    border-radius: 14px;
+
+    color: white;
+
+    padding: 14px 16px;
+
+    transition: .3s;
+}
+
+.form-group select,
+.form-group input {
+    height: 52px;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+
+    border-color: var(--indigo);
+
+    box-shadow:
+        0 0 0 4px rgba(99, 102, 241, .15);
+}
+
+/* =========================
+   SELECT OPTION
+========================= */
+
+.form-group select option {
+    background: #0f172a;
+    color: white;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.form-actions {
+    display: flex;
+    gap: 14px;
+
+    margin-top: 10px;
+}
+
+.btn-primary,
+.btn-secondary {
+    height: 50px;
+
+    padding: 0 24px;
+
+    border: none;
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+    transition: .3s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    color: white;
+
+    background:
+        linear-gradient(to right,
+            var(--indigo),
+            var(--purple));
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #334155;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #475569;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:768px) {
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+}

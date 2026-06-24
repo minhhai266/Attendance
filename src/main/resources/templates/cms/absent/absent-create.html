@@ -5,9 +5,7 @@
     <meta charset="UTF-8" />
     <title>Xin nghỉ phép</title>
 
-    <link rel="stylesheet" th:href="@{/css/world/world.css}">
     <link rel="stylesheet" th:href="@{/css/absent/absent-create.css}">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
@@ -18,18 +16,18 @@
     <div class="layout">
 
         <!-- SIDEBAR -->
-        <div th:replace="~{cms/sidebar/sidebar-manage :: sidebar}"></div>
+        <div th:replace="~{cms/sidebar/sidebar-employee :: sidebar}"></div>
 
         <!-- CONTENT -->
         <div class="container-layout">
 
             <!-- HEADER -->
-            <div class="attendance-header">
+            <div class="container-header">
                 <h1>Xin nghỉ phép</h1>
                 <p>Tạo đơn xin nghỉ phép mới</p>
             </div>
 
-            <main class="dashboard-manager">
+            <main class="main-container">
 
                 <!-- FORM CARD -->
                 <section class="dashboard-card">
@@ -107,12 +105,12 @@
                 </section>
 
             </main>
-
+            <!-- FOOTER -->
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <div th:replace="~{cms/layout/footer :: footer}"></div>
+
 
 </body>
 

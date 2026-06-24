@@ -1,92 +1,97 @@
 <!doctype html>
 
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Đăng Nhập - Face ID Attendance</title>
 
-    <link rel="stylesheet" th:href="@{/css/auth.css}" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng Nhập - Face ID Attendance</title>
 
-  <body>
-    <div class="bg-img"></div>
+  <link rel="stylesheet" th:href="@{/css/auths/login.css}" />
+</head>
 
-    <div th:replace="~{cms/layout/header :: header}"></div>
+<body>
+  <div class="bg-img"></div>
 
-    <div class="layout">
-        <div class="card">
+  <div th:replace="~{cms/layout/header :: header}"></div>
 
-            <div class="card-header">
-                <h1 class="card-title">Đăng nhập</h1>
-                <p class="card-description">Nhập thông tin để truy cập!</p>
-            </div>
+  <div class="layout">
+    <div class="left">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="hero-title-gradient">
+            SMART ATTENDANCE
+          </span>
+          <br>
+          <span class="hero-title-white">
+            SYSTEM
+          </span>
+        </h1>
 
-        <div class="divider"></div>
+        <p class="hero-description">
+          Tạo tài khoản để sử dụng cá nhân để tối ưu hóa trải nghiệm!
+        </p>
 
-        <div class="card-body">
-          <!-- Success / Global Error -->
-          <div
-            th:if="${successMessage}"
-            class="success-message"
-            th:text="${successMessage}">
-          </div>
-          <div
-            th:if="${errorMessage}"
-            class="error-message"
-            th:text="${errorMessage}">
-          </div>
-
-          <form
-            th:action="@{/auth/login}"
-            
-            method="post"
-            th:object="${loginRequest}"
-          >
-            <!-- Username / Email -->
-            <div class="auth-group">
-              <label for="login"> Username hoặc Email </label>
-
-              <input id="login" type="text" th:field="*{login}" />
-
-              <div
-                class="error-message"
-                th:if="${#fields.hasErrors('login')}"
-                th:errors="*{login}"
-              ></div>
-            </div>
-
-            <!-- Password -->
-            <div class="auth-group">
-              <label for="password"> Password </label>
-
-              <input id="password" type="password" th:field="*{password}" />
-
-              <div
-                class="error-message"
-                th:if="${#fields.hasErrors('password')}"
-                th:errors="*{password}"
-              ></div>
-            </div>
-
-            <button class="auth-btn" type="submit">Đăng nhập</button>
-          </form>
-
-          <hr style="margin: 1rem 0; opacity: 0.2" />
-
-          <div class="other-option">
-            <a th:href="@{/auth/register}" class="register-link">
-              Tạo tài khoản mới
-            </a>
-
-            <a th:href="@{/auth/forgot-password}" class="forgotPass-link">
-              Quên mật khẩu
-            </a>
-          </div>
-        </div>
       </div>
     </div>
+    <div class="card">
 
-    <div th:replace="~{cms/layout/footer :: footer}"></div>
-  </body>
+      <div class="card-header">
+        <h1 class="card-title">Đăng nhập</h1>
+        <p class="card-description">Nhập thông tin để truy cập!</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="card-body">
+        <!-- Success / Global Error -->
+        <div th:if="${successMessage}" class="success-message" th:text="${successMessage}">
+        </div>
+        <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}">
+        </div>
+
+        <form th:action="@{/auth/login}" method="post" th:object="${loginRequest}">
+          <!-- Username / Email -->
+          <div class="auth-group">
+            <label for="login"> Username hoặc Email </label>
+
+            <input id="login" type="text" th:field="*{login}" />
+
+            <div class="error-message" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></div>
+          </div>
+
+          <!-- Password -->
+          <div class="auth-group">
+            <label for="password"> Password </label>
+
+            <input id="password" type="password" th:field="*{password}" />
+
+            <div class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+          </div>
+
+          <button class="auth-btn" type="submit">Đăng nhập</button>
+        </form>
+        <br><br>
+        <a class="auth-btn" href="/dashboardEmployee">Nhân Viên</a>
+        <a class="auth-btn" href="/dashboardManager">Quản lý</a>
+        <a class="auth-btn" href="/dashboardAdmin">Admin</a>
+        <br>
+        <hr style="margin: 1rem 0; opacity: 0.2" />
+        <div class="other-option">
+          <a th:href="@{/auth/register}" class="register-link">
+            Tạo tài khoản mới
+          </a>
+
+          <a th:href="@{/auth/forgot-password}" class="forgotPass-link">
+            Quên mật khẩu
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div th:replace="~{cms/layout/footer :: footer}"></div>
+</body>
+
 </html>

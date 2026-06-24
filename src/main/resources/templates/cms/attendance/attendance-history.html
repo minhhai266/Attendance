@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử điểm danh cá nhân</title>
+
+    <link rel="stylesheet" th:href="@{/css/attendance/attendance-history.css}">
+</head>
+
+<body>
+
+    <div class="bg-img"></div>
+
+    <div class="layout">
+
+        <div th:replace="~{cms/sidebar/sidebar-employee :: sidebar}"></div>
+
+        <div class="container-layout">
+
+            <div class="container-header">
+                <h1>Lịch sử điểm danh</h1>
+                <p>Theo dõi lịch sử check in / check out của bạn</p>
+            </div>
+
+            <main class="main-container">
+
+
+                <!-- Thông tin cá nhân -->
+                <div class="profile-card">
+
+                    <div class="avatar">
+                        <img src="/images/default-avatar.png" alt="">
+                    </div>
+
+                    <div class="profile-info">
+                        <h3>Nguyễn Văn A</h3>
+                        <span>Phòng Công nghệ thông tin</span>
+                    </div>
+
+                </div>
+
+                <!-- Thống kê -->
+                <div class="stats-grid">
+
+                    <div class="stats-card">
+                        <span class="stats-value">22</span>
+                        <span class="stats-label">Ngày làm việc</span>
+                    </div>
+
+                    <div class="stats-card present">
+                        <span class="stats-value">18</span>
+                        <span class="stats-label">Đúng giờ</span>
+                    </div>
+
+                    <div class="stats-card late">
+                        <span class="stats-value">3</span>
+                        <span class="stats-label">Đi muộn</span>
+                    </div>
+
+                    <div class="stats-card warning">
+                        <span class="stats-value">1</span>
+                        <span class="stats-label">Về sớm</span>
+                    </div>
+
+                    <div class="stats-card total">
+                        <span class="stats-value">168h</span>
+                        <span class="stats-label">Tổng giờ</span>
+                    </div>
+
+                </div>
+
+                <!-- Bộ lọc -->
+                <div class="card filter-card">
+
+                    <div class="filter-panel">
+
+                        <input type="date">
+
+                        <select>
+                            <option>Tất cả trạng thái</option>
+                            <option>Đúng giờ</option>
+                            <option>Đi muộn</option>
+                            <option>Về sớm</option>
+                        </select>
+
+                        <button>Lọc</button>
+
+                    </div>
+
+                </div>
+
+                <!-- Bảng -->
+                <div class="card table-card">
+
+                    <div class="table-header">
+                        <h3>Lịch sử điểm danh</h3>
+                        <span>22 bản ghi</span>
+                    </div>
+
+                    <div class="table-scroll">
+
+                        <table class="attendance-table">
+
+                            <thead>
+                                <tr>
+                                    <th>Ngày</th>
+                                    <th>Check In</th>
+                                    <th>Check Out</th>
+                                    <th>Trạng thái</th>
+                                    <th>Tổng giờ</th>
+                                    <th>Ghi chú</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+                                    <td>23/06/2026</td>
+                                    <td>08:01</td>
+                                    <td>17:35</td>
+                                    <td>
+                                        <span class="badge success">
+                                            Đúng giờ
+                                        </span>
+                                    </td>
+                                    <td>8h 34p</td>
+                                    <td>-</td>
+                                </tr>
+
+                                <tr>
+                                    <td>22/06/2026</td>
+                                    <td>08:15</td>
+                                    <td>17:30</td>
+                                    <td>
+                                        <span class="badge late">
+                                            Đi muộn
+                                        </span>
+                                    </td>
+                                    <td>8h 15p</td>
+                                    <td>Muộn 15 phút</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </main>
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
+        </div>
+
+    </div>
+
+    
+
+
+</body>
+
+</html>

@@ -1,0 +1,27 @@
+@import url("/css/layout/footer.css");
+@import url("/css/sidebar/sidebar.css");
+@import url("/css/attendance/attendance-common.css");
+@import url("/css/base.css");
+/* =========================
+   STATS VARIANTS
+========================= */
+
+.present .stats-value{
+    color:var(--success);
+}
+
+.absent .stats-value{
+    color:var(--danger);
+}
+
+.pending .stats-value{
+    color:var(--warning);
+}
+
+.late .stats-value{
+    color:var(--purple);
+}
+
+/* =========================
+   PAGE CUSTOM (nếu có)
+========================= */

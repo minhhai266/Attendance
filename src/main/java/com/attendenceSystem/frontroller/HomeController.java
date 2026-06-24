@@ -67,19 +67,23 @@ public class HomeController {
     public String attendance() {
         return "cms/attendance/attendance";
     }
+    @GetMapping("/attendanceHistory")
+    public String attendanceHistory() {
+        return "cms/attendance/attendance-history";
+    }
 
     // @GetMapping("/attendanceLists")
     // public String attendanceList() {
     //     return "cms/attendance/attendance-list";
     // }
-    // @GetMapping("/adccountList")
-    // public String accountList() {
-    //     return "cms/account/account-list";
-    // }
-    // @GetMapping("/absentCreate")
-    // public String absentCreate() {
-    //     return "cms/absent/absent-create";
-    // }
+    @GetMapping("/accountList")
+    public String accountList() {
+        return "cms/account/account-list";
+    }
+    @GetMapping("/absentCreate")
+    public String absentCreate() {
+        return "cms/absent/absent-create";
+    }
     @GetMapping("/absentHistory")
     public String absentHistory() {
         return "cms/absent/absent-history";

@@ -1,0 +1,149 @@
+@import url("/css/layout/footer.css");
+@import url("/css/sidebar/sidebar.css");
+/* ===================================
+   ROOT
+=================================== */
+
+:root {
+    --bg-dark: #020617;
+    --bg-card: rgba(15, 23, 42, .65);
+
+    --border: rgba(255, 255, 255, .08);
+
+    --text-white: #ffffff;
+    --text-gray: #94a3b8;
+    --text-light: #cbd5e1;
+
+    --indigo: #6366f1;
+    --purple: #8b5cf6;
+    --pink: #ec4899;
+
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+}
+
+/* ===================================
+   RESET
+=================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    color: white;
+
+    background:
+        linear-gradient(135deg,
+            #020617 0%,
+            #1e1b4b 50%,
+            #020617 100%);
+}
+
+.layout {
+    display: flex;
+    flex: 1;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 280px;
+    min-width: 280px;
+
+    position: sticky;
+    top: 0;
+}
+
+/* ===================================
+   BACKGROUND
+=================================== */
+
+.bg-image {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+}
+
+.bg-image::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(circle at top left,
+            rgba(1, 1, 11, 0.25),
+            transparent 100%),
+        radial-gradient(circle at bottom right,
+            rgba(31, 20, 58, 0.25),
+            transparent 50%);
+}
+
+/* ===================================
+   PAGE
+=================================== */
+
+
+.container-layout {
+    max-width: 1580px;
+    flex: 1;
+    min-height: 100vh;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===================================
+   HEADER
+=================================== */
+
+.container-header {
+    background-color: #020c2e;
+    margin-bottom: 32px;
+    padding: 15px 20px 15px 15px;
+    border-radius: 1px;
+    height: 112px;
+    border: 0.65px solid #291c56;
+    padding-left: 20px;
+    height:140px;
+}
+
+.container-header h1 {
+    padding-top: 13px;
+    font-size: 1.5rem;
+    font-weight: 800;
+
+    margin-bottom: 10px;
+
+    background:
+        linear-gradient(to right,
+            #c7cbeb,
+            #e5e1e8,
+            #e5e2e3);
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.container-header p {
+    color: #94a3b8;
+    font-size: 1rem;
+}
+
+.main-container {
+    padding: 10px 15px 120px 35px;
+    min-height: 85vh;
+}

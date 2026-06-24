@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Báo cáo tháng</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/css/report/report-month.css">
 </head>
 
 <body>
@@ -19,16 +19,12 @@
 
         <div class="container-layout">
 
-            <header class="page-header">
-                <h1>Báo cáo tháng</h1>
+            <div class="container-header">
+                <h1>Báo cáo hằng tháng</h1>
+                <p>Thống kê chuyên cần hằng tháng </p>
+            </div>
 
-                <div class="notification">
-                    <i class="fa-regular fa-bell"></i>
-                    <span class="dot"></span>
-                </div>
-            </header>
-
-            <div class="report-card">
+            <main class="main-container">
 
                 <!-- Filter -->
                 <div class="filter-bar">
@@ -140,13 +136,13 @@
 
                 </div>
 
-            </div>
+            </main>
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
 
         </div>
 
     </div>
 
-    <div th:replace="~{cms/layout/footer :: footer}"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 

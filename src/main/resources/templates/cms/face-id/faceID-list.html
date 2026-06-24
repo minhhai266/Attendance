@@ -6,106 +6,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Face Recognition Dashboard</title>
 
-    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+    <link rel="stylesheet" th:href="@{/css/faceID/faceID-list.css}">
 </head>
 
 <body>
 
     <div class="bg-image"></div>
+    <div class="layout">
+        <!-- SIDEBAR -->
+        <div th:replace="~{cms/sidebar/sidebar-manage :: sidebar}"></div>
 
-    <!-- SIDEBAR -->
-    <div th:replace="~{cms/sidebar/sidebar-employee :: sidebar}"></div>
+        <!-- MAIN LAYOUT -->
+        <div class="container-layout">
 
-    <!-- MAIN LAYOUT -->
-    <div class="container-layout">
-
-        <!-- HEADER -->
-        <header class="page-header">
-            <div>
-                <h1>Đăng kí face ID</h1>
-                <p>Quản lý đăng ký khuôn mặt & điểm danh realtime</p>
+            <!-- HEADER -->
+            <div class="container-header">
+                <h1>Danh sách face ID</h1>
+                <p>Các nhân viên đã đăng kí vào phòng bạn</p>
             </div>
 
-            <div class="notification">
-                <i class="fa-regular fa-bell"></i>
-                <span class="dot"></span>
-            </div>
-        </header>
-
-        <!-- =========================
+            <!-- =========================
         FACE REGISTER
         ========================== -->
-        <section class="page">
+            <main class="main-container">
 
-            <div class="card">
+                <section class="card">
 
-                <table class="face-table">
+                    <table class="face-table">
 
-                    <thead>
-                        <tr>
-                            <th>Mã SV</th>
-                            <th>Họ tên</th>
-                            <th>Face ID</th>
-                            <th>Số mẫu</th>
-                            <th>Phòng</th>
-                            <th>Cập nhật</th>
-                            <th>Chi tiết</th>
-                        </tr>
-                    </thead>
+                        <thead>
+                            <tr>
+                                <th>Mã SV</th>
+                                <th>Họ tên</th>
+                                <th>Face ID</th>
+                                <th>Số mẫu</th>
+                                <th>Phòng</th>
+                                <th>Chi tiết</th>
+                                <th>Cập nhật</th>
+                            </tr>
+                        </thead>
 
-                    <tbody>
+                        <tbody>
 
-                        <tr>
-                            <td>SV001</td>
-                            <td>Nguyễn Văn A</td>
-                            <td>#face_001</td>
-                            <td>
-                                <span class="sample-badge">
-                                    10 / 10
-                                </span>
-                            </td>
-                            <td>21/02/2025</td>
+                            <tr>
+                                <td>SV001</td>
+                                <td>Nguyễn Văn A</td>
+                                <td>#face_001</td>
+                                <td>
+                                    <span class="sample-badge">
+                                        10 / 10
+                                    </span>
+                                </td>
+                                <td><button class="detail-btn" onclick="openFaceGallery()">
 
-                            <td>
-                                <button class="detail-btn" onclick="openFaceGallery()">
+                                        Xem ảnh
 
-                                    Xem ảnh
+                                    </button>
+                                </td>
 
-                                </button>
-                            </td>
-                        </tr>
+                                <td>
 
-                        <tr>
-                            <td>SV002</td>
-                            <td>Trần Văn B</td>
-                            <td>#face_002</td>
-                            <td>
-                                <span class="sample-badge">
-                                    7 / 10
-                                </span>
-                            </td>
-                            <td>DE214</td>
-                            <td>20/02/2025</td>
+                                    Chấp nhận -từ chốt
+                                </td>
+                            </tr>
 
-                            <td>
-                                <button class="detail-btn" onclick="openFaceGallery()">
+                            <tr>
+                                <td>SV002</td>
+                                <td>Trần Văn B</td>
+                                <td>#face_002</td>
+                                <td>
+                                    <span class="sample-badge">
+                                        7 / 10
+                                    </span>
+                                </td>
+                                <td>DE214</td>
 
-                                    Xem ảnh
 
-                                </button>
-                            </td>
-                        </tr>
+                                <td>
+                                    <button class="detail-btn" onclick="openFaceGallery()">
 
-                    </tbody>
+                                        Xem ảnh
 
-                </table>
+                                    </button>
+                                </td>
+                                <td>Đồng ý</td>
+                            </tr>
 
-            </div>
+                        </tbody>
 
-        </section>
+                    </table>
 
+                </section>
+            </main>
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
+
+
+        </div>
     </div>
-    <div th:replace="~{cms/layout/footer :: footer}"></div>
+
 
 </body>
 

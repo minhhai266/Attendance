@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nộp báo cáo công việc</title>
 
-    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+    <link rel="stylesheet" th:href="@{/css/document/document-create.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
@@ -23,12 +23,12 @@
         <div class="container-layout">
 
             <!-- HEADER -->
-            <div class="attendance-header">
+            <div class="container-header">
                 <h1>Nộp báo cáo công việc</h1>
                 <p>Gửi báo cáo và chia sẻ cho phòng ban</p>
             </div>
 
-            <main class="dashboard-manager">
+            <main class="main-container">
 
                 <!-- FORM CARD -->
                 <section class="dashboard-card">
@@ -104,12 +104,12 @@
                 </section>
 
             </main>
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
 
         </div>
     </div>
 
     <!-- FOOTER -->
-    <div th:replace="~{cms/layout/footer :: footer}"></div>
 
     <!-- JS load user theo phòng -->
     <script>

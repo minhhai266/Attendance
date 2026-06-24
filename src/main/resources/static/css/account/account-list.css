@@ -1,0 +1,384 @@
+@import url("../base.css");
+
+/* ===================================
+   CARD LAYOUT (giống dashboard-card)
+=================================== */
+
+.dashboard-card {
+    background: var(--bg-card);
+
+    backdrop-filter: blur(20px);
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    margin-bottom: 24px;
+}
+
+.card-header {
+    padding: 24px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.card-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.card-body {
+    padding: 0;
+}
+
+/* ===================================
+   ADD BUTTON
+=================================== */
+
+.add-btn {
+    height: 44px;
+
+    padding: 0 18px;
+
+    border: none;
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+    color: white;
+
+    background:
+        linear-gradient(to right,
+            var(--indigo),
+            var(--purple));
+
+    transition: .25s;
+}
+
+.add-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* ===================================
+   SEARCH BOX (giống filter input)
+=================================== */
+
+.search-box {
+    padding: 20px 24px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.search-box input {
+    width: 100%;
+    height: 52px;
+
+    padding: 0 16px;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    background: rgba(255, 255, 255, .05);
+
+    color: white;
+
+    transition: .3s;
+}
+
+.search-box input:focus {
+    outline: none;
+
+    border-color: var(--indigo);
+
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, .15);
+}
+
+/* ===================================
+   TABLE (GIỐNG ATTENDANCE / LEAVE)
+=================================== */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+thead {
+    background: rgba(255, 255, 255, .03);
+}
+
+th {
+    padding: 18px;
+
+    text-align: left;
+
+    color: var(--text-light);
+
+    font-size: .92rem;
+
+    border-bottom: 1px solid var(--border);
+}
+
+td {
+    padding: 18px;
+
+    color: #e2e8f0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, .04);
+}
+
+tbody tr {
+    transition: .25s;
+}
+
+tbody tr:hover {
+    background: rgba(255, 255, 255, .03);
+}
+
+/* ===================================
+   USER CELL
+=================================== */
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+
+    color: white;
+
+    background:
+        linear-gradient(135deg,
+            var(--indigo),
+            var(--purple));
+}
+
+/* ===================================
+   ROLE BADGE
+=================================== */
+
+.role {
+    display: inline-flex;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    font-size: .85rem;
+    font-weight: 600;
+
+    background: rgba(99, 102, 241, .15);
+
+    color: #a5b4fc;
+}
+
+/* ===================================
+   STATUS BADGE (GIỐNG SYSTEM CHUNG)
+=================================== */
+
+.status {
+    display: inline-flex;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.active {
+    background: rgba(34, 197, 94, .15);
+
+    color: var(--success);
+}
+
+.inactive,
+.locked {
+    background: rgba(239, 68, 68, .15);
+
+    color: var(--danger);
+}
+
+/* ===================================
+   ACTION BUTTONS
+=================================== */
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-btn {
+    height: 38px;
+
+    padding: 0 14px;
+
+    border: none;
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+    color: white;
+
+    transition: .25s;
+}
+
+.btn-role {
+    background:
+        linear-gradient(to right,
+            var(--indigo),
+            var(--purple));
+}
+
+.lock {
+    background: rgba(239, 68, 68, .18);
+
+    color: var(--danger);
+}
+
+.icon-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* ===================================
+   MODAL (GLASS STYLE - đồng bộ system)
+=================================== */
+
+.detail-modal {
+    position: fixed;
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, .65);
+
+    backdrop-filter: blur(6px);
+
+    z-index: 999;
+}
+
+.detail-content {
+    width: 680px;
+    max-width: 95%;
+
+    background: var(--bg-card);
+
+    backdrop-filter: blur(20px);
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    overflow: hidden;
+}
+
+.detail-header {
+    padding: 24px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.detail-header h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.close-btn {
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    color: white;
+
+    background: rgba(255, 255, 255, .05);
+}
+
+.detail-body {
+    padding: 24px;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 18px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.detail-item label {
+    color: var(--text-gray);
+    font-size: .85rem;
+}
+
+.detail-item p,
+.detail-item span {
+    color: white;
+    font-weight: 600;
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:768px) {
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .detail-body {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .icon-btn {
+        width: 100%;
+    }
+}

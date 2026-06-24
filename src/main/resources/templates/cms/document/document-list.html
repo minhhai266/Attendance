@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Danh sách báo cáo</title>
-    <link rel="stylesheet" th:href="@{/css/world/world.css}">
+    <link rel="stylesheet" th:href="@{/css/document/document-list.css}">
 
 </head>
 
@@ -15,16 +15,17 @@
         <div th:replace="~{cms/sidebar/sidebar-manage :: sidebar}"></div>
 
         <div class="container-layout">
-            <div class="absent-header">
-                <h1 class="header-title">Danh sách báo cáo</h1>
-                <div class="header-divider"></div>
+
+            <div class="container-header">
+                <h1>Danh sách báo cáo</h1>
+                <p>Xem các báo cáo ở đây</p>
             </div>
 
-            <main class="main-section">
+            <main class="main-container">
 
                 <div class="document-card">
 
-                    <div class="main-document">
+                    <div class="document-container">
 
                         <table class="document-table">
                             <thead>
@@ -147,10 +148,10 @@
                 </div>
 
             </main>
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
 
         </div>
     </div>
-    <div th:replace="~{cms/layout/footer :: footer}"></div>
 </body>
 
 </html>

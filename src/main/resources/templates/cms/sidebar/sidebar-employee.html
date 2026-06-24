@@ -1,13 +1,13 @@
 <div class="sidebar" th:fragment="sidebar">
 
     <div class="sidebar-header">
-        <div class="logo">
+        <a href="/" class="logo">
             📷
-        </div>
+        </a>
 
         <div>
             <h2>Smart Attendance</h2>
-            <div class="header-description">Quản lý</div>
+            <div class="header-description">Nhân viên</div>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         </li>
 
         <li class="sidebar-option">
-            <a href="/absentHistory" class="sidebar-link">
+            <a href="/attendanceHistory" class="sidebar-link">
                 <span>🕒</span>
                 Lịch sử điểm danh
             </a>
@@ -56,12 +56,12 @@
                 Thông tin cá nhân
             </a>
         </li>
-        <li class="sidebar-option">
+        <!-- <li class="sidebar-option">
             <a href="/changePassword" class="sidebar-link">
                 <span>🔒</span>
                 Đổi mật khẩu
             </a>
-        </li>
+        </li> -->
     </ul>
 
     <div class="sidebar-line"></div>
@@ -69,7 +69,7 @@
     <div class="sidebar-footer">
 
         <div class="footer-user">
-            <div class="avatar">N</div>
+            <div class="avatar"></div>
 
             <div>
                 <h3>Nguyễn Thị B</h3>
