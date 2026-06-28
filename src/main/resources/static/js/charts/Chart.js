@@ -11,6 +11,6 @@ var options = {
 };
 
 new ApexCharts(
-    document.querySelector("#chart"),
+    document.querySelector("#weeklyAttendanceChart"),
     options
 ).render();

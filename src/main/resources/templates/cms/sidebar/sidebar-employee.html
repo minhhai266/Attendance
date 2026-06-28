@@ -16,7 +16,7 @@
     <ul class="sidebar-menu">
 
         <li class="sidebar-option">
-            <a href="/dashboard/student" class="sidebar-link">
+            <a href="/dashboardEmployee" class="sidebar-link">
                 <span>📊</span>
                 Dashboard
             </a>
@@ -69,12 +69,20 @@
     <div class="sidebar-footer">
 
         <div class="footer-user">
-            <div class="avatar"></div>
+            <div class="avatar">
+                <i class="bi bi-person-circle"></i>
+            </div>
 
-            <div>
+            <!-- <div>
                 <h3 th:text="${#authentication.principal.fullName}"></h3>
                 <div class="header-description" th:text="${#authentication.principal.role}">
                     Vai trò
+                </div>
+            </div> -->
+            <div>
+                <h3>Nguyen van an</h3>
+                <div class="header-description">
+                    Nhân viên
                 </div>
             </div>
         </div>
