@@ -1,9 +1,13 @@
 <div class="sidebar" th:fragment="sidebar">
 
     <div class="sidebar-header">
-        <a href="/" class="logo">
+        <div class="logo">
+            <a href="/" >
             📷
         </a>
+
+        </div>
+        
 
         <div>
             <h2>Smart Attendance</h2>
@@ -16,7 +20,7 @@
     <ul class="sidebar-menu">
 
         <li class="sidebar-option">
-            <a href="/dashboard/manager" class="sidebar-link">
+            <a href="/dashboardManager" class="sidebar-link">
                 <span>📊</span>
                 Dashboard
             </a>
@@ -59,12 +63,20 @@
     <div class="sidebar-footer">
 
         <div class="footer-user">
-            <div class="avatar"></div>
+            <div class="avatar">
+                <i class="bi bi-person-circle"></i>
+            </div>
 
-            <div>
+            <!-- <div>
                 <h3 th:text="${#authentication.principal.fullName}"></h3>
                 <div class="header-description" th:text="${#authentication.principal.role}">
                     Vai trò
+                </div>
+            </div> -->
+             <div>
+                <h3 >Nguyen van an</h3>
+                <div class="header-description" >
+                    Manager
                 </div>
             </div>
         </div>

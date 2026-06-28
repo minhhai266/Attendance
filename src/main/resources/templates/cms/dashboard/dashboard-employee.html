@@ -10,7 +10,7 @@
 </head>
 
 <body>
-        <div class="bg-image"></div>
+    <div class="bg-image"></div>
 
     <div class="layout">
         <div th:replace="~{cms/sidebar/sidebar-employee :: sidebar}"></div>
@@ -31,7 +31,9 @@
                 <section class="employee-overview">
 
                     <div class="employee-stat-card report-submitted">
-                        <div class="employee-stat-card__icon">📄</div>
+                        <div class="employee-stat-card__icon">
+                            <i class="bi bi-file-earmark-arrow-up-fill"></i>
+                        </div>
 
                         <div class="employee-stat-card__content">
                             <h3 class="employee-stat-card__number">12</h3>
@@ -42,25 +44,33 @@
                     </div>
 
                     <div class="employee-stat-card report-approved">
-                        <div class="employee-stat-card__icon">📄</div>
+                        <div class="employee-stat-card__icon">
+                            <i class="bi bi-file-earmark-check"></i>
+                        </div>
 
                         <div class="employee-stat-card__content">
                             <h3 class="employee-stat-card__number">10</h3>
                             <p class="employee-stat-card__label">Báo cáo được duyệt</p>
                         </div>
+                        <span class="employee-stat-card__trend">V</span>
                     </div>
 
                     <div class="employee-stat-card report-rejected">
-                        <div class="employee-stat-card__icon">📄</div>
+                        <div class="employee-stat-card__icon">
+                            <i class="bi bi-file-earmark-excel-fill"></i>
+                        </div>
 
                         <div class="employee-stat-card__content">
                             <h3 class="employee-stat-card__number">1</h3>
                             <p class="employee-stat-card__label">Báo cáo bị từ chối</p>
                         </div>
+                        <span class="employee-stat-card__trend">X</span>
                     </div>
 
                     <div class="employee-stat-card attendance-rate">
-                        <div class="employee-stat-card__icon">📅</div>
+                        <div class="employee-stat-card__icon">
+                            <i class="bi bi-file-earmark-bar-graph-fill"></i>
+                        </div>
 
                         <div class="employee-stat-card__content">
                             <h3 class="employee-stat-card__number">95%</h3>
@@ -94,31 +104,45 @@
                             <div class="quick-actions-grid">
 
                                 <a href="#" class="quick-action-card">
-                                    <div class="quick-action-card__icon"></div>
+                                    <div class="quick-action-card__icon">
+                                        <i class="bi bi-person-lines-fill"></i>
+                                    </div>
 
-                                    <h3>Thông Tin Cá Nhân</h3>
-                                    <p>Xem và cập nhật profile</p>
+                                    <div>
+                                        <h3>Thông Tin Cá Nhân</h3>
+                                        <p>Xem và cập nhật profile</p>
+
+                                    </div>
                                 </a>
 
                                 <a href="#" class="quick-action-card">
-                                    <div class="quick-action-card__icon"></div>
-
-                                    <h3>Nộp Báo Cáo</h3>
-                                    <p>Tạo báo cáo công việc</p>
+                                    <div class="quick-action-card__icon">
+                                        <i class="bi bi-file-earmark-arrow-up-fill"></i>
+                                    </div>
+                                    <div>
+                                        <h3>Nộp Báo Cáo</h3>
+                                        <p>Tạo báo cáo công việc</p>
+                                    </div>
                                 </a>
 
                                 <a href="#" class="quick-action-card">
-                                    <div class="quick-action-card__icon"></div>
-
-                                    <h3>Lịch Sử Điểm Danh</h3>
-                                    <p>Xem lịch sử check-in/out</p>
+                                    <div class="quick-action-card__icon">
+                                        <i class="bi bi-calendar-check-fill"></i>
+                                    </div>
+                                    <div>
+                                        <h3>Lịch Sử Điểm Danh</h3>
+                                        <p>Xem lịch sử check-in/out</p>
+                                    </div>
                                 </a>
 
                                 <a href="#" class="quick-action-card">
-                                    <div class="quick-action-card__icon"></div>
-
-                                    <h3>Xin Nghỉ Phép</h3>
-                                    <p>Tạo đơn xin nghỉ</p>
+                                    <div class="quick-action-card__icon">
+                                        <i class="bi bi-calendar2-x-fill"></i>
+                                    </div>
+                                    <div>
+                                        <h3>Xin Nghỉ Phép</h3>
+                                        <p>Tạo đơn xin nghỉ</p>
+                                    </div>
                                 </a>
 
                             </div>
@@ -207,7 +231,7 @@
 
                     <!-- RIGHT -->
                     <aside class="employee-sidebar">
-
+                        <br>
                         <!-- Profile -->
                         <div class="profile-card">
 

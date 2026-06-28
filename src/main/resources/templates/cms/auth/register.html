@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Ký - Face ID Attendance</title>
     <link rel="stylesheet" href="/css/auths/register.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 </head>
 
 <body>
@@ -43,42 +45,48 @@
             <div class="divider"></div>
 
             <div class="card-body">
-                <div
-                    th:if="${errorMessage}"
-                    class="error-message"
-                    th:text="${errorMessage}">
+                <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}">
                 </div>
 
                 <form th:action="@{/auth/register}" th:object="${registerRequest}" method="post">
 
                     <div class="auth-group">
                         <label class="auth-label">Tên đăng nhập *</label>
-                        <input id="username" type="text" th:field="*{username}" class="auth-control" placeholder="Tên đăng nhập" required />
-                        <div class="error-message" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                        <input id="username" type="text" th:field="*{username}" class="auth-control"
+                            placeholder="Tên đăng nhập" required />
+                        <div class="error-message" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+                        </div>
                     </div>
 
                     <div class="auth-group">
                         <label class="auth-label">Họ và tên *</label>
-                        <input id="fullName" type="text" th:field="*{fullName}" class="auth-control" placeholder="Nguyễn Văn A" required />
-                        <div class="error-message" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+                        <input id="fullName" type="text" th:field="*{fullName}" class="auth-control"
+                            placeholder="Nguyễn Văn A" required />
+                        <div class="error-message" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">
+                        </div>
                     </div>
 
                     <div class="auth-group">
                         <label class="auth-label">Email *</label>
-                        <input id="email" type="email" th:field="*{email}" class="auth-control" placeholder="your.email@company.com" required />
+                        <input id="email" type="email" th:field="*{email}" class="auth-control"
+                            placeholder="your.email@company.com" required />
                         <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                     </div>
 
                     <div class="auth-group">
                         <label class="auth-label">Mật khẩu *</label>
-                        <input id="password" type="password" th:field="*{password}" class="auth-control" placeholder="••••••••" required />
-                        <div class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                        <input id="password" type="password" th:field="*{password}" class="auth-control"
+                            placeholder="••••••••" required />
+                        <div class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                        </div>
                     </div>
 
                     <div class="auth-group">
                         <label class="auth-label">Xác nhận mật khẩu *</label>
-                        <input id="rePassword" type="password" th:field="*{rePassword}" class="auth-control" placeholder="••••••••" required />
-                        <div class="error-message" th:if="${#fields.hasErrors('rePassword')}" th:errors="*{rePassword}"></div>
+                        <input id="rePassword" type="password" th:field="*{rePassword}" class="auth-control"
+                            placeholder="••••••••" required />
+                        <div class="error-message" th:if="${#fields.hasErrors('rePassword')}" th:errors="*{rePassword}">
+                        </div>
                     </div>
 
                     <button class="auth-btn" type="submit">
@@ -88,11 +96,11 @@
 
                 <hr style="margin: 1rem 0; opacity: 0.2;" />
                 <div class="other-option">
-                    <a class="register-link">
+                    <a href="/auth/login" class="register-link">
                         Đã có tài khoản
                     </a>
 
-                    <a class="forgotPass-link">
+                    <a href="/forgotPassword" class="forgotPass-link">
                         Quên mật khẩu
                     </a>
                 </div>

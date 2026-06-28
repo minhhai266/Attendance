@@ -15,7 +15,11 @@
 
     overflow:hidden;
 }
-
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
 .card-header{
     padding:18px;
 
@@ -255,9 +259,9 @@
 .video-wrap{
     position:relative;
 
-    width:100%;
+    width:96%;
 
-    height:320px;
+    height:550px;
 
     border-radius:18px;
 

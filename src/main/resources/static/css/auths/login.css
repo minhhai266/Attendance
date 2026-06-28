@@ -14,7 +14,7 @@
     --text-light: #cbd5e1;
 
     --indigo: #6366f1;
-    --purple: #8b5cf6;
+    --purple: #8b5cf6; 
     --pink: #ec4899;
 }
 
@@ -104,10 +104,6 @@ body {
         font-size: 1.1rem;
     }
 }
-/* =========================
-   RESPONSIVE
-========================= */
-
 
 /* =========================
    BACKGROUND EFFECT
@@ -139,15 +135,26 @@ body {
 ========================= */
 
 .layout {
-    min-height: calc(100vh - 72px);
-
     display: flex;
     justify-content: center;
-    align-items: center;
+    gap: 80px;
+
+    max-width: 1400px;
+    margin: 0 auto;
 
     padding: 60px 20px;
+
+    align-items: flex-start;
+    /* quan trọng */
 }
 
+.left {
+    padding: 50px;
+    flex: 1;
+
+    position: sticky;
+    top: 150px;
+}
 /* =========================
    CARD
 ========================= */

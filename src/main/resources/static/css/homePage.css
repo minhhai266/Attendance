@@ -133,10 +133,12 @@ a {
 }
 
 .brand-icon i {
-    width: 22px;
-    height: 22px;
+    /* width: 42px;
+    height: 42px; */
+    font-size: 25px;
     color: white;
 }
+
 
 .brand-name {
     font-size: 1.3rem;
@@ -215,6 +217,7 @@ a {
             #c084fc,
             #f472b6);
 
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -269,7 +272,7 @@ a {
     padding: 15px 28px;
 
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,.2);
+    border: 1px solid rgba(255, 255, 255, .2);
 
     color: white;
 
@@ -277,7 +280,7 @@ a {
 }
 
 .secondary-btn:hover {
-    background: rgba(255,255,255,.08);
+    background: rgba(255, 255, 255, .08);
 }
 
 /* =========================
@@ -290,18 +293,16 @@ a {
     border-radius: 32px;
 
     background:
-        linear-gradient(
-            135deg,
-            rgba(99,102,241,.15),
-            rgba(139,92,246,.15)
-        );
+        linear-gradient(135deg,
+            rgba(99, 102, 241, .15),
+            rgba(139, 92, 246, .15));
 
     backdrop-filter: blur(20px);
 
-    border: 1px solid rgba(255,255,255,.08);
+    border: 1px solid rgba(255, 255, 255, .08);
 
     display: grid;
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
 }
 
@@ -312,11 +313,11 @@ a {
 
     border-radius: 24px;
 
-    background: rgba(15,23,42,.55);
+    background: rgba(15, 23, 42, .55);
 
     backdrop-filter: blur(10px);
 
-    border: 1px solid rgba(255,255,255,.08);
+    border: 1px solid rgba(255, 255, 255, .08);
 
     transition: .3s;
 }
@@ -353,7 +354,7 @@ a {
 .features {
     padding: 120px 0;
 
-    background: rgba(15,23,42,.4);
+    background: rgba(15, 23, 42, .4);
 }
 
 .section-header {
@@ -375,7 +376,7 @@ a {
 
 .feature-grid {
     display: grid;
-    grid-template-columns: repeat(4,1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 24px;
 }
 
@@ -384,11 +385,11 @@ a {
 
     border-radius: 24px;
 
-    background: rgba(15,23,42,.55);
+    background: rgba(15, 23, 42, .55);
 
     backdrop-filter: blur(10px);
 
-    border: 1px solid rgba(255,255,255,.08);
+    border: 1px solid rgba(255, 255, 255, .08);
 
     transition: .35s;
 }
@@ -396,7 +397,7 @@ a {
 .feature-card:hover {
     transform: translateY(-8px);
 
-    border-color: rgba(255,255,255,.18);
+    border-color: rgba(255, 255, 255, .18);
 }
 
 .feature-icon {
@@ -410,11 +411,9 @@ a {
     justify-content: center;
 
     background:
-        linear-gradient(
-            135deg,
+        linear-gradient(135deg,
             var(--indigo),
-            #4338ca
-        );
+            #4338ca);
 
     margin-bottom: 20px;
 
@@ -426,8 +425,9 @@ a {
 }
 
 .feature-icon i {
-    width: 28px;
-    height: 28px;
+    /* width: 28px;
+    height: 28px; */
+    font-size: 30px;
     color: white;
 }
 
@@ -459,7 +459,7 @@ a {
     }
 
     .feature-grid {
-        grid-template-columns: repeat(2,1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 

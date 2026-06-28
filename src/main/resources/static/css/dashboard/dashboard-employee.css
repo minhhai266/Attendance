@@ -4,358 +4,385 @@
    OVERVIEW STATS
 =================================== */
 
-.employee-overview{
-    display:grid;
+.employee-overview {
+    display: grid;
 
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns: repeat(4, 1fr);
 
-    gap:18px;
+    gap: 18px;
 
-    margin-bottom:24px;
+    margin-bottom: 24px;
 }
 
 /* ===================================
    STAT CARD
 =================================== */
 
-.employee-stat-card{
-    padding:20px;
+.employee-stat-card {
+    padding: 20px;
 
-    border-radius:24px;
+    border-radius: 24px;
 
-    background:var(--bg-card);
+    background: var(--bg-card);
 
-    border:1px solid var(--border);
+    border: 1px solid var(--border);
 
-    backdrop-filter:blur(20px);
+    backdrop-filter: blur(20px);
 
-    display:flex;
+    display: flex;
 
-    align-items:center;
+    align-items: center;
 
-    justify-content:space-between;
+    justify-content: space-between;
 
-    transition:.25s;
+    transition: .25s;
 
-    position:relative;
+    position: relative;
 }
 
-.employee-stat-card:hover{
-    transform:translateY(-3px);
+.employee-stat-card:hover {
+    transform: translateY(-3px);
 }
 
-.employee-stat-card__icon{
-    width:42px;
-    height:42px;
+.employee-stat-card__icon {
+    width: 42px;
+    height: 42px;
 
-    border-radius:12px;
+    border-radius: 12px;
 
-    background:rgba(255,255,255,.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(135deg,
+            var(--indigo),
+            var(--purple));
 }
 
-.employee-stat-card__number{
-    font-size:1.6rem;
-    font-weight:800;
-
-    color:white;
+.employee-stat-card__icon i {
+    /* width: 42px;
+    height: 42px; */
+    font-size: 24px;
+    color: white;
 }
 
-.employee-stat-card__label{
-    font-size:.9rem;
+.employee-stat-card__number {
+    font-size: 1.6rem;
+    font-weight: 800;
 
-    color:var(--text-gray);
+    color: white;
+}
+
+.employee-stat-card__label {
+    font-size: .9rem;
+
+    color: var(--text-gray);
 }
 
 .employee-stat-card__trend,
-.employee-stat-card__status{
-    font-size:.8rem;
+.employee-stat-card__status {
+    font-size: .8rem;
 
-    padding:4px 10px;
+    padding: 4px 10px;
 
-    border-radius:999px;
+    border-radius: 999px;
 
-    background:rgba(255,255,255,.05);
+    background: rgba(255, 255, 255, .05);
 
-    color:var(--text-light);
+    color: var(--text-light);
 }
 
 /* color variants */
 
-.report-submitted .employee-stat-card__number{
-    color:var(--indigo);
+.report-submitted .employee-stat-card__number {
+    color: var(--indigo);
 }
 
-.report-approved .employee-stat-card__number{
-    color:var(--success);
+.report-approved .employee-stat-card__number {
+    color: var(--success);
 }
 
-.report-rejected .employee-stat-card__number{
-    color:var(--danger);
+.report-rejected .employee-stat-card__number {
+    color: var(--danger);
 }
 
-.attendance-rate .employee-stat-card__number{
-    color:var(--purple);
+.attendance-rate .employee-stat-card__number {
+    color: var(--purple);
 }
 
 /* ===================================
    LAYOUT
 =================================== */
 
-.employee-content{
-    display:grid;
+.employee-content {
+    display: grid;
 
-    grid-template-columns:1fr 320px;
+    grid-template-columns: 1fr 320px;
 
-    gap:20px;
+    gap: 20px;
 }
 
 /* ===================================
    QUICK ACTION (SYSTEM STYLE)
 =================================== */
 
-.quick-actions{
-    margin-bottom:24px;
+.quick-actions {
+    margin-bottom: 24px;
 }
 
-.section-title{
-    font-size:1.1rem;
-    font-weight:700;
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
 
-    margin-bottom:14px;
+    margin-bottom: 14px;
 
-    color:white;
+    color: white;
 }
 
-.quick-actions-grid{
-    display:grid;
+.quick-actions-grid {
+    display: grid;
 
-    grid-template-columns:repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
 
-    gap:16px;
+    gap: 16px;
 }
 
-.quick-action-card{
-    padding:18px;
+.quick-action-card {
+    padding: 18px 18px 18px 40px;
 
-    border-radius:24px;
+    border-radius: 24px;
 
-    background:var(--bg-card);
+    background: var(--bg-card);
 
-    border:1px solid var(--border);
+    border: 1px solid var(--border);
 
-    text-decoration:none;
+    text-decoration: none;
 
-    color:white;
+    color: white;
 
-    transition:.25s;
+    transition: .25s;
 
-    backdrop-filter:blur(20px);
+    backdrop-filter: blur(20px);
+
+    display: flex;
+    /* justify-content: space-evenly; */
+    align-items: center;
+    gap: 35px;
+
 }
 
-.quick-action-card:hover{
-    transform:translateY(-4px);
+.quick-action-card__icon i {
+    /* width: 42px;
+    height: 42px; */
+    font-size: 25px;
+    color: white;
 }
 
-.quick-action-card h3{
-    font-size:1rem;
-
-    margin-top:10px;
+.quick-action-card:hover {
+    transform: translateY(-4px);
 }
 
-.quick-action-card p{
-    color:var(--text-gray);
+.quick-action-card h3 {
+    font-size: 1rem;
 
-    font-size:.9rem;
+    margin-top: 10px;
+}
+
+.quick-action-card p {
+    color: var(--text-gray);
+
+    font-size: .9rem;
 }
 
 /* ===================================
    TABLE (reuse system)
 =================================== */
 
-.table-wrapper{
-    overflow-x:auto;
+.table-wrapper {
+    overflow-x: auto;
 }
 
-.attendance-table{
-    width:100%;
+.attendance-table {
+    width: 100%;
 
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
-.attendance-table thead{
-    background:rgba(255,255,255,.03);
+.attendance-table thead {
+    background: rgba(255, 255, 255, .03);
 }
 
-.attendance-table th{
-    padding:16px;
+.attendance-table th {
+    padding: 16px;
 
-    text-align:left;
+    text-align: left;
 
-    color:var(--text-light);
+    color: var(--text-light);
 
-    border-bottom:1px solid var(--border);
+    border-bottom: 1px solid var(--border);
 }
 
-.attendance-table td{
-    padding:16px;
+.attendance-table td {
+    padding: 16px;
 
-    color:#e2e8f0;
+    color: #e2e8f0;
 
-    border-bottom:1px solid rgba(255,255,255,.04);
+    border-bottom: 1px solid rgba(255, 255, 255, .04);
 }
 
-.attendance-table tbody tr:hover{
-    background:rgba(255,255,255,.03);
+.attendance-table tbody tr:hover {
+    background: rgba(255, 255, 255, .03);
 }
 
 /* ===================================
    STATUS BADGE (SYSTEM UNIFIED)
 =================================== */
 
-.status-badge{
-    display:inline-flex;
+.status-badge {
+    display: inline-flex;
 
-    padding:6px 12px;
+    padding: 6px 12px;
 
-    border-radius:999px;
+    border-radius: 999px;
 
-    font-size:.85rem;
+    font-size: .85rem;
 
-    font-weight:600;
+    font-weight: 600;
 }
 
-.status-success{
-    background:rgba(34,197,94,.15);
-    color:var(--success);
+.status-success {
+    background: rgba(34, 197, 94, .15);
+    color: var(--success);
 }
 
-.status-warning{
-    background:rgba(245,158,11,.15);
-    color:var(--warning);
+.status-warning {
+    background: rgba(245, 158, 11, .15);
+    color: var(--warning);
 }
 
-.status-danger{
-    background:rgba(239,68,68,.15);
-    color:var(--danger);
+.status-danger {
+    background: rgba(239, 68, 68, .15);
+    color: var(--danger);
 }
 
 /* ===================================
    PROFILE CARD
 =================================== */
 
-.employee-sidebar{
-    display:flex;
+.employee-sidebar {
+    display: flex;
 
-    flex-direction:column;
+    flex-direction: column;
 
-    gap:16px;
+    gap: 16px;
 }
 
 .profile-card,
-.reminder-card{
-    padding:18px;
+.reminder-card {
+    padding: 18px;
 
-    border-radius:24px;
+    border-radius: 24px;
 
-    background:var(--bg-card);
+    background: var(--bg-card);
 
-    border:1px solid var(--border);
+    border: 1px solid var(--border);
 
-    backdrop-filter:blur(20px);
+    backdrop-filter: blur(20px);
 }
 
-.profile-card__title{
-    font-size:1.1rem;
+.profile-card__title {
+    font-size: 1.1rem;
 
-    font-weight:700;
+    font-weight: 700;
 
-    margin-bottom:12px;
+    margin-bottom: 12px;
 }
 
-.profile-item{
-    display:flex;
+.profile-item {
+    display: flex;
 
-    justify-content:space-between;
+    justify-content: space-between;
 
-    margin-bottom:10px;
+    margin-bottom: 10px;
 
-    color:var(--text-gray);
+    color: var(--text-gray);
 
-    font-size:.9rem;
+    font-size: .9rem;
 }
 
-.faceid-badge{
-    color:var(--success);
+.faceid-badge {
+    color: var(--success);
 
-    font-weight:600;
+    font-weight: 600;
 }
 
-.btn-update-profile{
-    width:100%;
+.btn-update-profile {
+    width: 100%;
 
-    margin-top:10px;
+    margin-top: 10px;
 
-    padding:12px;
+    padding: 12px;
 
-    border:none;
+    border: none;
 
-    border-radius:14px;
+    border-radius: 14px;
 
-    cursor:pointer;
+    cursor: pointer;
 
-    font-weight:600;
+    font-weight: 600;
 
-    color:white;
+    color: white;
 
-    background:linear-gradient(to right, var(--indigo), var(--purple));
+    background: linear-gradient(to right, var(--indigo), var(--purple));
 
-    transition:.25s;
+    transition: .25s;
 }
 
-.btn-update-profile:hover{
-    transform:translateY(-2px);
+.btn-update-profile:hover {
+    transform: translateY(-2px);
 }
 
 /* ===================================
    REMINDER
 =================================== */
 
-.reminder-card__header{
-    font-weight:700;
+.reminder-card__header {
+    font-weight: 700;
 
-    margin-bottom:8px;
+    margin-bottom: 8px;
 
-    color:white;
+    color: white;
 }
 
-.reminder-card__content{
-    color:var(--text-gray);
+.reminder-card__content {
+    color: var(--text-gray);
 
-    font-size:.9rem;
+    font-size: .9rem;
 }
 
 /* ===================================
    RESPONSIVE
 =================================== */
 
-@media(max-width:1200px){
+@media(max-width:1200px) {
 
-    .employee-overview{
-        grid-template-columns:repeat(2,1fr);
+    .employee-overview {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    .employee-content{
-        grid-template-columns:1fr;
+    .employee-content {
+        grid-template-columns: 1fr;
     }
 }
 
-@media(max-width:768px){
+@media(max-width:768px) {
 
-    .employee-overview{
-        grid-template-columns:1fr;
+    .employee-overview {
+        grid-template-columns: 1fr;
     }
 
-    .quick-actions-grid{
-        grid-template-columns:1fr;
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
     }
 }

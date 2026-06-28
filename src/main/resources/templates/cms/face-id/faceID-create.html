@@ -43,21 +43,6 @@
                             <input type="text" id="roomCode" placeholder="Nhập mã phòng (VD: P101)">
                         </div>
 
-                        <!-- STUDENT SELECT -->
-                        <div class="student-select">
-
-                            <label>Sinh viên</label>
-
-                            <select id="faceStudentSelect">
-                                <option value="">Chọn sinh viên</option>
-                            </select>
-
-                            <button id="faceSampleCount" class="sample-btn">
-                                0 / 10 mẫu
-                            </button>
-
-                        </div>
-
                         <!-- GRID -->
                         <div class="face-register-grid">
 
@@ -80,9 +65,10 @@
                                 </div>
 
                                 <div class="video-wrap">
-                                    <video autoplay muted></video>
-                                    <canvas></canvas>
+                                    <video id="video" autoplay playsinline muted></video>
                                 </div>
+
+
 
                                 <!-- ACTION -->
                                 <div class="action-row">
@@ -108,7 +94,24 @@
 
         </div>
     </div>
+    <script>
+        const video = document.getElementById("video");
+        const btn = document.getElementById("faceRegisterToggleBtn");
 
+        btn.addEventListener("click", async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: false
+                });
+
+                video.srcObject = stream;
+            } catch (err) {
+                console.error(err);
+                alert("Không thể mở camera");
+            }
+        });
+    </script>
 </body>
 
 </html>

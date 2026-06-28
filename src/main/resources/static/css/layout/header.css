@@ -75,8 +75,9 @@ a {
 }
 
 .brand-icon i {
-    width: 22px;
-    height: 22px;
+    /* width: 22px;
+    height: 22px; */
+    font-size:25px;
     color: white;
 }
 
