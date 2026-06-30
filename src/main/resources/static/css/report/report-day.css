@@ -23,7 +23,7 @@
 
     font-weight: 800;
 
-    color: white;
+    color: var(--text-white);
 }
 
 .container-header p {
@@ -37,7 +37,7 @@
 =================================== */
 
 .card-header {
-    background: rgba(255, 255, 255, .03);
+    background: var(--bg-table);
 
     border: 1px solid var(--border);
 
@@ -51,7 +51,7 @@
 
     font-weight: 700;
 
-    color: white;
+    color: var(--text-white);
 }
 
 /* ===================================
@@ -90,11 +90,11 @@
 
     border-radius: 14px;
 
-    border: 1px solid rgba(255, 255, 255, .08);
+    border: 1px solid var(--border);
 
-    background: rgba(255, 255, 255, .05);
+    background: var(--bg-table-06);
 
-    color: white;
+    color: var(--text-white);
 
     outline: none;
 
@@ -103,9 +103,9 @@
 
 .filter-group input:focus,
 .filter-group select:focus {
-    border-color: var(--indigo);
+    border-color: var(--indigo-06);
 
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, .15);
+    box-shadow: 0 0 0 4px var(--indigo-15);
 }
 
 /* FILTER BUTTON */
@@ -123,9 +123,9 @@
 
     font-weight: 700;
 
-    color: white;
+    color: var(--text-white);
 
-    background: linear-gradient(to right, var(--indigo), var(--purple));
+    background: linear-gradient(to right, var(--indigo-06), var(--purple));
 
     transition: .25s;
 }
@@ -153,11 +153,11 @@
 
     border-collapse: collapse;
 
-    color: #e2e8f0;
+    color: var(--text-white);
 }
 
 .attendance-table thead {
-    background: rgba(255, 255, 255, .03);
+    background: var(--bg-table);
 }
 
 .attendance-table th {
@@ -175,7 +175,7 @@
 .attendance-table td {
     padding: 16px;
 
-    border-bottom: 1px solid rgba(255, 255, 255, .04);
+    border-bottom: 1px solid var(--bg-form);
 }
 
 .attendance-table tbody tr {
@@ -183,7 +183,7 @@
 }
 
 .attendance-table tbody tr:hover {
-    background: rgba(255, 255, 255, .03);
+    background: var(--bg-table);
 }
 
 /* ===================================
@@ -201,19 +201,19 @@
 }
 
 .status.present {
-    background: rgba(34, 197, 94, .15);
+    background: var(--btn-approv-15);
 
     color: var(--success);
 }
 
 .status.late {
-    background: rgba(245, 158, 11, .15);
+    background: var(--btn-warning-15);
 
     color: var(--warning);
 }
 
 .status.absent {
-    background: rgba(239, 68, 68, .15);
+    background: var(--btn-reject-15);
 
     color: var(--danger);
 }

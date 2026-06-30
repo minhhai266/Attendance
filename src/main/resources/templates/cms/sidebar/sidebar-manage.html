@@ -1,18 +1,20 @@
 <div class="sidebar" th:fragment="sidebar">
 
     <div class="sidebar-header">
-        <div class="logo">
-            <a href="/" >
-            📷
-        </a>
 
+        <div class="logo">
+            <a href="/">
+                📷
+            </a>
         </div>
-        
+
 
         <div>
             <h2>Smart Attendance</h2>
             <div class="header-description">Quản lý</div>
         </div>
+
+
     </div>
 
     <div class="sidebar-line"></div>
@@ -32,7 +34,12 @@
                 Quản lý điểm danh
             </a>
         </li>
-
+        <li class="sidebar-option">
+            <a href="/employeeList" class="sidebar-link">
+                <span>👥</span>
+                Quản lý nhân viên
+            </a>
+        </li>
         <li class="sidebar-option">
             <a href="/faceIDList" class="sidebar-link">
                 <span>👤</span>
@@ -44,6 +51,12 @@
             <a href="/attendance/leave" class="sidebar-link">
                 <span>📅</span>
                 Duyệt nghỉ phép
+            </a>
+        </li>
+        <li class="sidebar-option">
+            <a href="/documentList" class="sidebar-link">
+                <span>📝</span>
+                Danh sách báo cáo
             </a>
         </li>
         <li class="sidebar-option">
@@ -73,9 +86,9 @@
                     Vai trò
                 </div>
             </div> -->
-             <div>
-                <h3 >Nguyen van an</h3>
-                <div class="header-description" >
+            <div>
+                <h3>Nguyen van an</h3>
+                <div class="header-description">
                     Manager
                 </div>
             </div>
@@ -88,5 +101,14 @@
         </form>
 
     </div>
+    <script>
+        const links = document.querySelectorAll(".sidebar-link");
+        const currentPath = window.location.pathname;
 
+        links.forEach(link => {
+            if (link.getAttribute("href") === currentPath) {
+                link.classList.add("active");
+            }
+        });
+    </script>
 </div>

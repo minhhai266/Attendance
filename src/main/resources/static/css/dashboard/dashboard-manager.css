@@ -48,7 +48,7 @@
 
     margin-bottom:6px;
 
-    color:white;
+    color:var(--text-white);
 }
 
 .stat-card p{
@@ -59,7 +59,7 @@
 
 /* COLORS */
 .stat-card.total h3{
-    color:var(--indigo);
+    color:var(--indigo-06);
 }
 
 .stat-card.present h3{
@@ -112,7 +112,7 @@
 
     font-weight:700;
 
-    color:white;
+    color:var(--text-white);
 }
 
 .card-body{
@@ -134,7 +134,7 @@
 
     border-radius:14px;
 
-    background:rgba(255,255,255,.03);
+    background:var(--bg-table);
 
     margin-bottom:10px;
 
@@ -142,7 +142,7 @@
 }
 
 .activity-card .activity-item:hover{
-    background:rgba(255,255,255,.06);
+    background:var(--bg-table-06);
 }
 
 .activity-left{
@@ -169,7 +169,7 @@
 .activity-item h4{
     font-size:.95rem;
 
-    color:white;
+    color:var(--text-white);
 }
 
 .activity-item p{

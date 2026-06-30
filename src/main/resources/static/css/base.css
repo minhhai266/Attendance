@@ -6,8 +6,15 @@
 =================================== */
 
 :root {
-    --bg-dark: #020617;
+    --bg-dark: #171233;
     --bg-card: rgba(15, 23, 42, .65);
+
+    --bg-table: rgba(255, 255, 255, .03);
+    --bg-form: rgba(255, 255, 255, .04);
+    --bg-table-06: rgba(255, 255, 255, .06);
+    --bg-table-015: rgba(255, 255, 255, .15);
+
+    --bg-purple-025:rgba(1, 1, 11, 0.25);
 
     --border: rgba(255, 255, 255, .08);
 
@@ -15,13 +22,31 @@
     --text-gray: #94a3b8;
     --text-light: #cbd5e1;
 
-    --indigo: #6366f1;
+    --indigo-06: rgba(99, 102, 241, .6);
+    --indigo-15: rgba(99, 102, 241, .15);
+    --indigo-08: rgba(10, 11, 65, 0.08);
     --purple: #8b5cf6;
+    --purple-light: #b794ff;
     --pink: #ec4899;
+    --blue: #3b82f6;
+    --pinl-light: #d68eff;
 
-    --success: #22c55e;
+    --success: rgb(37, 249, 83);
     --warning: #f59e0b;
     --danger: #ef4444;
+
+    --shadow-box: rgba(99, 102, 241, .15);
+
+    --btn-secondary: #334155;
+    --btn-secondary-hover: #475569;
+
+    --btn-warning-15: rgba(139, 92, 246, .15);
+
+    --btn-reject-18: rgba(239, 68, 68, .18);
+    --btn-reject-15: rgba(239, 68, 68, .15);
+
+    --btn-approv-18: rgba(34, 197, 94, .18);
+    --btn-approv-15: rgba(34, 197, 94, .15);
 }
 
 /* ===================================
@@ -44,13 +69,13 @@ body {
         "Segoe UI",
         sans-serif;
 
-    color: white;
+    color: var(--text-white);
 
     background:
         linear-gradient(135deg,
-            #020617 0%,
-            #1e1b4b 50%,
-            #020617 100%);
+            #1a1633 0%,
+            rgba(188, 163, 237) 50%,
+            #191339 100%);
 }
 
 .layout {
@@ -85,11 +110,11 @@ body {
 
     background:
         radial-gradient(circle at top left,
-            rgba(1, 1, 11, 0.25),
-            transparent 100%),
+            #1b0f38,
+            transparent 80%),
         radial-gradient(circle at bottom right,
-            rgba(31, 20, 58, 0.25),
-            transparent 50%);
+            #220d54,
+            transparent 80%);
 }
 
 /* ===================================
@@ -111,14 +136,14 @@ body {
 =================================== */
 
 .container-header {
-    background-color: #020c2e;
+    background-color: var(--bg-dark);
     margin-bottom: 32px;
     padding: 15px 20px 15px 15px;
     border-radius: 1px;
     height: 112px;
-    border: 0.65px solid #291c56;
+    border: 0.65px solid var(--shadow-box);
     padding-left: 20px;
-    height:140px;
+    height: 140px;
 }
 
 .container-header h1 {
@@ -130,9 +155,9 @@ body {
 
     background:
         linear-gradient(to right,
-            #c7cbeb,
-            #e5e1e8,
-            #e5e2e3);
+            var(--text-white),
+            var(--text-light),
+            var(--text-white));
 
     background-clip: text;
     -webkit-background-clip: text;
@@ -140,7 +165,7 @@ body {
 }
 
 .container-header p {
-    color: #94a3b8;
+    color: var(--text-gray);
     font-size: 1rem;
 }
 

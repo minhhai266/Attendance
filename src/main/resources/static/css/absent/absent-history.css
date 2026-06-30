@@ -71,9 +71,9 @@
 
     color: white;
 
-    background: rgba(255, 255, 255, .05);
+    background: var(--bg-form);
 
-    border: 1px solid rgba(255, 255, 255, .08);
+    border: 1px solid var(--border);
 
     transition: .3s;
 }
@@ -82,14 +82,14 @@
 .form-group select:focus {
     outline: none;
 
-    border-color: var(--indigo);
+    border-color: var(--indigo-06);
 
     box-shadow:
-        0 0 0 4px rgba(99, 102, 241, .15);
+        0 0 0 4px var(--shadow-box);
 }
 
 .form-group select option {
-    background: #0f172a;
+    background: var(--bg-dark);
 }
 
 /* ===================================
@@ -127,7 +127,7 @@
 
     background:
         linear-gradient(to right,
-            var(--indigo),
+            var(--indigo-06),
             var(--purple));
 }
 
@@ -136,12 +136,12 @@
 }
 
 .btn-secondary {
-    background: #334155;
-    color: white;
+    background: var(--btn-secondary);
+    color: var(--text-white);
 }
 
 .btn-secondary:hover {
-    background: #475569;
+    background: var(--btn-secondary-hover);
 }
 
 /* ===================================
@@ -159,7 +159,7 @@
 
 .table thead {
     background:
-        rgba(255, 255, 255, .03);
+        var(--bg-table);
 }
 
 .table th {
@@ -180,7 +180,7 @@
     color: #e2e8f0;
 
     border-bottom:
-        1px solid rgba(255, 255, 255, .04);
+        1px solid var(--bg-form);
 }
 
 .table tbody tr {
@@ -189,7 +189,7 @@
 
 .table tbody tr:hover {
     background:
-        rgba(255, 255, 255, .03);
+        var(--bg-table);
 }
 
 /* ===================================
@@ -218,14 +218,14 @@
 
 .approved {
     background:
-        rgba(34, 197, 94, .15);
+        var(--btn-approv-15);
 
     color: var(--success);
 }
 
 .rejected {
     background:
-        rgba(239, 68, 68, .15);
+        var(--btn-reject-15);
 
     color: var(--danger);
 }
@@ -253,20 +253,20 @@
 
     transition: .25s;
 
-    color: white;
+    color: var(--text-white);
 }
 
 .btn-view {
-    background: #334155;
+    background: var(--border);
 }
 
 .btn-approve {
-    background: rgba(34, 197, 94, .18);
+    background: var(--btn-approv-18);
     color: var(--success);
 }
 
 .btn-reject {
-    background: rgba(239, 68, 68, .18);
+    background: var(--btn-reject-18);
     color: var(--danger);
 }
 

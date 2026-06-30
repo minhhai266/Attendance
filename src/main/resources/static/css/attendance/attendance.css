@@ -99,11 +99,11 @@
     padding:0 16px;
 
     background:
-        rgba(255,255,255,.05);
+        var(--bg-form);
 
     color:white;
 
-    border:1px solid rgba(255,255,255,.08);
+    border:1px solid var(--border);
 
     transition:.3s;
 }
@@ -112,10 +112,10 @@
 .filter-panel select:focus{
     outline:none;
 
-    border-color:var(--indigo);
+    border-color:var(--indigo-06);
 
     box-shadow:
-        0 0 0 4px rgba(99,102,241,.15);
+        0 0 0 4px var(--shadow-box);
 }
 
 .search-input{
@@ -133,13 +133,13 @@
 
     cursor:pointer;
 
-    color:white;
+    color:var(--text-white);
     font-weight:600;
 
     background:
         linear-gradient(
             to right,
-            var(--indigo),
+            var(--indigo-06),
             var(--purple)
         );
 
@@ -151,7 +151,7 @@
 }
 
 .secondary{
-    background:#334155 !important;
+    background:var(--btn-secondary) !important;
 }
 
 /* ===================================
@@ -206,10 +206,10 @@
 .attendance-table td{
     padding:18px;
 
-    color:#e2e8f0;
+    color:var(--text-white);
 
     border-bottom:
-        1px solid rgba(255,255,255,.04);
+        1px solid var(--bg-form);
 }
 
 .attendance-table tbody tr{
@@ -218,7 +218,7 @@
 
 .attendance-table tbody tr:hover{
     background:
-        rgba(255,255,255,.03);
+        var(--bg-table);
 }
 
 /* ===================================
@@ -236,21 +236,21 @@
 
 .badge-success{
     background:
-        rgba(34,197,94,.15);
+        var(--btn-approv-15);
 
     color:var(--success);
 }
 
 .badge-warning{
     background:
-        rgba(245,158,11,.15);
+        var(--btn-warning-15);
 
     color:var(--warning);
 }
 
 .badge-danger{
     background:
-        rgba(239,68,68,.15);
+        var(--btn-reject-15);
 
     color:var(--danger);
 }
@@ -265,11 +265,11 @@
 }
 
 ::-webkit-scrollbar-track{
-    background:#1e293b;
+    background:var(--bg-card);
 }
 
 ::-webkit-scrollbar-thumb{
-    background:#475569;
+    background:var(--border);
     border-radius:8px;
 }
 

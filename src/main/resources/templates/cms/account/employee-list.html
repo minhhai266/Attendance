@@ -1,0 +1,271 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý nhân viên</title>
+
+    <link rel="stylesheet" th:href="@{/css/account/employee-list.css}">
+</head>
+
+<body>
+
+    <div class="bg-image"></div>
+
+    <div class="layout">
+
+        <div th:replace="~{cms/sidebar/sidebar-manage :: sidebar}"></div>
+
+        <div class="container-layout">
+
+            <!-- HEADER -->
+            <div class="container-header">
+                <h1>Quản lý nhân viên</h1>
+                <p>Quản lý nhân viên theo phòng ban</p>
+            </div>
+
+            <main class="main-container">
+
+                <section class="dashboard-card">
+
+                    <!-- Header -->
+                    <div class="card-header">
+
+                        <h2>Danh sách nhân viên</h2>
+
+                        <button id="add-employee" class="add-btn">
+                            + Thêm nhân viên
+                        </button>
+
+                    </div>
+
+                    <!-- Search + Filter -->
+                    <div class="toolbar">
+
+                        <div class="search-box">
+                            <input type="text" placeholder="Tìm theo tên, email hoặc mã nhân viên...">
+                        </div>
+
+                        <div class="filter-box">
+
+                            <select>
+                                <option>Tất cả phòng ban</option>
+                                <option>Phòng IT</option>
+                                <option>Phòng Nhân sự</option>
+                                <option>Phòng Kế toán</option>
+                                <option>Phòng Marketing</option>
+                            </select>
+
+                            <select>
+                                <option>Tất cả trạng thái</option>
+                                <option>Đang làm việc</option>
+                                <option>Nghỉ việc</option>
+                                <option>Tạm khóa</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <!-- TABLE -->
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Nhân viên</th>
+
+                                <th>Mã NV</th>
+
+                                <th>Email</th>
+
+                                <th>Phòng ban</th>
+
+                                <th>Vai trò</th>
+
+                                <th>Trạng thái</th>
+
+                                <th>Hành động</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+                                <td>
+
+                                    <div class="user">
+
+                                        <div class="avatar">H</div>
+
+                                        <strong>Nguyễn Minh Hải</strong>
+
+                                    </div>
+
+                                </td>
+
+                                <td>EMP001</td>
+
+                                <td>hai@gmail.com</td>
+
+                                <td>IT</td>
+
+                                <td>Nhân viên</td>
+
+                                <td>
+
+                                    <span class="status active">
+                                        Đang làm việc
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <div class="actions">
+
+                                        <button class="icon-btn">
+                                            Chi tiết
+                                        </button>
+
+                                        <button class="icon-btn btn-role">
+                                            Chuyển phòng
+                                        </button>
+
+                                        <button class="icon-btn lock">
+                                            Khóa
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>
+
+                                    <div class="user">
+
+                                        <div class="avatar">A</div>
+
+                                        <strong>Nguyễn Văn An</strong>
+
+                                    </div>
+
+                                </td>
+
+                                <td>EMP002</td>
+
+                                <td>an@gmail.com</td>
+
+                                <td>Nhân sự</td>
+
+                                <td>Trưởng phòng</td>
+
+                                <td>
+
+                                    <span class="status inactive">
+                                        Nghỉ việc
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <div class="actions">
+
+                                        <button class="icon-btn">
+                                            Chi tiết
+                                        </button>
+
+                                        <button class="icon-btn btn-role">
+                                            Chuyển phòng
+                                        </button>
+
+                                        <button class="icon-btn lock">
+                                            Mở khóa
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </section>
+
+            </main>
+
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
+
+        </div>
+
+    </div>
+    <section id="card-addEmployee" class="card-add">
+        <div class="card-container">
+
+            <div class="card-headers">
+                <div class="header-icon">
+                    <i class="bi bi-person-add"></i>
+                </div>
+
+                <h2>Mời thành viên vào phòng</h2>
+            </div>
+
+            <div class="card-body">
+
+                <!-- Chọn phòng -->
+                <div class="filter-box">
+                    <label>Chọn phòng</label>
+
+                    <select id="roomSelect">
+                        <option value="">-- Chọn phòng ban --</option>
+                        <option value="DE211">Phòng DE211</option>
+                        <option value="DE212">Phòng DE212</option>
+                        <option value="DE213">Phòng DE213</option>
+                    </select>
+                </div>
+
+                <!-- Hiển thị sau khi chọn -->
+                <div class="container-QR" id="joinInfo">
+
+                    <div class="room-code-box">
+                        <span>Mã tham gia</span>
+
+                        <h1 id="roomCode">DE211-X7A9</h1>
+
+                        <button id="copyBtn">
+                            Sao chép mã
+                        </button>
+                    </div>
+
+                    <p class="note">
+                        Sinh viên nhập mã trên hoặc quét QR để tham gia phòng.
+                    </p>
+
+                </div>
+                <button id="closePopup" class="close-btn">
+                    <i class="fas fa-times">Đóng</i>
+                    
+                </button>
+            </div>
+
+        </div>
+    </section>
+    <script src="/js/employee/employee-popup.js"></script>
+    <script src="/js/employee/room-code.js"></script>
+    <script src="/js/employee/copy-code.js"></script>
+</body>
+
+</html>

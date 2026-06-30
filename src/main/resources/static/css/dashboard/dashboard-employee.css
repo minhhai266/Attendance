@@ -56,7 +56,7 @@
 
     background:
         linear-gradient(135deg,
-            var(--indigo),
+            var(--indigo-06),
             var(--purple));
 }
 
@@ -64,14 +64,14 @@
     /* width: 42px;
     height: 42px; */
     font-size: 24px;
-    color: white;
+    color: var(--text-white);
 }
 
 .employee-stat-card__number {
     font-size: 1.6rem;
     font-weight: 800;
 
-    color: white;
+    color: var(--text-white);
 }
 
 .employee-stat-card__label {
@@ -88,7 +88,7 @@
 
     border-radius: 999px;
 
-    background: rgba(255, 255, 255, .05);
+    background: var(--bg-form);
 
     color: var(--text-light);
 }
@@ -96,7 +96,7 @@
 /* color variants */
 
 .report-submitted .employee-stat-card__number {
-    color: var(--indigo);
+    color: var(--indigo-06);
 }
 
 .report-approved .employee-stat-card__number {
@@ -137,7 +137,7 @@
 
     margin-bottom: 14px;
 
-    color: white;
+    color: var(--text-white);
 }
 
 .quick-actions-grid {
@@ -159,7 +159,7 @@
 
     text-decoration: none;
 
-    color: white;
+    color: var(--text-white);
 
     transition: .25s;
 
@@ -176,7 +176,7 @@
     /* width: 42px;
     height: 42px; */
     font-size: 25px;
-    color: white;
+    color: var(--text-white);
 }
 
 .quick-action-card:hover {
@@ -210,7 +210,7 @@
 }
 
 .attendance-table thead {
-    background: rgba(255, 255, 255, .03);
+    background: var(--bg-table);
 }
 
 .attendance-table th {
@@ -226,13 +226,13 @@
 .attendance-table td {
     padding: 16px;
 
-    color: #e2e8f0;
+    color: var(--text-white);
 
-    border-bottom: 1px solid rgba(255, 255, 255, .04);
+    border-bottom: 1px solid var(--bg-form);
 }
 
 .attendance-table tbody tr:hover {
-    background: rgba(255, 255, 255, .03);
+    background: var(--bg-table);
 }
 
 /* ===================================
@@ -252,17 +252,17 @@
 }
 
 .status-success {
-    background: rgba(34, 197, 94, .15);
+    background: var(--btn-approv-15);
     color: var(--success);
 }
 
 .status-warning {
-    background: rgba(245, 158, 11, .15);
+    background: var(--btn-warning-15);
     color: var(--warning);
 }
 
 .status-danger {
-    background: rgba(239, 68, 68, .15);
+    background: var(--btn-reject-15);
     color: var(--danger);
 }
 
@@ -332,9 +332,9 @@
 
     font-weight: 600;
 
-    color: white;
+    color: var(--text-white);
 
-    background: linear-gradient(to right, var(--indigo), var(--purple));
+    background: linear-gradient(to right, var(--indigo-06), var(--purple));
 
     transition: .25s;
 }
@@ -352,7 +352,7 @@
 
     margin-bottom: 8px;
 
-    color: white;
+    color: var(--text-white);
 }
 
 .reminder-card__content {

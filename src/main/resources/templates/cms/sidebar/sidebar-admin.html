@@ -60,8 +60,8 @@
                 </div>
             </div> -->
             <div>
-                <h3 >Nguyen van an</h3>
-                <div class="header-description" >
+                <h3>Nguyen van an</h3>
+                <div class="header-description">
                     admin
                 </div>
             </div>
@@ -74,4 +74,14 @@
         </form>
 
     </div>
+    <script>
+        const links = document.querySelectorAll(".sidebar-link");
+        const currentPath = window.location.pathname;
+
+        links.forEach(link => {
+            if (link.getAttribute("href") === currentPath) {
+                link.classList.add("active");
+            }
+        });
+    </script>
 </div>

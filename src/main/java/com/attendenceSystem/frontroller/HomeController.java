@@ -84,6 +84,10 @@ public class HomeController {
     public String accountList() {
         return "cms/account/account-list";
     }
+    @GetMapping("/employeeList")
+    public String employeeList() {
+        return "cms/account/employee-list";
+    }
     @GetMapping("/absentCreate")
     public String absentCreate() {
         return "cms/absent/absent-create";
