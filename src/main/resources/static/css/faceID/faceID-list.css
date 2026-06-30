@@ -25,11 +25,11 @@
 
     border-collapse:collapse;
 
-    color:#e2e8f0;
+    color:var(--text-white);
 }
 
 .face-table thead{
-    background:rgba(255,255,255,.03);
+    background:var(--bg-table);
 }
 
 .face-table th{
@@ -47,7 +47,7 @@
 .face-table td{
     padding:16px;
 
-    border-bottom:1px solid rgba(255,255,255,.04);
+    border-bottom:1px solid var(--bg-form);
 
     font-size:.95rem;
 }
@@ -57,8 +57,9 @@
 }
 
 .face-table tbody tr:hover{
-    background:rgba(255,255,255,.03);
+    background:var(--bg-table);
 }
+
 
 /* ===================================
    BADGE
@@ -75,11 +76,11 @@
 
     font-weight:600;
 
-    background:rgba(99,102,241,.15);
+    background:var(--bg-table-015);
 
-    color:var(--indigo);
+    color:var(--text-white );
 
-    border:1px solid rgba(99,102,241,.25);
+    border:1px solid var(--indigo-15);
 }
 
 /* ===================================
@@ -91,9 +92,9 @@
 
     border-radius:12px;
 
-    border:1px solid rgba(255,255,255,.1);
+    border:1px solid var(--border);
 
-    background:rgba(255,255,255,.05);
+    background:var(--bg-table-06);
 
     color:var(--text-light);
 
@@ -103,9 +104,9 @@
 }
 
 .detail-btn:hover{
-    background:rgba(99,102,241,.2);
+    background:var(--indigo-15);
 
-    border-color:var(--indigo);
+    border-color:var(--indigo-06);
 
     color:white;
 }
@@ -125,7 +126,14 @@
 
     font-weight:600;
 }
-
+.btn-secondery{
+    background-color:var(--danger) ;
+    color: var(--text-white);
+}
+.btn-primary{
+    background-color:var(--success) ;
+    color: var(--text-white);
+}
 /* ===================================
    TABLE WRAPPER IMPROVEMENT
 =================================== */

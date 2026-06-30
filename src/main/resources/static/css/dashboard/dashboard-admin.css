@@ -24,7 +24,7 @@
 
     background:
         linear-gradient(135deg,
-            var(--indigo),
+            var(--indigo-06),
             var(--purple));
 }
 
@@ -32,7 +32,7 @@
     /* width: 42px;
     height: 42px; */
     font-size: 20px;
-    color: white;
+    color: var(--text-white);
 }
 /* ===================================
    STAT CARD
@@ -112,7 +112,7 @@
 
 .admin-action-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(99, 102, 241, .4);
+    border-color: var(--shadow-box);
 }
 
 .admin-action-card__badge {
@@ -123,8 +123,8 @@
     height: 24px;
     padding: 0 7px;
     border-radius: 999px;
-    background: linear-gradient(to right, var(--indigo), var(--purple));
-    color: white;
+    background: linear-gradient(to right, var(--indigo-06), var(--purple));
+    color: var(--text-white);
     font-size: .75rem;
     font-weight: 700;
     display: flex;
@@ -145,7 +145,7 @@
 
     background:
         linear-gradient(135deg,
-            var(--indigo),
+            var(--indigo-06),
             var(--purple));
 }
 
@@ -153,7 +153,7 @@
     /* width: 42px;
     height: 42px; */
     font-size: 20px;
-    color: white;
+    color: var(--text-white);
 }
 
 .admin-action-card__title {
@@ -248,7 +248,7 @@
 }
 
 .activity-item:hover {
-    background: rgba(255, 255, 255, .03);
+    background: var(--bg-form);
 }
 
 .activity-item__left {
@@ -264,7 +264,7 @@
     flex-shrink: 0;
 }
 
-.activity-dot--blue   { background: var(--indigo); }
+.activity-dot--blue   { background: var(--indigo-06); }
 .activity-dot--green  { background: var(--success); }
 .activity-dot--yellow { background: var(--warning); }
 .activity-dot--red    { background: var(--danger); }
@@ -319,8 +319,8 @@
     border-radius: 12px;
     cursor: pointer;
     font-weight: 600;
-    color: white;
-    background: linear-gradient(to right, var(--indigo), var(--purple));
+    color: var(--text-white);
+    background: linear-gradient(to right, var(--indigo-06), var(--purple));
     transition: .25s;
 }
 
@@ -342,14 +342,14 @@
     padding: 12px 14px;
     border-radius: 12px;
     border: 1px solid var(--border);
-    background: rgba(255, 255, 255, .03);
-    color: white;
+    background: var(--bg-table);
+    color: var(--text-white);
     outline: none;
     transition: .2s;
 }
 
 .search-box input:focus {
-    border-color: rgba(99, 102, 241, .6);
+    border-color: var(--indigo-06);
 }
 
 
@@ -363,7 +363,7 @@ table {
 }
 
 thead {
-    background: rgba(255, 255, 255, .03);
+    background: var(--bg-table);
 }
 
 th {
@@ -376,12 +376,12 @@ th {
 
 td {
     padding: 14px;
-    color: #e2e8f0;
-    border-bottom: 1px solid rgba(255, 255, 255, .04);
+    color: var(--text-white);
+    border-bottom: 1px solid var(--bg-form);
 }
 
 tbody tr:hover {
-    background: rgba(255, 255, 255, .03);
+    background: var(--bg-table);
 }
 
 
@@ -402,7 +402,7 @@ tbody tr:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, .06);
+    background: var(--bg-table-06);
     font-weight: 700;
     color: white;
 }
@@ -418,8 +418,8 @@ tbody tr:hover {
     border-radius: 999px;
     font-size: .8rem;
     font-weight: 600;
-    background: rgba(99, 102, 241, .15);
-    color: var(--indigo);
+    background: var(--indigo-15);
+    color: var(--indigo-06);
 }
 
 .status {
@@ -431,12 +431,12 @@ tbody tr:hover {
 }
 
 .status.active {
-    background: rgba(34, 197, 94, .15);
+    background: var(--btn-approv-15);
     color: var(--success);
 }
 
 .status.locked {
-    background: rgba(239, 68, 68, .15);
+    background: var(--btn-reject-15);
     color: var(--danger);
 }
 
@@ -454,7 +454,7 @@ tbody tr:hover {
     padding: 6px 10px;
     border-radius: 10px;
     border: 1px solid var(--border);
-    background: rgba(255, 255, 255, .03);
+    background: var(--bg-table);
     color: white;
     cursor: pointer;
     transition: .2s;
@@ -479,7 +479,7 @@ tbody tr:hover {
     display: none;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, .6);
+    background: var(--bg-dark);
     backdrop-filter: blur(6px);
 }
 
@@ -499,14 +499,14 @@ tbody tr:hover {
 }
 
 .detail-header h2 {
-    color: white;
+    color: var(--text-white);
     font-size: 1.1rem;
 }
 
 .close-btn {
     background: transparent;
     border: none;
-    color: white;
+    color: var(--text-white);
     font-size: 1.3rem;
     cursor: pointer;
 }
@@ -524,7 +524,7 @@ tbody tr:hover {
 
 .detail-item p,
 .detail-item span {
-    color: white;
+    color: var(--text-white);
     font-weight: 600;
 }
 

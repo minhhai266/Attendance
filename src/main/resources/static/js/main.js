@@ -8,14 +8,18 @@
 // ===========================
 
 function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    updateThemeIcon(savedTheme);
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme) {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+    }
+
+    updateThemeIcon(savedTheme || "dark");
 }
 
 function toggleTheme() {
     const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'dark';
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
     updateThemeIcon(newTheme);

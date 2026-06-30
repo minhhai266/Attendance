@@ -1,15 +1,56 @@
 /* ===== SIDEBAR ===== */
+:root {
+    --bg-dark: #020617;
+    --bg-card: rgba(15, 23, 42, .65);
+
+    --bg-table: rgba(255, 255, 255, .03);
+    --bg-form: rgba(255, 255, 255, .04);
+    --bg-table-06: rgba(255, 255, 255, .06);
+    --bg-table-015: rgba(255, 255, 255, .15);
+
+    --border: rgba(255, 255, 255, .08);
+
+    --text-white: #ffffff;
+    --text-gray: #94a3b8;
+    --text-light: #cbd5e1;
+
+    --indigo-06: rgba(99, 102, 241, .6);
+    --indigo-15: rgba(99, 102, 241, .15);
+
+    --purple: #8b5cf6;
+    --purple-light: #b794ff;
+    --pink: #ec4899;
+    --blue: #3b82f6;
+    --pinl-light: #d68eff;
+
+    --success: rgb(37, 249, 83);
+    --warning: #f59e0b;
+    --danger: #ef4444;
+
+    --shadow-box: rgba(99, 102, 241, .15);
+
+    --btn-secondary: #334155;
+    --btn-secondary-hover: #475569;
+
+    --btn-warning-15: rgba(139, 92, 246, .15);
+
+    --btn-reject-18: rgba(239, 68, 68, .18);
+    --btn-reject-15: rgba(239, 68, 68, .15);
+
+    --btn-approv-18: rgba(34, 197, 94, .18);
+    --btn-approv-15: rgba(34, 197, 94, .15);
+}
 
 .sidebar {
-    
+
     min-height: 100vh;
 
-    background: #020c2e;
+    background: var(--bg-dark);
 
     display: flex;
     flex-direction: column;
 
-    color: white;
+    color: var(--text-white);
     font-family: "Segoe UI", sans-serif;
     padding-bottom: 30px;
 }
@@ -25,7 +66,7 @@
 }
 
 .logo {
-    width:56px;
+    width: 56px;
     height: 48px;
 
     border-radius: 18px;
@@ -36,15 +77,14 @@
 
     font-size: 24px;
 
-    background: linear-gradient(
-        135deg,
-        #02085c,
-        #2461ca
-    );
+    background: linear-gradient(135deg,
+            #02085c,
+            #2461ca);
 }
-.logo i{
+
+.logo i {
     width: 26px;
-    height:26px;
+    height: 26px;
 }
 
 .sidebar-header h2 {
@@ -53,7 +93,7 @@
 }
 
 .header-description {
-    color: #94a3b8;
+    color: var(--text-gray);
     margin-top: 4px;
     font-size: 0.95rem;
 }
@@ -62,7 +102,7 @@
 
 .sidebar-line {
     height: 1px;
-    background: rgba(255,255,255,0.08);
+    background: var(--border);
 }
 
 /* ===== MENU ===== */
@@ -85,7 +125,7 @@
 
     text-decoration: none;
 
-    color: #94a3b8;
+    color: var(--text-gray);
 
     padding: 14px 18px;
 
@@ -100,23 +140,33 @@
 /* Hover */
 
 .sidebar-link:hover {
-    background: rgba(255,255,255,0.05);
-    color: white;
+    background: var(--bg-table-06);
+    color: var(--text-white);
 }
 
 /* Active giống ảnh */
+.sidebar-link.active {
+    background: linear-gradient(135deg,
+            #3b82f6,
+            #6366f1,
+            #8b5cf6);
 
-.sidebar-option.active .sidebar-link {
-    background: linear-gradient(
-        90deg,
-        #02085c,
-        #2461ca
-    );
+    color: #fff;
 
-    color: white;
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    transform: translateX(6px);
 
     box-shadow:
-        0 8px 25px rgba(63, 120, 235, 0.3);
+        0 0 20px rgba(99, 102, 241, .45),
+        0 10px 30px rgba(99, 102, 241, .35);
+
+    backdrop-filter: blur(10px);
+}
+
+.sidebar-link.active span {
+    transform: scale(1.15);
+    text-shadow: 0 0 12px rgba(255, 255, 255, .8);
 }
 
 /* ===== FOOTER ===== */
@@ -135,7 +185,7 @@
 
     border-radius: 20px;
 
-    background: rgba(255,255,255,0.05);
+    background: var(--bg-table-06);
 
     margin-bottom: 20px;
 }
@@ -152,16 +202,16 @@
 
     font-size: 20px;
 
-    background: linear-gradient(
-        135deg,
-        #1e044d,
-        #251785
-    );
+    background: linear-gradient(135deg,
+            #1e044d,
+            #251785);
 }
+
 .avatar i {
     font-size: 28px;
-    color:white;
+    color: var(--text-white);
 }
+
 .footer-user h3 {
     font-size: 1.1rem;
 }
@@ -171,7 +221,7 @@
     align-items: center;
     gap: 12px;
 
-    color: #94a3b8;
+    color: var(--text-gray);
 
     cursor: pointer;
 
@@ -186,6 +236,6 @@
 }
 
 .logout:hover {
-    background: rgba(255,255,255,0.05);
-    color: white;
+    background: var(--bg-table-06);
+    color: var(--text-white);
 }

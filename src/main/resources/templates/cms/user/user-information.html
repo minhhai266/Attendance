@@ -34,10 +34,11 @@
 
                     <div class="card-header">
                         <h2>Thông tin cá nhân</h2>
+                        <button class="btn btn-primary" id="changeInformation">Sửa</button>
+
                     </div>
 
                     <div class="card-body">
-
                         <div class="info-grid">
 
                             <div class="info-item">
@@ -112,13 +113,69 @@
                 </section>
 
             </main>
+
             <div th:replace="~{cms/layout/footer :: footer}"></div>
 
         </div>
     </div>
 
-    <!-- FOOTER -->
+    <section class="edit-card" id="editInformation">
 
+        
+            <div class="edit-body">
+                <div class="edit-header">
+                    <h2>Thông tin cá nhân</h2>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label >Họ và tên</label>
+                        <input type="text">
+                    </div>
+                    <div class="info-item">
+                        <label >Tên đăng nhập</label>
+                        <input type="text">
+                    </div>
+                    <div class="info-item">
+                        <label >Email</label>
+                        <input type="text">
+                    </div>
+                    <div class="info-item">
+                        <label >Số điện thoại</label>
+                        <input type="text">
+                    </div>
+                    <div class="info-item">
+                        <label >Bộ phận</label>
+                        <input type="text">
+                    </div>
+                    <div class="btn-run">
+                        <button id="btnEdit" class="btn btn-primary">
+                            Sửa
+                        </button>
+
+                        <button id="btnClose" class="btn btn-close">
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        
+    </section>
+    <!-- FOOTER -->
+    <script>
+        const btn = document.getElementById("editInformation");
+        document.getElementById("changeInformation").onclick = function () {
+            btn.style.display = "flex";
+        };
+        document.getElementById("btnClose").onclick = function () {
+            btn.style.display = "none";
+        }
+
+        btn.addEventListener("click", function (e) {
+            if (e.target === btn) {
+                btn.style.display = "none";
+            }
+        });
+    </script>
 </body>
 
 </html>

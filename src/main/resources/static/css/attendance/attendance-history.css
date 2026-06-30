@@ -30,7 +30,7 @@
 
     object-fit: cover;
 
-    border: 2px solid rgba(255, 255, 255, .1);
+    border: 2px solid var(--bg-table);
 }
 
 .profile-info h3 {
@@ -86,7 +86,7 @@
 
     margin-bottom: 6px;
 
-    color: white;
+    color: var(--text-white);
 }
 
 .stats-label {
@@ -107,7 +107,7 @@
 }
 
 .total .stats-value {
-    color: var(--indigo);
+    color: var(--indigo-06);
 }
 
 /* ===================================
@@ -132,11 +132,11 @@
 
     border-radius: 14px;
 
-    border: 1px solid rgba(255, 255, 255, .08);
+    border: 1px solid var(--border);
 
-    background: rgba(255, 255, 255, .05);
+    background: var(--bg-form);
 
-    color: white;
+    color: var(--text-white);
 
     transition: .25s;
 }
@@ -145,9 +145,9 @@
 .filter-panel select:focus {
     outline: none;
 
-    border-color: var(--indigo);
+    border-color: var(--indigo-06);
 
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, .15);
+    box-shadow: 0 0 0 4px var(--shadow-box);
 }
 
 .filter-panel button {
@@ -162,9 +162,9 @@
 
     font-weight: 600;
 
-    color: white;
+    color: var(--text-white);
 
-    background: linear-gradient(to right, var(--indigo), var(--purple));
+    background: linear-gradient(to right, var(--indigo-06), var(--purple));
 
     transition: .25s;
 }
@@ -205,7 +205,7 @@
     font-size: 1.2rem;
     font-weight: 700;
 
-    color: white;
+    color: var(--text-white);
 }
 
 .table-header span {
@@ -224,7 +224,7 @@
 }
 
 .attendance-table thead {
-    background: rgba(255, 255, 255, .03);
+    background: var(--bg-table);
 }
 
 .attendance-table th {
@@ -240,13 +240,13 @@
 .attendance-table td {
     padding: 16px;
 
-    color: #e2e8f0;
+    color: var(--text-white);
 
-    border-bottom: 1px solid rgba(255, 255, 255, .04);
+    border-bottom: 1px solid var(--bg-form);
 }
 
 .attendance-table tbody tr:hover {
-    background: rgba(255, 255, 255, .03);
+    background: var(--bg-table);
 }
 
 /* ===================================
@@ -265,17 +265,17 @@
 }
 
 .badge.success {
-    background: rgba(34, 197, 94, .15);
+    background: var(--btn-approv-15);
     color: var(--success);
 }
 
 .badge.late {
-    background: rgba(245, 158, 11, .15);
+    background: var(--btn-reject-15);
     color: var(--warning);
 }
 
 .badge.warning {
-    background: rgba(139, 92, 246, .15);
+    background: var( --btn-warning);
     color: var(--purple);
 }
 

@@ -64,11 +64,11 @@
 
     border-radius:14px;
 
-    border:1px solid rgba(255,255,255,.08);
+    border:1px solid var(--border);
 
-    background:rgba(255,255,255,.05);
+    background:var(--bg-table-06);
 
-    color:white;
+    color:var(--text-white);
 
     outline:none;
 
@@ -82,9 +82,9 @@
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus{
-    border-color:var(--indigo);
+    border-color:var(--indigo-06);
 
-    box-shadow:0 0 0 4px rgba(99,102,241,.15);
+    box-shadow:0 0 0 4px var(--indigo-15);
 }
 
 /* ===================================
@@ -102,11 +102,11 @@
 input[type="file"]{
     padding:10px;
 
-    background:rgba(255,255,255,.03);
+    background:var(--bg-table);
 
     border-radius:14px;
 
-    border:1px dashed rgba(255,255,255,.15);
+    border:1px dashed var(--bg-table-015);
 
     color:var(--text-gray);
 }
@@ -137,7 +137,7 @@ input[type="file"]{
 
     color:white;
 
-    background:linear-gradient(to right, var(--indigo), var(--purple));
+    background:linear-gradient(to right, var(--indigo-06), var(--purple));
 
     transition:.25s;
 
@@ -158,9 +158,9 @@ input[type="file"]{
 
     border-radius:14px;
 
-    border:1px solid rgba(255,255,255,.1);
+    border:1px solid var(--bg-table);
 
-    background:rgba(255,255,255,.05);
+    background:var(--bg-table-015);
 
     color:var(--text-light);
 
@@ -170,7 +170,7 @@ input[type="file"]{
 }
 
 .btn-secondary:hover{
-    background:rgba(255,255,255,.08);
+    background:var(--border);
 }
 
 /* ===================================

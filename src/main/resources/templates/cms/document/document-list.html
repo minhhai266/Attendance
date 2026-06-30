@@ -45,22 +45,21 @@
 
                                 <tr>
 
-                                    <td ">
-                                    Nguyễn Văn A
-                                </td>
+                                    <td>
+                                        Nguyễn Văn A
+                                    </td>
 
-                                <td >
-                                    Báo cáo tuần 01
-                                </td>
+                                    <td>
+                                        Báo cáo tuần 01
+                                    </td>
 
-                                <td >
-                                    15/02/2025
-                                </td>
+                                    <td>
+                                        15/02/2025
+                                    </td>
 
-                                <td>
-                                    <a 
-                                        class=" file-link">
-                                        📎 Tải file
+                                    <td>
+                                        <a class=" file-link">
+                                            📎 Tải file
                                         </a>
 
                                         <span>
@@ -80,17 +79,11 @@
 
                                     <td>
 
-                                        <span th:if="${report.status == 'PENDING'}" class="status-pending">
+                                        <span  class="status-pending">
                                             Chờ duyệt
                                         </span>
 
-                                        <span th:if="${report.status == 'APPROVED'}" class="status-approved">
-                                            Đã duyệt
-                                        </span>
-
-                                        <span th:if="${report.status == 'REJECTED'}" class="status-rejected">
-                                            Từ chối
-                                        </span>
+                                        
 
                                     </td>
 
@@ -102,7 +95,7 @@
 
                                     <td>
 
-                                        <div class="action-group" th:if="${report.status == 'PENDING'}">
+                                        <div class="action-group" >
 
                                             <form method="post">
 

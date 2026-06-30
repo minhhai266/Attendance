@@ -1,0 +1,627 @@
+@import url("../base.css");
+
+/* ===================================
+   DASHBOARD CARD
+=================================== */
+
+.dashboard-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.card-header h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+/* ===================================
+   BUTTON
+=================================== */
+
+.add-btn {
+    height: 46px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg,
+            var(--indigo-06),
+            var(--purple));
+    transition: .25s;
+}
+
+.add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(99, 102, 241, .35);
+}
+
+
+/* ===================================
+   TOOLBAR
+=================================== */
+
+.toolbar {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+}
+
+/* ===================================
+   SEARCH
+=================================== */
+
+.search-box {
+    flex: 1;
+    min-width: 320px;
+}
+
+.search-box input {
+    width: 100%;
+    height: 50px;
+    padding: 0 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    background: rgba(255, 255, 255, .05);
+    color: white;
+    font-size: .95rem;
+    transition: .25s;
+}
+
+.search-box input::placeholder {
+    color: #94a3b8;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--indigo-06);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, .15);
+}
+
+/* ===================================
+   FILTER
+=================================== */
+
+.filter-box {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.filter-box select {
+    min-width: 190px;
+    height: 50px;
+    padding: 0 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    background: rgba(255, 255, 255, .05);
+    color: white;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.filter-box select:focus {
+    outline: none;
+    border-color: var(--indigo-06);
+}
+
+.filter-box option {
+    background: #0f172a;
+    color: white;
+}
+
+/* ===================================
+   TABLE
+=================================== */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: rgba(255, 255, 255, .03);
+}
+
+th {
+    padding: 18px;
+    text-align: left;
+    color: var(--text-light);
+    font-size: .9rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+}
+
+td {
+    padding: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, .05);
+    color: #e2e8f0;
+}
+
+tbody tr {
+    transition: .25s;
+}
+
+tbody tr:hover {
+    background: rgba(255, 255, 255, .03);
+}
+
+/* ===================================
+   USER
+=================================== */
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(135deg,
+            var(--indigo-06),
+            var(--purple));
+}
+
+/* ===================================
+   STATUS
+=================================== */
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.active {
+    background: rgba(34, 197, 94, .15);
+    color: var(--success);
+}
+
+.inactive {
+    background: rgba(245, 158, 11, .15);
+    color: var(--warning);
+}
+
+.locked {
+    background: rgba(239, 68, 68, .15);
+    color: var(--danger);
+}
+
+/* ===================================
+   ACTIONS
+=================================== */
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.icon-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: .85rem;
+    font-weight: 600;
+    color: white;
+    background: rgba(255, 255, 255, .06);
+    transition: .25s;
+}
+
+.icon-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, .12);
+}
+
+.btn-role {
+    background: linear-gradient(135deg,
+            var(--indigo-06),
+            var(--purple));
+}
+
+.btn-role:hover {
+    box-shadow: 0 10px 20px rgba(99, 102, 241, .35);
+}
+
+.lock {
+    background: rgba(239, 68, 68, .18);
+    color: var(--danger);
+}
+
+
+.lock:hover {
+    background: rgba(239, 68, 68, .28);
+}
+
+/* ===================================
+   ADD EMPLOYEE POPUP
+=================================== */
+
+.card-add {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, .65);
+    backdrop-filter: blur(8px);
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999;
+    animation: fadeIn .25s ease;
+}
+
+.card-add.show {
+    display: flex;
+}
+
+.card-container {
+    width: 520px;
+    max-width: 92%;
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+    animation: popup .3s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+}
+
+/* ===================================
+   HEADER
+=================================== */
+
+.card-add .card-headers {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.header-icon {
+    width: 54px;
+    height: 54px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 16px;
+
+    background: linear-gradient(135deg,
+            var(--indigo-06),
+            var(--purple));
+
+    color: white;
+    font-size: 22px;
+
+    flex-shrink: 0;
+}
+
+.card-add .card-headers h2 {
+    font-size: 1.25rem;
+    color: white;
+    font-weight: 700;
+}
+
+/* ===================================
+   BODY
+=================================== */
+
+.card-body {
+    padding: 28px;
+}
+
+/* ===================================
+   SELECT
+=================================== */
+
+.card-body label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text-light);
+    font-size: .9rem;
+    font-weight: 600;
+}
+
+.card-add .filter-box {
+    display: block;
+}
+
+.card-add select {
+    width: 100%;
+    height: 52px;
+
+    padding: 0 18px;
+
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    background: rgba(255, 255, 255, .05);
+    color: white;
+
+    font-size: .95rem;
+    transition: .25s;
+}
+
+.card-add select:focus {
+    outline: none;
+    border-color: var(--indigo-06);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, .15);
+}
+
+/* ===================================
+   QR CONTAINER
+=================================== */
+
+.container-QR {
+    margin-top: 28px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+/* ===================================
+   ROOM CODE
+=================================== */
+
+.room-code-box {
+    width: 100%;
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    background: rgba(255, 255, 255, .04);
+
+    text-align: center;
+}
+
+.room-code-box span {
+    color: var(--text-light);
+    font-size: .9rem;
+}
+
+.room-code-box h1 {
+    margin: 16px 0 20px;
+
+    font-size: 2rem;
+    letter-spacing: 4px;
+    color: white;
+}
+
+/* ===================================
+   COPY BUTTON
+=================================== */
+
+#copyBtn {
+    border: none;
+    cursor: pointer;
+
+    padding: 12px 26px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+    color: white;
+
+    background: linear-gradient(135deg,
+            var(--indigo-06),
+            var(--purple));
+
+    transition: .25s;
+}
+
+#copyBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(99, 102, 241, .35);
+}
+
+/* ===================================
+   QR
+=================================== */
+
+.qr-box {
+    width: 220px;
+    height: 220px;
+
+    padding: 14px;
+
+    background: white;
+    border-radius: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.qr-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ===================================
+   NOTE
+=================================== */
+
+.note {
+    text-align: center;
+    color: var(--text-light);
+    line-height: 1.6;
+    font-size: .9rem;
+}
+
+/* ===================================
+   CLOSE BUTTON
+=================================== */
+
+.close-btn {
+    margin-left: auto;
+
+    width:60px;
+    height: 42px;
+    padding:5px;
+    border: none;
+    border-radius: 12px;
+    margin-top: 10px;
+    cursor: pointer;
+
+    background: linear-gradient(135deg,
+            var(--indigo-06),
+            var(--purple));
+    transition: .25s;
+        color: var(--text-white);
+
+    font-size: 22px;
+
+    transition: .25s;
+    display:flex;
+    align-items: center;
+    justify-content: end;
+}
+
+
+
+.close-btn:hover {
+    background: var(--btn-reject-18);
+    color: var(--danger);
+}
+
+/* ===================================
+   ANIMATION
+=================================== */
+
+@keyframes popup {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media (max-width: 600px) {
+
+    .card-container {
+        width: 95%;
+    }
+
+    .room-code-box h1 {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+    }
+
+    .qr-box {
+        width: 180px;
+        height: 180px;
+    }
+
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media (max-width:1200px) {
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .icon-btn {
+        width: 100%;
+    }
+
+}
+
+@media (max-width:900px) {
+
+    .toolbar {
+        flex-direction: column;
+    }
+
+    .search-box {
+        min-width: 100%;
+    }
+
+    .filter-box {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .filter-box select {
+        width: 100%;
+    }
+
+}
+
+@media (max-width:768px) {
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    table {
+        min-width: 900px;
+    }
+
+    .dashboard-card {
+        overflow-x: auto;
+    }
+
+}

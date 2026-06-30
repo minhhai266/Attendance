@@ -70,13 +70,13 @@
 .form-group textarea {
     width: 100%;
 
-    background: rgba(255, 255, 255, .04);
+    background: var(--bg-form);
 
-    border: 1px solid rgba(255, 255, 255, .08);
+    border: 1px solid var(--border);
 
     border-radius: 14px;
 
-    color: white;
+    color: var(--text-white);
 
     padding: 14px 16px;
 
@@ -98,7 +98,7 @@
 .form-group textarea:focus {
     outline: none;
 
-    border-color: var(--indigo);
+    border-color: var(--indigo-06);
 
     box-shadow:
         0 0 0 4px rgba(99, 102, 241, .15);
@@ -109,8 +109,8 @@
 ========================= */
 
 .form-group select option {
-    background: #0f172a;
-    color: white;
+    background: var(--bg-card);
+    color: var(--text-white);
 }
 
 /* =========================
@@ -150,7 +150,7 @@
 
     background:
         linear-gradient(to right,
-            var(--indigo),
+            var(--indigo-06),
             var(--purple));
 }
 
@@ -159,12 +159,12 @@
 }
 
 .btn-secondary {
-    background: #334155;
-    color: white;
+    background: var(--btn-secondary);
+    color: var(--text-white);
 }
 
 .btn-secondary:hover {
-    background: #475569;
+    background: var(--btn-secondary-hover);
 }
 
 /* =========================

@@ -83,7 +83,7 @@
 .form-group select:focus {
     outline: none;
 
-    border-color: var(--indigo);
+    border-color: var(--indigo-06);
 
     box-shadow:
         0 0 0 4px rgba(99, 102, 241, .15);
@@ -128,7 +128,7 @@
 
     background:
         linear-gradient(to right,
-            var(--indigo),
+            var(--indigo-06),
             var(--purple));
 }
 
