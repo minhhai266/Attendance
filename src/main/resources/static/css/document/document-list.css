@@ -19,13 +19,13 @@
 }
 
 .document-table {
-    width: 100%;
-    min-width: 1200px;
+    width: 78%;
+    min-width: 1180px;
     border-collapse: collapse;
 }
 
 .document-table thead {
-    background: rgba(255, 255, 255, .03);
+    background: rgba(8, 3, 31, 0.08);
 }
 
 .document-table th {
@@ -40,7 +40,7 @@
 .document-table td {
     padding: 18px;
     color: #e2e8f0;
-    border-bottom: 1px solid rgba(255, 255, 255, .05);
+    border-bottom: 1px solid rgba(15, 8, 53, 0.05);
     vertical-align: middle;
 }
 
@@ -49,7 +49,7 @@
 }
 
 .document-table tbody tr:hover {
-    background: rgba(255, 255, 255, .03);
+    background: rgba(7, 2, 31, 0.03);
 }
 
 /* ==========================
@@ -58,7 +58,7 @@
 
 .file-link {
     color: var(--indigo-06);
-    font-weight: 600;
+    font-weight: 500;
     text-decoration: none;
     transition: .25s;
 }
