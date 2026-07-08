@@ -4,343 +4,588 @@
    FORM CARD SYSTEM
 =================================== */
 
-.dashboard-card{
-    background:var(--bg-card);
+.dashboard-card {
+    background: var(--bg-card);
 
-    border:1px solid var(--border);
+    border: 1px solid var(--border);
 
-    border-radius:24px;
+    border-radius: 24px;
 
-    backdrop-filter:blur(20px);
+    backdrop-filter: blur(20px);
 
-    overflow:hidden;
+    overflow: hidden;
 }
+
 video {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
-.card-header{
-    padding:18px;
 
-    border-bottom:1px solid var(--border);
+.card-header {
+    padding: 18px;
+
+    border-bottom: 1px solid var(--border);
 }
 
-.card-header h2{
-    font-size:1.1rem;
+.card-header h2 {
+    font-size: 1.1rem;
 
-    font-weight:700;
+    font-weight: 700;
 
-    color:var(--text-white);
+    color: var(--text-white);
 }
 
-.card-body{
-    padding:18px;
+.card-body {
+    padding: 18px;
 }
 
 /* ===================================
    ROOM INPUT
 =================================== */
 
-.room-code-input{
-    display:flex;
+.room-code-input {
+    display: flex;
 
-    flex-direction:column;
+    flex-direction: column;
 
-    gap:6px;
+    gap: 6px;
 
-    margin-bottom:16px;
+    margin-bottom: 16px;
 }
 
-.room-code-input label{
-    color:var(--text-light);
+.room-code-input label {
+    color: var(--text-light);
 
-    font-size:.9rem;
+    font-size: .9rem;
 
-    font-weight:600;
+    font-weight: 600;
 }
 
-.room-code-input input{
-    padding:12px 14px;
+.room-code-input input {
+    padding: 12px 14px;
 
-    border-radius:14px;
+    border-radius: 14px;
 
-    border:1px solid var(--border);
+    border: 1px solid var(--border);
 
-    background:var(--bg-form);
+    background: var(--bg-form);
 
-    color:var(--text-white);
+    color: var(--text-white);
 
-    outline:none;
+    outline: none;
 
-    transition:.25s;
+    transition: .25s;
 }
 
-.room-code-input input:focus{
-    border-color:var(--indigo-06);
+.room-code-input input:focus {
+    border-color: var(--indigo-06);
 
-    box-shadow:0 0 0 4px var(--indigo-15);
+    box-shadow: 0 0 0 4px var(--indigo-15);
 }
 
 /* ===================================
    STUDENT SELECT AREA
 =================================== */
 
-.student-select{
-    display:flex;
+.student-select {
+    display: flex;
 
-    align-items:end;
+    align-items: end;
 
-    gap:12px;
+    gap: 12px;
 
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
 
-.student-select label{
-    display:block;
+.student-select label {
+    display: block;
 
-    color:var(--text-light);
+    color: var(--text-light);
 
-    font-size:.9rem;
+    font-size: .9rem;
 
-    font-weight:600;
+    font-weight: 600;
 }
 
-.student-select select{
-    flex:1;
+.student-select select {
+    flex: 1;
 
-    padding:12px 14px;
+    padding: 12px 14px;
 
-    border-radius:14px;
+    border-radius: 14px;
 
-    border:1px solid var(--border);
+    border: 1px solid var(--border);
 
-    background:var(--bg-table-06);
+    background: var(--bg-table-06);
 
-    color:var(--text-white);
+    color: var(--text-white);
 
-    outline:none;
+    outline: none;
 }
 
-.sample-btn{
-    padding:10px 14px;
+.sample-btn {
+    padding: 10px 14px;
 
-    border-radius:14px;
+    border-radius: 14px;
 
-    border:1px solid var(--border);
+    border: 1px solid var(--border);
 
-    background:var(--bg-table-06);
+    background: var(--bg-table-06);
 
-    color:var(--text-light);
+    color: var(--text-light);
 
-    font-weight:600;
+    font-weight: 600;
 }
 
 /* ===================================
    FACE GRID
 =================================== */
 
-.face-register-grid{
-    display:grid;
+.face-register-grid {
+    display: grid;
 
-    grid-template-columns:1fr;
+    grid-template-columns: 1fr;
 
-    gap:16px;
+    gap: 16px;
 }
 
 /* ===================================
    PANEL (CAMERA BOX)
 =================================== */
 
-.panel{
-    background:var(--bg-table);
+.panel {
+    background: var(--bg-table);
 
-    border:1px solid var(--border);
+    border: 1px solid var(--border);
 
-    border-radius:24px;
+    border-radius: 24px;
 
-    padding:16px;
+    padding: 16px;
 }
 
-.panel-header{
-    display:flex;
+.panel-header {
+    display: flex;
 
-    justify-content:space-between;
+    justify-content: space-between;
 
-    align-items:center;
+    align-items: center;
 
-    margin-bottom:12px;
+    margin-bottom: 12px;
 }
 
-.panel-header h3{
-    font-size:1rem;
+.panel-header h3 {
+    font-size: 1rem;
 
-    color:white;
+    color: white;
 }
 
-.panel-header button{
-    padding:8px 12px;
+.panel-header button {
+    padding: 8px 12px;
 
-    border-radius:12px;
+    border-radius: 12px;
 
-    border:none;
+    border: none;
 
-    cursor:pointer;
+    cursor: pointer;
 
-    background:linear-gradient(to right, var(--indigo-06), var(--purple));
+    background: linear-gradient(to right, var(--indigo-06), var(--purple));
 
-    color:var(--text-white);
+    color: var(--text-white);
 
-    font-weight:600;
+    font-weight: 600;
 }
 
 /* ===================================
    MODE TABS
 =================================== */
 
-.mode-tabs{
-    display:flex;
+.mode-tabs {
+    display: flex;
 
-    gap:10px;
+    gap: 10px;
 
-    margin-bottom:12px;
+    margin-bottom: 12px;
 }
 
-.mode-tabs button{
-    flex:1;
+.mode-tabs button {
+    flex: 1;
 
-    padding:8px 10px;
+    padding: 8px 10px;
 
-    border-radius:12px;
+    border-radius: 12px;
 
-    border:1px solid var(--border);
+    border: 1px solid var(--border);
 
-    background:var(--bg-table-06);
+    background: var(--bg-table-06);
 
-    color:var(--text-light);
+    color: var(--text-light);
 
-    cursor:pointer;
+    cursor: pointer;
 
-    transition:.25s;
+    transition: .25s;
 }
 
-.mode-tabs button.active{
-    background:var(--indigo-15);
+.mode-tabs button.active {
+    background: var(--indigo-15);
 
-    border-color:var(--indigo);
+    border-color: var(--indigo);
 
-    color:var(--text-white);
+    color: var(--text-white);
 }
 
 /* ===================================
    GUIDE BOX
 =================================== */
 
-.guide-box{
-    padding:12px;
+.guide-box {
+    padding: 12px;
 
-    border-radius:14px;
+    border-radius: 14px;
 
-    background:var(--bg-table);
+    background: var(--bg-table);
 
-    border:1px solid var(--border);
+    border: 1px solid var(--border);
 
-    margin-bottom:12px;
+    margin-bottom: 12px;
 
-    color:var(--text-gray);
+    color: var(--text-gray);
 
-    font-size:.9rem;
+    font-size: .9rem;
 }
 
 /* ===================================
    VIDEO
 =================================== */
 
-.video-wrap{
-    position:relative;
+.video-wrap {
+    position: relative;
 
-    width:96%;
+    width: 96%;
 
-    height:550px;
+    height: 550px;
 
-    border-radius:18px;
+    border-radius: 18px;
 
-    overflow:hidden;
+    overflow: hidden;
 
-    background:#000;
+    background: #000;
 
-    margin-bottom:12px;
+    margin-bottom: 12px;
 }
 
 .video-wrap video,
-.video-wrap canvas{
-    position:absolute;
+.video-wrap canvas {
+    position: absolute;
 
-    inset:0;
+    inset: 0;
 
-    width:100%;
+    width: 100%;
 
-    height:100%;
+    height: 100%;
 
-    object-fit:cover;
+    object-fit: cover;
 }
 
 /* ===================================
    ACTION ROW
 =================================== */
 
-.action-row{
-    display:flex;
+.action-row {
+    display: flex;
 
-    gap:12px;
+    gap: 12px;
 }
 
-.action-row button{
-    flex:1;
+.action-row button {
+    flex: 1;
 
-    padding:12px;
+    padding: 12px;
 
-    border-radius:14px;
+    border-radius: 14px;
 
-    border:none;
+    border: none;
 
-    cursor:pointer;
+    cursor: pointer;
 
-    font-weight:600;
+    font-weight: 600;
 
-    color:var(--text-white);
+    color: var(--text-white);
 }
 
 /* PRIMARY */
-#captureFaceBtn{
-    background:linear-gradient(to right, var(--indigo-06), var(--purple));
+#captureFaceBtn {
+    background: linear-gradient(to right, var(--indigo-06), var(--purple));
 }
 
 /* SECONDARY */
-.action-row .secondary{
-    background:var(--bg-table-06);
+.action-row .secondary {
+    background: var(--bg-table-06);
 
-    border:1px solid var(--border);
+    border: 1px solid var(--border);
 
-    color:var(--text-light);
+    color: var(--text-light);
+}
+
+/* ===================================
+   FACE REGISTER META
+=================================== */
+
+.face-register-meta {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+}
+
+.face-register-meta h3 {
+    color: var(--text-white);
+    font-size: 1rem;
+}
+
+.face-register-meta label {
+    color: var(--text-light);
+    font-size: .9rem;
+    font-weight: 600;
+}
+
+.face-register-meta input {
+    padding: 12px 14px;
+
+    border-radius: 14px;
+
+    border: 1px solid var(--border);
+
+    background: var(--bg-form);
+
+    color: var(--text-white);
+
+    outline: none;
+
+    transition: .25s;
+}
+
+.face-register-meta input:focus {
+    border-color: var(--indigo-06);
+
+    box-shadow: 0 0 0 4px var(--indigo-15);
+}
+
+/* ===================================
+   SAMPLE SUMMARY
+=================================== */
+
+.face-sample-summary {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-top: 6px;
+
+    flex-wrap: wrap;
+}
+
+.face-sample-count-btn {
+    padding: 10px 16px;
+
+    border-radius: 14px;
+
+    border: 1px solid var(--border);
+
+    background: var(--bg-table-06);
+
+    color: var(--text-white);
+
+    font-weight: 700;
+
+    cursor: default;
+}
+
+.face-sample-summary span {
+    color: var(--text-gray);
+
+    font-size: .9rem;
+}
+
+/* ===================================
+   FACE MODE HINT
+=================================== */
+
+.face-mode-hint {
+    margin-bottom: 12px;
+
+    color: var(--text-gray);
+
+    font-size: .9rem;
+
+    line-height: 1.5;
+}
+
+/* ===================================
+   MESSAGE
+=================================== */
+
+.message {
+    margin-top: 14px;
+
+    padding: 12px;
+
+    border-radius: 14px;
+
+    background: var(--bg-table);
+
+    border: 1px solid var(--border);
+
+    color: var(--text-light);
+
+    min-height: 48px;
+
+    display: flex;
+
+    align-items: center;
+}
+
+/* ===================================
+   GUIDE PANEL
+=================================== */
+
+.scan-tips {
+    list-style: none;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    margin-bottom: 16px;
+}
+
+.scan-tips li {
+    color: var(--text-light);
+
+    font-size: .95rem;
+}
+
+.muted {
+    color: var(--text-gray);
+
+    font-size: .9rem;
+
+    line-height: 1.6;
+}
+
+/* ===================================
+   REGISTER GRID 2 COLUMNS
+=================================== */
+
+.face-register-grid {
+    display: grid;
+
+    grid-template-columns: 2fr 1fr;
+
+    gap: 20px;
+}
+
+/* ===================================
+   STATUS BOX
+=================================== */
+
+.status-box {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.status-item {
+    padding: 12px;
+
+    border-radius: 14px;
+
+    background: var(--bg-table);
+
+    border: 1px solid var(--border);
+}
+
+.status-item h4 {
+    margin-bottom: 6px;
+
+    color: var(--text-white);
+
+    font-size: .95rem;
+}
+
+.status-item p {
+    color: var(--text-gray);
+
+    font-size: .9rem;
+}
+
+/* ===================================
+   BUTTON EFFECTS
+=================================== */
+
+.panel-header button:hover,
+.action-row button:hover {
+    transform: translateY(-2px);
+
+    transition: .25s;
+}
+
+#captureFaceBtn:hover {
+    box-shadow: 0 10px 25px rgba(99, 102, 241, .25);
 }
 
 /* ===================================
    RESPONSIVE
 =================================== */
 
-@media(max-width:768px){
+@media (max-width: 1100px) {
 
-    .student-select{
-        flex-direction:column;
-        align-items:stretch;
+    .face-register-grid {
+        grid-template-columns: 1fr;
     }
 
-    .action-row{
-        flex-direction:column;
+}
+
+@media (max-width: 768px) {
+
+    .face-sample-summary {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    .video-wrap{
-        height:240px;
+    .action-row {
+        flex-direction: column;
+    }
+
+    .video-wrap {
+        height: 300px;
+    }
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media(max-width:768px) {
+
+    .student-select {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .action-row {
+        flex-direction: column;
+    }
+
+    .video-wrap {
+        height: 240px;
     }
 }

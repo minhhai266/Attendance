@@ -235,6 +235,34 @@
     background: var(--bg-table);
 }
 
+
+/* ===================================
+   ATTENDANCE HISTORY
+=================================== */
+
+.attendance-history {
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    backdrop-filter: blur(20px);
+
+    overflow: hidden;
+}
+
+.attendance-history .section-title {
+    margin: 0;
+
+    padding: 20px 24px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.attendance-history .table-wrapper {
+    padding: 0;
+}
 /* ===================================
    STATUS BADGE (SYSTEM UNIFIED)
 =================================== */

@@ -58,10 +58,9 @@
                                     </span>
                                 </td>
                                 <td>DE214</td>
-                                <td><button class="detail-btn" onclick="openFaceGallery()">
-
+                                <td>
+                                    <button class="detail-btn" onclick="openFaceGallery()">
                                         Xem ảnh
-
                                     </button>
                                 </td>
 
@@ -91,7 +90,8 @@
                                     </button>
                                 </td>
                                 <td><button class="detail-btn btn-primary" type="submit">Chấp nhận</button>
-                                    <button class="detail-btn btn-secondery" type="submit">Từ chối</button></td>
+                                    <button class="detail-btn btn-secondery" type="submit">Từ chối</button>
+                                </td>
                             </tr>
 
                         </tbody>
@@ -105,7 +105,53 @@
 
         </div>
     </div>
+    <div id="faceGalleryModal" class="face-modal">
 
+        <div class="face-modal-content">
+
+            <div class="face-modal-header">
+                <h2>Ảnh Face ID</h2>
+
+                <button class="close-btn" onclick="closeFaceGallery()">
+                    ✕
+                </button>
+            </div>
+
+            <div class="face-gallery">
+
+                <img id="facePreviewImage" src="https://i.pinimg.com/736x/6a/5e/fc/6a5efc25bf7c7603afac79d7046f999c.jpg" alt="Face ID">
+
+            </div>
+
+        </div>
+
+    </div>
+    <script>
+        function openFaceGallery() {
+
+            document
+                .getElementById("faceGalleryModal")
+                .classList.add("show");
+        }
+
+        function closeFaceGallery() {
+
+            document
+                .getElementById("faceGalleryModal")
+                .classList.remove("show");
+        }
+
+        window.onclick = function (event) {
+
+            const modal =
+                document.getElementById("faceGalleryModal");
+
+            if (event.target === modal) {
+                closeFaceGallery();
+            }
+        };
+
+    </script>
 
 </body>
 
