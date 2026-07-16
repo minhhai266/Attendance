@@ -1,6 +1,7 @@
 package com.attendenceSystem.module.dashboard.service.impl;
 
 import java.time.LocalDate;
+import java.util.Locale;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +11,7 @@ import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
 import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
+import com.attendenceSystem.module.dashboard.dto.response.AccountTypeDistributionResponse;
 import com.attendenceSystem.module.dashboard.dto.response.AdminDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.StudentDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.ManagerDashboardResponse;
@@ -20,6 +22,7 @@ import com.attendenceSystem.module.report.entity.enums.ReportStatus;
 import com.attendenceSystem.module.report.repository.ReportRepository;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Role;
+import com.attendenceSystem.module.user.entity.enums.Status;
 import com.attendenceSystem.module.user.repository.UserRepository;
 import com.attendenceSystem.util.SecurityUtil;
 
@@ -37,11 +40,22 @@ public class DashboardServiceImpl implements DashboardService {
     @Override
     public AdminDashboardResponse getAdminDashboard() {
         long totalAccounts = userRepository.count();
-        long activeAccounts = userRepository.countByIsActiveTrue();
-        long inactiveAccounts = userRepository.countByIsActiveFalse();
-        long pendingAccounts = userRepository.countByMustChangePasswordTrue();
+        long activeAccounts = userRepository.countByStatus(Status.ACTIVE);
+        long inactiveAccounts = userRepository.countByStatus(Status.INACTIVE);
+        long pendingAccounts = userRepository.countByStatus(Status.PENDING);
+        var accountTypeDistribution = java.util.Arrays.stream(Role.values())
+                .map(role -> new AccountTypeDistributionResponse(
+                        role.name(),
+                        roleLabel(role),
+                        userRepository.countByRole(role)))
+                .toList();
         return dashboardResponseMapper.toAdminDashboardResponse(totalAccounts, activeAccounts, inactiveAccounts,
-                pendingAccounts);
+                pendingAccounts, accountTypeDistribution);
+    }
+
+    private String roleLabel(Role role) {
+        String roleName = role.name().toLowerCase(Locale.ROOT);
+        return roleName.substring(0, 1).toUpperCase(Locale.ROOT) + roleName.substring(1);
     }
 
     @Override

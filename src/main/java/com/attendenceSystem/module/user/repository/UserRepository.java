@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Role;
+import com.attendenceSystem.module.user.entity.enums.Status;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -19,9 +20,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByUsernameOrEmail(String username, String email);
     boolean existsByUsernameOrEmail(String username, String email);
     Page<User> findAllByOrderByIdAsc(Pageable pageable);
-    long countByIsActiveTrue();
-    long countByIsActiveFalse();
+    long countByStatus(Status status);
     long countByMustChangePasswordTrue();
+    long countByRole(Role role);
     long countByRoleNot(Role role);
     Optional<User> findByUsername(String username);
 }

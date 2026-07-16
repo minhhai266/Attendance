@@ -8,7 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.attendenceSystem.module.user.entity.User;
-import com.attendenceSystem.module.user.entity.enums.Department;
+import com.attendenceSystem.module.user.entity.enums.Status;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,7 @@ public class CustomUserDetails implements UserDetails {
     private final String phone;
     private final String department;
     private final String role;
+    private final Status status;
 
     public static CustomUserDetails fromUser(User user) {
         return new CustomUserDetails(
@@ -33,12 +34,18 @@ public class CustomUserDetails implements UserDetails {
                 user.getFullName(),
                 user.getEmail(),
                 user.getPhone(),
-                user.getDepartment().name(),
-                user.getRole().name());
+                user.getDepartment() == null ? null : user.getDepartment().name(),
+                user.getRole().name(),
+                user.getStatus());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_"+role));
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return status == Status.ACTIVE;
     }
 }

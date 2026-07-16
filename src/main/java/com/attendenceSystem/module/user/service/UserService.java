@@ -9,4 +9,6 @@ public interface UserService {
     Page<UserResponse> getUsers(Pageable pageable);
     UserResponse getById(Long id);
     void deleteUser(Long id);
+    void deactiveUser(Long id);
+    void activateUser(Long id);
 }

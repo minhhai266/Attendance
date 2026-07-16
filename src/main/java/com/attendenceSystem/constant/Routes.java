@@ -8,6 +8,14 @@ public final class Routes {
     public static final String REDIRECT = "redirect:";
     public static final String API = "/api";
 
+    public static final class Action {
+        public static final String CREATE = "/create";
+        public static final String UPDATE = "/update";
+        public static final String DELETE = "/delete";
+        public static final String DEACTIVATE = "/deactivate";
+        public static final String ACTIVATE = "/activate";
+    }
+
     public static final class Auth {
         public static final String ROOT = "/auth";
         public static final String LOGIN = "/login";
