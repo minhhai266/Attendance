@@ -13,7 +13,7 @@
 <body>
     <div class="bg-image"></div>
     <div class="layout">
-        <div th:replace="~{cms/sidebar/sidebar-admin :: sidebar}"></div>
+        <div th:replace="~{cms/sidebar/sidebar-role :: sidebar}"></div>
 
         <div class="container-layout">
 
@@ -38,9 +38,9 @@
                         </div>
 
                         <div class="admin-stat-card__body">
-                            <h2 class="admin-stat-card__number">53</h2>
+                            <h2 class="admin-stat-card__number" th:text="${dashboard.totalAccounts()}">53</h2>
                             <p class="admin-stat-card__description">
-                                +12% so với tháng trước
+                                Tất cả tài khoản trong hệ thống
                             </p>
                         </div>
                     </div>
@@ -56,8 +56,9 @@
                         </div>
 
                         <div class="admin-stat-card__body">
-                            <h2 class="admin-stat-card__number">48</h2>
-                            <p class="admin-stat-card__description">
+                            <h2 class="admin-stat-card__number" th:text="${dashboard.activeAccounts()}">48</h2>
+                            <p class="admin-stat-card__description"
+                                th:text="${dashboard.activeRate()} + ' tổng số'">
                                 90.6% tổng số
                             </p>
                         </div>
@@ -74,8 +75,9 @@
                         </div>
 
                         <div class="admin-stat-card__body">
-                            <h2 class="admin-stat-card__number">5</h2>
-                            <p class="admin-stat-card__description">
+                            <h2 class="admin-stat-card__number" th:text="${dashboard.inactiveAccounts()}">5</h2>
+                            <p class="admin-stat-card__description"
+                                th:text="${dashboard.inactiveRate()} + ' tổng số'">
                                 Cần xem xét
                             </p>
                         </div>
@@ -92,8 +94,9 @@
                         </div>
 
                         <div class="admin-stat-card__body">
-                            <h2 class="admin-stat-card__number">7</h2>
-                            <p class="admin-stat-card__description">
+                            <h2 class="admin-stat-card__number" th:text="${dashboard.pendingAccounts()}">7</h2>
+                            <p class="admin-stat-card__description"
+                                th:text="${dashboard.pendingRate()} + ' tổng số'">
                                 Tài khoản mới đăng ký
                             </p>
                         </div>
@@ -323,6 +326,12 @@
             <div th:replace="~{cms/layout/footer :: footer}"></div>
         </div>
     </div>
+    <script th:inline="javascript">
+        window.accountTypeChartData = {
+            labels: /*[[${dashboard.accountTypeDistribution().![label]}]]*/ [],
+            values: /*[[${dashboard.accountTypeDistribution().![count]}]]*/ []
+        };
+    </script>
 <script th:src="@{https://cdn.jsdelivr.net/npm/chart.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script th:src="@{/js/charts/AccountChart.js}"></script>

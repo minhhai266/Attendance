@@ -1,6 +1,7 @@
 package com.attendenceSystem.module.user.controller;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -81,6 +82,9 @@ public class AuthController {
                 case "STUDENT" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.STUDENT;
                 default -> Routes.REDIRECT + Routes.Dashboard.ROOT;
             };
+        } catch (DisabledException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return Views.Auth.LOGIN;
         } catch (AuthenticationException e) {
             model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng.");
             return Views.Auth.LOGIN;

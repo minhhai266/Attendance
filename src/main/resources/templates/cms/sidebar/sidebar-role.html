@@ -1,0 +1,11 @@
+<th:block th:fragment="sidebar">
+    <th:block th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+        <th:block th:replace="~{cms/sidebar/sidebar-admin :: sidebar}"></th:block>
+    </th:block>
+    <th:block th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
+        <th:block th:replace="~{cms/sidebar/sidebar-manage :: sidebar}"></th:block>
+    </th:block>
+    <th:block th:if="${#authorization.expression('hasRole(''STUDENT'')')}">
+        <th:block th:replace="~{cms/sidebar/sidebar-employee :: sidebar}"></th:block>
+    </th:block>
+</th:block>

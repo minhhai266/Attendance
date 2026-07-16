@@ -7,9 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.attendenceSystem.module.user.dto.response.UserResponse;
 import com.attendenceSystem.module.user.entity.User;
+import com.attendenceSystem.module.user.entity.enums.Role;
+import com.attendenceSystem.module.user.entity.enums.Status;
 import com.attendenceSystem.module.user.mapper.response.UserResponseMapper;
 import com.attendenceSystem.module.user.repository.UserRepository;
 import com.attendenceSystem.module.user.service.UserService;
+import com.attendenceSystem.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +30,50 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void deleteUser(Long id) {
-        userRepository.delete(findById(id));
+        User user = findById(id);
+        validateAdminAction(user);
+        userRepository.delete(user);
+    }
+
+    @Override
+    public Page<UserResponse> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(userResponseMapper::fromEntity);
+    }
+
+    @Transactional
+    @Override
+    public void deactiveUser(Long id) {
+        User user = findById(id);
+        validateAdminAction(user);
+        if(user.getStatus() == Status.INACTIVE){
+            throw new IllegalStateException("Tài khoản đã bị khóa");
+        }
+        user.setStatus(Status.INACTIVE);
+    }
+
+    @Transactional
+    @Override
+    public void activateUser(Long id) {
+        User user = findById(id);
+        validateAdminAction(user);
+        if(user.getStatus() == Status.ACTIVE){
+            throw new IllegalStateException("Tài khoản chưa bị khóa");
+        }
+        user.setStatus(Status.ACTIVE);
+    }
+
+    private void validateAdminAction(User targetUser) {
+        String currentUsername = SecurityUtil.getCurrentUserName();
+        Role currentRole = SecurityUtil.getCurrentUserRole();
+        if (currentUsername == null || currentRole == null) {
+            throw new IllegalStateException("Không xác định được tài khoản hiện tại");
+        }
+        if (targetUser.getUsername().equals(currentUsername)) {
+            throw new IllegalStateException("Admin không thể thay đổi tài khoản của chính mình");
+        }
+        if (currentRole == Role.ADMIN && targetUser.getRole() == Role.ADMIN) {
+            throw new IllegalStateException("Admin không thể tác động tài khoản admin khác");
+        }
     }
 
     private User findById(Long id) {
@@ -35,8 +81,4 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với id: " + id));
     }
 
-    @Override
-    public Page<UserResponse> getUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(userResponseMapper::fromEntity);
-    }
 }

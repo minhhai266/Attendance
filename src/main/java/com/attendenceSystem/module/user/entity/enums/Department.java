@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Department {
-    SE(0);
+    UNASSIGNED(0),
+    SE(1);
 
     public final int value;
 

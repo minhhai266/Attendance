@@ -12,7 +12,7 @@
 <body>
     <div class="bg-image"></div>
     <div class="layout">
-        <div th:replace="~{cms/sidebar/sidebar-admin :: sidebar}"></div>
+        <div th:replace="~{cms/sidebar/sidebar-role :: sidebar}"></div>
 
         <div class="container-layout">
 
@@ -56,12 +56,27 @@
                                     </div>
                                 </td>
                                 <td th:text="${users.email()}">nguyenvana@company.com</td>
-                                <td ><span th:text="${users.role()}" class="role">Nhân viên</span></td>
-                                <td><span th:text="${users.isActive()} == true?'Hoạt động':'Ngừng hoạt động'" class="status active">Hoạt động</span></td>
+                                <td><span th:text="${users.role()}" class="role">Nhân viên</span></td>
+                                <td><span
+                                        th:text="${users.status() == 'ACTIVE' ? 'Hoạt động' : (users.status() == 'PENDING' ? 'Chờ duyệt' : 'Bị khóa')}"
+                                        th:class="${'status ' + (users.status() == 'ACTIVE' ? 'active' : 'inactive')}">Hoạt động</span>
+                                </td>
                                 <td>
-                                    <div class="actions">
-                                        <button class="icon-btn btn-role">Đổi quyền</button>
-                                        <button class="icon-btn lock">🔒</button>
+                                    <div class="actions"
+                                        th:with="canManage=${users.username() != currentUsername and users.role() != 'ADMIN'}">
+
+                                        <button class="icon-btn btn-role" th:if="${canManage}">Đổi quyền</button>
+                                        <div th:if="${canManage and users.status() == 'ACTIVE'}">
+                                            <form th:action="@{/user/deactivate/{id}(id=${users.id()})}" method="post">
+                                                <button class="icon-btn lock">🔒</button>
+                                            </form>
+                                        </div>
+                                        <div th:if="${canManage and users.status() != 'ACTIVE'}">
+                                            <form th:action="@{/user/activate/{id}(id=${users.id()})}" method="post">
+                                                <button class="icon-btn unlock">🔓</button>
+                                            </form>
+                                        </div>
+                                        <span th:unless="${canManage}" class="action-note">Không thể thao tác</span>
                                     </div>
                                 </td>
                             </tr>
