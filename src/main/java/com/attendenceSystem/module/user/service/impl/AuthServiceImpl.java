@@ -5,6 +5,7 @@ import com.attendenceSystem.module.user.mapper.response.UserResponseMapper;
 import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -17,6 +18,7 @@ import com.attendenceSystem.module.user.dto.request.LoginRequest;
 import com.attendenceSystem.module.user.dto.request.RegisterRequest;
 import com.attendenceSystem.module.user.dto.response.UserResponse;
 import com.attendenceSystem.module.user.entity.User;
+import com.attendenceSystem.module.user.entity.enums.Status;
 import com.attendenceSystem.module.user.repository.UserRepository;
 import com.attendenceSystem.module.user.service.AuthService;
 
@@ -49,10 +51,20 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserResponse login(LoginRequest request) {
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getLogin(),
-                        request.getPassword()));
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getLogin(),
+                            request.getPassword()));
+        } catch (DisabledException e) {
+            User user = findUser(request.getLogin())
+                    .orElseThrow(() -> new DisabledException("Tên đăng nhập hoặc mật khẩu không đúng.", e));
+            if (user.getStatus() == Status.PENDING) {
+                throw new DisabledException("Tài khoản đang chờ duyệt", e);
+            }
+            throw new DisabledException("Tài khoản đã bị khóa", e);
+        }
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);

@@ -1,8 +1,11 @@
 package com.attendenceSystem.module.dashboard.mapper.response;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.attendenceSystem.module.dashboard.dto.response.AccountTypeDistributionResponse;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.dashboard.dto.response.AdminDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.ManagerDashboardResponse;
@@ -12,8 +15,10 @@ import com.attendenceSystem.module.dashboard.dto.response.StudentDashboardRespon
 public class DashboardResponseMapper {
 
     public AdminDashboardResponse toAdminDashboardResponse(long totalAccounts, long activeAccounts,
-            long inactiveAccounts, long pendingAccounts) {
-        return new AdminDashboardResponse(totalAccounts, activeAccounts, inactiveAccounts, pendingAccounts);
+            long inactiveAccounts, long pendingAccounts,
+            List<AccountTypeDistributionResponse> accountTypeDistribution) {
+        return new AdminDashboardResponse(totalAccounts, activeAccounts, inactiveAccounts, pendingAccounts,
+                accountTypeDistribution);
     }
 
     public ManagerDashboardResponse toManagerDashboardResponse(long totalEmployees, long attendedEmployees,

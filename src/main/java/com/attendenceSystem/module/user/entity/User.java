@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Role;
+import com.attendenceSystem.module.user.entity.enums.Status;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,12 +43,12 @@ public class User {
     private String password;
     @Column(name = "role", nullable = false)
     private Role role;
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "status", nullable = false)
     @Builder.Default
-    private boolean isActive = true;
+    private Status status = Status.PENDING;
     @Column(name = "full_name", nullable = false, length = 255)
     private String fullName;
-    @Column(name = "department")
+    @Column(name = "department", nullable = false)
     private Department department;
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

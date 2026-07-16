@@ -1,21 +1,25 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     const ctx = document.getElementById("accountTypeChart");
+    const chartData = window.accountTypeChartData || {};
+    const labels = chartData.labels || [];
+    const values = chartData.values || [];
 
     new Chart(ctx, {
         type: "doughnut",
         data: {
-            labels: [
-                "Quản trị viên",
-                "Giảng viên",
-                "Sinh viên"
-            ],
+            labels: labels,
             datasets: [{
-                data: [5, 40, 320],
+                data: values,
                 backgroundColor: [
                     "#ef4444",
                     "#3b82f6",
-                    "#10b981"
+                    "#10b981",
+                    "#f59e0b",
+                    "#8b5cf6",
+                    "#06b6d4",
+                    "#f97316",
+                    "#64748b"
                 ],
                 borderWidth: 2,
                 borderColor: "#ffffff"
