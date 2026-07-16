@@ -2,7 +2,9 @@ package com.attendenceSystem.module.user.mapper.request;
 
 import com.attendenceSystem.module.user.dto.request.RegisterRequest;
 import com.attendenceSystem.module.user.entity.User;
+import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Role;
+import com.attendenceSystem.module.user.entity.enums.Status;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -15,7 +17,9 @@ public final class RegisterRequestMapper {
                 .email(request.getEmail())
                 .password(hashPassword)
                 .fullName(request.getFullName())
+                .department(Department.UNASSIGNED)
                 .role(Role.STUDENT)
+                .status(Status.PENDING)
                 .mustChangePassword(false)
                 .build();
     }

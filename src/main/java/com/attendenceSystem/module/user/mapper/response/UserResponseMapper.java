@@ -21,7 +21,7 @@ public class UserResponseMapper {
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .fullName(user.getFullName())
-                .isActive(user.isActive())
+                .status(user.getStatus() == null ? null : user.getStatus().name())
                 .role(user.getRole().name())
                 .build();
     }

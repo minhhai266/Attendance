@@ -3,6 +3,8 @@ package com.attendenceSystem.frontroller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.attendenceSystem.constant.Routes;
+
 @Controller
 public class HomeController {
 
@@ -40,15 +42,15 @@ public class HomeController {
     }
     @GetMapping("/dashboardAdmin")
     public String dashboardAdmin() {
-        return "cms/dashboard/dashboard-admin";
+        return Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.ADMIN;
     }
     @GetMapping("/dashboardEmployee")
     public String dashboardEmployee() {
-        return "cms/dashboard/dashboard-employee";
+        return Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.STUDENT;
     }
     @GetMapping("/dashboardManager")
     public String dashboardManager() {
-        return "cms/dashboard/dashboard-manager";
+        return Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.MANAGER;
     }
 
     @GetMapping("/login")
