@@ -38,18 +38,24 @@
 
                     <div class="card-body">
 
+                        <!-- SUCCESS / ERROR MESSAGES -->
+                        <div th:if="${successMessage}" class="success-message" th:text="${successMessage}"></div>
+                        <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+
                         <form class="absent-form" method="post" th:action="@{/attendance/leave/create}" th:object="${createLeaveRequest}">
                             <!-- Date -->
                             <div class="form-grid">
 
                                 <div class="form-group">
                                     <label>Từ ngày</label>
-                                    <input type="date"  required>
+                                    <input type="date" name="startDate" th:field="*{startDate}" required>
+                                    <span th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}" class="field-error"></span>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Đến ngày</label>
-                                    <input type="date"  required>
+                                    <input type="date" name="endDate" th:field="*{endDate}" required>
+                                    <span th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}" class="field-error"></span>
                                 </div>
 
                             </div>
@@ -57,8 +63,9 @@
                             <!-- Lý do -->
                             <div class="form-group">
                                 <label>Lý do</label>
-                                <textarea  rows="5" placeholder="Nhập lý do xin nghỉ..."
+                                <textarea rows="5" name="reason" th:field="*{reason}" placeholder="Nhập lý do xin nghỉ..."
                                     required></textarea>
+                                <span th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}" class="field-error"></span>
                             </div>
 
                             <!-- BUTTON -->

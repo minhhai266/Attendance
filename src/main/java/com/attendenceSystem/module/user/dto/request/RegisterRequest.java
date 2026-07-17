@@ -1,6 +1,6 @@
 package com.attendenceSystem.module.user.dto.request;
 
-import com.attendenceSystem.annotation.PasswordMatch;
+import com.attendenceSystem.annotation.RegisterPasswordMatch;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.Email;
@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@PasswordMatch
+@RegisterPasswordMatch
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

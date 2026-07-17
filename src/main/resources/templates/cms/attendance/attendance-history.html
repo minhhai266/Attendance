@@ -33,10 +33,9 @@
                     <div class="avatar">
                         <img src="/images/default-avatar.png" alt="">
                     </div>
-
                     <div class="profile-info">
-                        <h3>Nguyễn Văn A</h3>
-                        <span>Phòng Công nghệ thông tin</span>
+                        <h3 th:text="${#authentication.principal.fullName}"></h3>
+                        <span th:text="${#authentication.principal.department}"></span>
                     </div>
 
                 </div>
@@ -45,7 +44,7 @@
                 <div class="stats-grid">
 
                     <div class="stats-card">
-                        <span class="stats-value">22</span>
+                        <span class="stats-value" th:text="${attendanceHistory.totalElements}">22</span>
                         <span class="stats-label">Ngày làm việc</span>
                     </div>
 
@@ -96,7 +95,7 @@
 
                     <div class="table-header">
                         <h3>Lịch sử điểm danh</h3>
-                        <span>22 bản ghi</span>
+                        <span th:text="${attendanceHistory.totalElements} + ' bản ghi'">22 bản ghi</span>
                     </div>
 
                     <div class="table-scroll">
@@ -115,33 +114,22 @@
                             </thead>
 
                             <tbody>
-
-                                <tr>
-                                    <td>23/06/2026</td>
-                                    <td>08:01</td>
-                                    <td>17:35</td>
+                                <tr th:each="record : ${attendanceHistory.content}">
+                                    <td th:text="${#temporals.format(record.attendanceDate(), 'dd/MM/yyyy')}">23/06/2026</td>
+                                    <td th:text="${record.checkInTime() != null ? #temporals.format(record.checkInTime(), 'HH:mm') : '--'}">08:01</td>
+                                    <td th:text="${record.checkOutTime() != null ? #temporals.format(record.checkOutTime(), 'HH:mm') : '--'}">17:35</td>
                                     <td>
-                                        <span class="badge success">
-                                            Đúng giờ
-                                        </span>
+                                        <span th:if="${record.late()}" class="badge late">Đi muộn</span>
+                                        <span th:if="${!record.late() and !record.earlyLeave() and record.checkInTime() != null}" class="badge success">Đúng giờ</span>
+                                        <span th:if="${record.earlyLeave()}" class="badge warning">Về sớm</span>
+                                        <span th:if="${record.checkInTime() == null}" class="badge absent">Vắng mặt</span>
                                     </td>
-                                    <td>8h 34p</td>
-                                    <td>-</td>
+                                    <td th:text="${record.workingMinutes() > 0 ? #strings.replace(#strings.replace(#numbers.formatDecimal(record.workingMinutes() / 60, 0, 0), ',', '') + 'h ' + record.workingMinutes() % 60 + 'p', ' 0p', '') : '--'}">8h 34p</td>
+                                    <td th:text="${record.note() != null ? record.note() : '-'}">-</td>
                                 </tr>
-
-                                <tr>
-                                    <td>22/06/2026</td>
-                                    <td>08:15</td>
-                                    <td>17:30</td>
-                                    <td>
-                                        <span class="badge late">
-                                            Đi muộn
-                                        </span>
-                                    </td>
-                                    <td>8h 15p</td>
-                                    <td>Muộn 15 phút</td>
+                                <tr th:if="${attendanceHistory.content.isEmpty()}">
+                                    <td colspan="6" class="text-center">Chưa có dữ liệu điểm danh.</td>
                                 </tr>
-
                             </tbody>
 
                         </table>
@@ -154,7 +142,7 @@
 
     </div>
 
-    
+
 
 
 </body>

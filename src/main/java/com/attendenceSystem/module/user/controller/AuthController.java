@@ -19,6 +19,11 @@ import com.attendenceSystem.module.user.dto.request.LoginRequest;
 import com.attendenceSystem.module.user.dto.request.RegisterRequest;
 import com.attendenceSystem.module.user.dto.response.UserResponse;
 import com.attendenceSystem.module.user.service.AuthService;
+import com.attendenceSystem.module.user.service.UserService;
+
+import com.attendenceSystem.module.otp.exception.OtpExpiredException;
+import com.attendenceSystem.module.otp.exception.OtpInvalidException;
+import com.attendenceSystem.module.otp.exception.OtpNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,6 +33,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping(Routes.Auth.ROOT)
@@ -124,4 +130,45 @@ public class AuthController {
 
         return Routes.REDIRECT+"/";
     }
+
+    @PostMapping(Routes.Auth.FORGOT_PASSWORD)
+    public String forgotPassword(
+            @RequestParam("email") String email,
+            RedirectAttributes redirectAttributes) {
+        try {
+            authService.forgotPassword(email);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Mã OTP đã được gửi đến email của bạn. Vui lòng kiểm tra email.");
+            redirectAttributes.addFlashAttribute("email", email);
+            return Routes.REDIRECT + Routes.Auth.ROOT + Routes.Auth.VERIFY_OTP;
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return Routes.REDIRECT + Routes.Auth.ROOT + Routes.Auth.FORGOT_PASSWORD;
+        }
+    }
+
+    @PostMapping(Routes.Auth.VERIFY_OTP)
+    public String verifyOtp(
+            @RequestParam("email") String email,
+            @RequestParam("otp") String otpCode,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        try {
+            boolean isValid = authService.verifyOtp(email, otpCode);
+            if (isValid) {
+                redirectAttributes.addFlashAttribute("email", email);
+                redirectAttributes.addFlashAttribute("otpVerified", true);
+                return Routes.REDIRECT + Routes.Auth.ROOT + Routes.Auth.CHANGE_PASSWORD;
+            } else {
+                model.addAttribute("errorMessage", "Mã OTP không chính xác hoặc đã hết hạn.");
+                model.addAttribute("email", email);
+                return Views.Auth.VERIFY_OTP;
+            }
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("email", email);
+            return Views.Auth.VERIFY_OTP;
+        }
+    }
+
 }

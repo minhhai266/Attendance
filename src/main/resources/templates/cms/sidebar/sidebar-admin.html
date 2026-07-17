@@ -53,18 +53,18 @@
                 <i class="bi bi-person-circle"></i>
             </div>
 
-            <!-- <div>
+            <div>
                 <h3 th:text="${#authentication.principal.fullName}"></h3>
                 <div class="header-description" th:text="${#authentication.principal.role}">
                     Vai trò
                 </div>
-            </div> -->
-            <div>
+            </div>
+            <!-- <div>
                 <h3>Nguyen van an</h3>
                 <div class="header-description">
                     admin
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <form th:action="@{/auth/logout}" method="post" class="logout-form">

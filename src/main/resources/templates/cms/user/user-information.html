@@ -43,22 +43,22 @@
 
                             <div class="info-item">
                                 <label>Họ và tên</label>
-                                <p>Nguyễn Văn A</p>
+                                <p th:text="${#authentication.principal.fullName}"></p>
                             </div>
 
                             <div class="info-item">
                                 <label>Email</label>
-                                <p>abc@gmail.com</p>
+                                <p th:text="${#authentication.principal.email}"></p>
                             </div>
 
                             <div class="info-item">
                                 <label>Số điện thoại</label>
-                                <p>0987654321</p>
+                                <p th:text="${#authentication.principal.phone}">Không có</p>
                             </div>
 
                             <div class="info-item">
                                 <label>Phòng ban</label>
-                                <p>Phòng Lab 213</p>
+                                <p th:text="${#authentication.principal.department}">Không có   </p>
                             </div>
 
                         </div>
@@ -76,7 +76,7 @@
 
                     <div class="card-body">
 
-                        <form method="post" th:action="@{/profile/change-password}">
+                        <form method="post" th:action="@{/user/change-password}">
 
                             <div class="form-group">
                                 <label>Mật khẩu hiện tại</label>

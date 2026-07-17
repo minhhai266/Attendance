@@ -71,4 +71,9 @@ public class AttendanceCalculator {
                 }
                 return Duration.between(checkInTime, checkOutTime).toMinutes();
         }
+
+        public double totalWorkingHours(Instant checkInTime, Instant checkOutTime) {
+                long minutes = workingMinutes(checkInTime, checkOutTime);
+                return minutes / 60.0;
+        }
 }

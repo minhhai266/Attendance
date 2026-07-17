@@ -1,13 +1,13 @@
 package com.attendenceSystem.validator;
 
-import com.attendenceSystem.annotation.PasswordMatch;
+import com.attendenceSystem.annotation.RegisterPasswordMatch;
 import com.attendenceSystem.module.user.dto.request.RegisterRequest;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class PasswordMatchValidator
-        implements ConstraintValidator<PasswordMatch, RegisterRequest> {
+public class RegisterPasswordMatchValidator
+        implements ConstraintValidator<RegisterPasswordMatch, RegisterRequest> {
 
     @Override
     public boolean isValid(RegisterRequest request,

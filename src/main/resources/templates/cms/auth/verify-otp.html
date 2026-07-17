@@ -44,10 +44,10 @@
                 <!-- error -->
                 <div class="error-message"></div>
 
-                <form method="post">
+                <form th:action="@{/auth/verify-otp}" method="post">
 
                     <!-- hidden email -->
-                    <input type="hidden" name="email" />
+                    <input type="hidden" name="email" th:value="${email}" />
 
                     <!-- OTP -->
                     <div class="auth-group">
