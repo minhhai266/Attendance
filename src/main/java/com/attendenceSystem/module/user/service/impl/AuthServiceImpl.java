@@ -13,7 +13,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.mail.javamail.JavaMailSender;
 
+import com.attendenceSystem.module.otp.dto.request.SendOtpRequest;
+import com.attendenceSystem.module.otp.dto.request.VerifyOtpRequest;
+import com.attendenceSystem.module.otp.entity.enums.OtpPurpose;
+import com.attendenceSystem.module.otp.exception.OtpExpiredException;
+import com.attendenceSystem.module.otp.exception.OtpInvalidException;
+import com.attendenceSystem.module.otp.exception.OtpNotFoundException;
+import com.attendenceSystem.module.otp.service.OptService;
 import com.attendenceSystem.module.user.dto.request.LoginRequest;
 import com.attendenceSystem.module.user.dto.request.RegisterRequest;
 import com.attendenceSystem.module.user.dto.response.UserResponse;
@@ -31,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    
+    private final OptService otpService;
 
     @Transactional
     @Override
@@ -82,5 +90,34 @@ public class AuthServiceImpl implements AuthService {
 
     private boolean existsByKeyword(String keyword) {
         return userRepository.existsByUsernameOrEmail(keyword, keyword);
+    }
+
+    @Override
+    public void forgotPassword(String email) {
+        User user = findUser(email)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với email: " + email));
+
+        SendOtpRequest request = SendOtpRequest.builder()
+                .destination(user.getEmail())
+                .purpose(OtpPurpose.FORGOT_PASSWORD)
+                .build();
+
+        otpService.send(request);
+    }
+
+    @Override
+    public boolean verifyOtp(String destination, String code) {
+        try {
+            VerifyOtpRequest request = VerifyOtpRequest.builder()
+                    .destination(destination)
+                    .code(code)
+                    .purpose(OtpPurpose.FORGOT_PASSWORD)
+                    .build();
+
+            otpService.verify(request);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

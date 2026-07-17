@@ -99,12 +99,10 @@
                                     <tr>
                                         <th>Nhân viên</th>
                                         <th>Phòng ban</th>
-                                        <th>Lý do</th>
                                         <th>Từ ngày</th>
                                         <th>Đến ngày</th>
-                                        <th>Chi tiết</th>
                                         <th>Trạng thái</th>
-                                        <th>Hành động</th>
+                                        <th>Chi tiết</th>
                                     </tr>
                                 </thead>
 
@@ -118,15 +116,20 @@
                                     <tr th:each="leave : ${leaveRequests.content}">
                                         <td th:text="${leave.fullName()}">Nhân viên</td>
                                         <td>Phòng ban</td>
-                                        <td>CỘT NÀY SAI NGHIỆP VỤ. NÓ NÊN NẰM Ở DETAILS</td>
                                         <td th:text="${leave.startDate()}">Từ ngày</td>
                                         <td th:text="${leave.endDate()}">Đến ngày</td>
-                                        <td>Cột này nên nhét vào hành động. Phê duyệt và từ chối nên nhét vào details</td>
-                                        
                                         <td>
                                             <span class="status pending">Trạng thái</span>
                                         </td>
+                                        <td>
+                                            <a th:href="@{/leave/detail/{id}(id=${leave.id})}" class="btn btn-small btn-primary">
+                                                <i class="fa-solid fa-eye"></i>
+                                                Xem chi tiết
+                                            </a>
+                                        </td>
 
+
+                                        <!-- 
                                         <td>
                                             <div class="action-group">
 
@@ -143,7 +146,7 @@
                                                 </form>
 
                                             </div>
-                                        </td>
+                                        </td> -->
                                     </tr>
 
                                 </tbody>

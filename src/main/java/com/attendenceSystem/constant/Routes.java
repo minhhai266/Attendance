@@ -23,12 +23,15 @@ public final class Routes {
         public static final String FORGOT_PASSWORD = "/forgot-password";
         public static final String VERIFY_OTP = "/verify-otp";
         public static final String CHANGE_PASSWORD = "/change-password";
+        public static final String UPDATE_PASSWORD = "/update-password";
         public static final String LOGOUT = "/logout";
     }
 
     public static final class User {
         public static final String ROOT = "/user";
         public static final String PROFILE = "/profile";
+        public static final String CHANGE_PASSWORD = "/change-password";
+        public static final String UPDATE_PASSWORD = "/update-password";
     }
 
     public static final class Dashboard {
