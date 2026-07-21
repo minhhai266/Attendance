@@ -13,14 +13,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.mail.javamail.JavaMailSender;
 
 import com.attendenceSystem.module.otp.dto.request.SendOtpRequest;
 import com.attendenceSystem.module.otp.dto.request.VerifyOtpRequest;
 import com.attendenceSystem.module.otp.entity.enums.OtpPurpose;
-import com.attendenceSystem.module.otp.exception.OtpExpiredException;
-import com.attendenceSystem.module.otp.exception.OtpInvalidException;
-import com.attendenceSystem.module.otp.exception.OtpNotFoundException;
 import com.attendenceSystem.module.otp.service.OptService;
 import com.attendenceSystem.module.user.dto.request.LoginRequest;
 import com.attendenceSystem.module.user.dto.request.RegisterRequest;
@@ -43,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     @Override
-    public void register(RegisterRequest request) {
+    public void register(final RegisterRequest request) {
         if (existsByKeyword(request.getUsername())) {
             throw new IllegalArgumentException("Tên đăng nhập đã tồn tại!");
         }
@@ -57,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     @Override
-    public UserResponse login(LoginRequest request) {
+    public UserResponse login(final LoginRequest request) {
 
         Authentication authentication;
         try {
@@ -84,16 +80,8 @@ public class AuthServiceImpl implements AuthService {
         return userResponseMapper.fromEntity(user);
     }
 
-    private Optional<User> findUser(String keyword) {
-        return userRepository.findUserByUsernameOrEmail(keyword, keyword);
-    }
-
-    private boolean existsByKeyword(String keyword) {
-        return userRepository.existsByUsernameOrEmail(keyword, keyword);
-    }
-
     @Override
-    public void forgotPassword(String email) {
+    public void forgotPassword(final String email) {
         User user = findUser(email)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với email: " + email));
 
@@ -106,7 +94,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean verifyOtp(String destination, String code) {
+    public boolean verifyOtp(final String destination, final String code) {
         try {
             VerifyOtpRequest request = VerifyOtpRequest.builder()
                     .destination(destination)
@@ -119,5 +107,13 @@ public class AuthServiceImpl implements AuthService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private Optional<User> findUser(final String keyword) {
+        return userRepository.findUserByUsernameOrEmail(keyword, keyword);
+    }
+
+    private boolean existsByKeyword(final String keyword) {
+        return userRepository.existsByUsernameOrEmail(keyword, keyword);
     }
 }

@@ -21,13 +21,13 @@ public class AuditLogServiceImpl implements AuditLogService {
 
     @Transactional
     @Override
-    public void log(AuditLogRequest request) {
+    public void log(final AuditLogRequest request) {
         AuditLog auditLog = AuditLogRequestMapper.toEntity(request);
         auditLogRepository.save(auditLog);
     }
 
     @Override
-    public Page<AuditLogResponse> getLogs(Pageable pageable) {
+    public Page<AuditLogResponse> getLogs(final Pageable pageable) {
         return auditLogRepository
                 .findAll(pageable)
                 .map(auditLogResponseMapper::fromEntity);

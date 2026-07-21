@@ -46,54 +46,25 @@
                             </tr>
                         </thead>
 
-                        <tbody>
-
+                        <tbody th:each="faceProfile : ${faceProfiles.content}">
                             <tr>
-                                <td>SV001</td>
-                                <td>Nguyễn Văn A</td>
-                                <td>#face_001</td>
+                                <td th:text="${faceProfile.id}">SV001</td>
+                                <td th:text="${faceProfile.userFullName}">Nguyễn Văn A</td>
+                                <td th:text="${faceProfile.faceCode}">#face_001</td>
                                 <td>
-                                    <span class="sample-badge">
-                                        10 / 10
+                                    <span class="sample-badge" th:text="${faceProfile.sampleCount} + ' mẫu'">
+                                        10 mẫu
                                     </span>
                                 </td>
-                                <td>DE214</td>
+                                <td th:text="${faceProfile.userEmail}">user@example.com</td>
                                 <td>
-                                    <button class="detail-btn" onclick="openFaceGallery()">
-                                        Xem ảnh
-                                    </button>
+                                    <img th:src="${faceProfile.thumbnailUrl}" alt="Face" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" th:if="${faceProfile.thumbnailUrl}">
                                 </td>
 
                                 <td>
-                                    <button class="detail-btn btn-primary" type="submit">Chấp nhận</button>
-                                    <button class="detail-btn btn-secondery" type="submit">Từ chối</button>
+                                    <button class="detail-btn btn-primary" type="button">Chi tiết</button>
                                 </td>
                             </tr>
-
-                            <tr>
-                                <td>SV002</td>
-                                <td>Trần Văn B</td>
-                                <td>#face_002</td>
-                                <td>
-                                    <span class="sample-badge">
-                                        7 / 10
-                                    </span>
-                                </td>
-                                <td>DE214</td>
-
-
-                                <td>
-                                    <button class="detail-btn" onclick="openFaceGallery()">
-
-                                        Xem ảnh
-
-                                    </button>
-                                </td>
-                                <td><button class="detail-btn btn-primary" type="submit">Chấp nhận</button>
-                                    <button class="detail-btn btn-secondery" type="submit">Từ chối</button>
-                                </td>
-                            </tr>
-
                         </tbody>
 
                     </table>

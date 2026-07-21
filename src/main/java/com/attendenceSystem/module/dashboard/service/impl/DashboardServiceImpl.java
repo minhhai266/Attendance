@@ -10,10 +10,9 @@ import org.springframework.stereotype.Service;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
-import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
 import com.attendenceSystem.module.dashboard.dto.response.AccountTypeDistributionResponse;
 import com.attendenceSystem.module.dashboard.dto.response.AdminDashboardResponse;
-import com.attendenceSystem.module.dashboard.dto.response.StudentDashboardResponse;
+import com.attendenceSystem.module.dashboard.dto.response.EmployeeDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.ManagerDashboardResponse;
 import com.attendenceSystem.module.dashboard.mapper.response.DashboardResponseMapper;
 import com.attendenceSystem.module.dashboard.service.DashboardService;
@@ -72,7 +71,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public StudentDashboardResponse getStudentDashboard() {
+    public EmployeeDashboardResponse getEmployeeDashboard() {
         User user = getCurrentUser();
         long totalReports = reportRepository.countByEmployee(user);
         long acceptedReports = reportRepository.countByEmployeeAndStatus(user, ReportStatus.ACCEPTED);
@@ -83,7 +82,7 @@ public class DashboardServiceImpl implements DashboardService {
         Page<AttendanceResponse> attendanceHistory = attendanceRecordRepository
                 .findByUser(user, PageRequest.of(0, 10))
                 .map(attendanceResponseMapper::fromEntity);
-        return dashboardResponseMapper.toStudentDashboardResponse(totalReports, acceptedReports, rejectedReports,
+        return dashboardResponseMapper.toEmployeeDashboardResponse(totalReports, acceptedReports, rejectedReports,
                 attendenceRate, attendanceHistory);
     }
 

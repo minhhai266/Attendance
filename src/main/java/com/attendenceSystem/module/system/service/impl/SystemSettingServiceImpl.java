@@ -30,7 +30,7 @@ public class SystemSettingServiceImpl implements SystemSettingService {
     @Override
     @Transactional
     public SystemSettingResponse updateSetting(
-            UpdateSystemSettingRequest request) {
+           final UpdateSystemSettingRequest request) {
 
         SystemSetting setting = systemSettingRepository.findById(SETTING_ID)
                 .orElseGet(this::createDefaultSetting);

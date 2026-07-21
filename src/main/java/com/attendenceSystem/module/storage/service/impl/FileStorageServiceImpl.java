@@ -5,26 +5,38 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
-import org.springframework.util.DigestUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.attendenceSystem.constant.FileConstants;
+import com.attendenceSystem.module.storage.provider.StorageProvider;
 import com.attendenceSystem.module.storage.service.FileStorageService;
 
+@Service
 public class FileStorageServiceImpl implements FileStorageService {
+
+    private final StorageProvider storageProvider;
+
+    public FileStorageServiceImpl(StorageProvider storageProvider) {
+        this.storageProvider = storageProvider;
+    }
 
     @Override
     public String saveFile(
-            MultipartFile file,
-            String directory) throws IOException {
+            final MultipartFile file,
+            final String directory) throws IOException {
 
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException(
                     "File upload không hợp lệ");
         }
 
+        // Validate file extension
         String originalFilename = file.getOriginalFilename();
         String extension = StringUtils.getFilenameExtension(originalFilename);
         if (extension == null || !FileConstants.ALLOWED_EXTENSIONS.contains(extension.toLowerCase())) {
@@ -32,20 +44,86 @@ public class FileStorageServiceImpl implements FileStorageService {
                     "Định dạng file không được hỗ trợ");
         }
 
+        // Validate directory (chống path traversal)
+        validateDirectory(directory);
+
+        // Tính SHA-256 hash từ nội dung file
         String fileHash;
+        try {
+            fileHash = sha256Hex(file);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IOException("Lỗi khi tính hash file", e);
+        }
+
+        String fileName = fileHash + "." + extension;
+        String relativePath = directory + "/" + fileName;
+        Path targetPath = Paths.get(directory, fileName);
+
+        // Lưu file qua StorageProvider
+        storageProvider.save(targetPath, file);
+
+        // Detect và kiểm tra MIME type từ file đã lưu
+        Path savedPath = storageProvider.resolvePath(relativePath);
+        String detectedMime = Files.probeContentType(savedPath);
+        String expectedMime = FileConstants.ALLOWED_EXTENSION_MIME.get(extension.toLowerCase());
+        if (detectedMime == null || expectedMime == null || !expectedMime.equals(detectedMime)) {
+            // Xóa file nếu MIME type không khớp
+            storageProvider.delete(relativePath);
+            throw new IllegalArgumentException(
+                    "Nội dung file không khớp với định dạng khai báo");
+        }
+
+        return storageProvider.getPublicUrl(relativePath);
+    }
+
+    @Override
+    public Resource loadFile(final String path) throws IOException {
+        if (path == null || path.isBlank()) {
+            throw new IllegalArgumentException("Đường dẫn file không hợp lệ");
+        }
+        return storageProvider.load(path);
+    }
+
+    @Override
+    public void deleteFile(final String path) throws IOException {
+        if (path == null || path.isBlank()) {
+            throw new IllegalArgumentException("Đường dẫn file không hợp lệ");
+        }
+        storageProvider.delete(path);
+    }
+
+    private String sha256Hex(final MultipartFile file) throws IOException, NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] buffer = new byte[8192];
+        int bytesRead;
         try (InputStream is = file.getInputStream()) {
-            fileHash = DigestUtils.md5DigestAsHex(is);
+            while ((bytesRead = is.read(buffer)) != -1) {
+                digest.update(buffer, 0, bytesRead);
+            }
         }
-        String fileName = fileHash + extension;
-        Path uploadDir = Paths.get("uploads", directory);
-        Files.createDirectories(uploadDir);
-        Path targetPath = uploadDir.resolve(fileName);
-        if (!Files.exists(targetPath)) {
-            file.transferTo(targetPath);
+        byte[] hashBytes = digest.digest();
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hashBytes) {
+            hexString.append(String.format("%02x", b));
         }
-        return "/uploads/"
-                + directory
-                + "/"
-                + fileName;
+        return hexString.toString();
+    }
+
+    private void validateDirectory(final String directory) {
+        if (directory == null || directory.isBlank()) {
+            throw new IllegalArgumentException("Directory không hợp lệ");
+        }
+        if (directory.contains("..")) {
+            throw new IllegalArgumentException(
+                    "Directory không hợp lệ: chứa path traversal");
+        }
+        if (directory.contains("/") || directory.contains("\\")) {
+            throw new IllegalArgumentException(
+                    "Directory không hợp lệ: chứa ký tự phân cách");
+        }
+        if (!directory.matches("[a-zA-Z0-9_-]+")) {
+            throw new IllegalArgumentException(
+                    "Directory chứa ký tự không hợp lệ");
+        }
     }
 }

@@ -13,20 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.constant.Views;
-import com.attendenceSystem.module.log.entity.enums.LogAction;
-import com.attendenceSystem.module.log.entity.enums.LogEntityType;
 import com.attendenceSystem.module.user.dto.request.LoginRequest;
 import com.attendenceSystem.module.user.dto.request.RegisterRequest;
 import com.attendenceSystem.module.user.dto.response.UserResponse;
 import com.attendenceSystem.module.user.service.AuthService;
-import com.attendenceSystem.module.user.service.UserService;
 
-import com.attendenceSystem.module.otp.exception.OtpExpiredException;
-import com.attendenceSystem.module.otp.exception.OtpInvalidException;
-import com.attendenceSystem.module.otp.exception.OtpNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,7 +80,7 @@ public class AuthController {
             return switch (user.role()) {
                 case "ADMIN" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.ADMIN;
                 case "MANAGER" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.MANAGER;
-                case "STUDENT" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.STUDENT;
+                case "EMPLOYEE" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.EMPLOYEE;
                 default -> Routes.REDIRECT + Routes.Dashboard.ROOT;
             };
         } catch (DisabledException e) {
@@ -113,7 +108,7 @@ public class AuthController {
         } catch (IllegalArgumentException e) {
             request.setPassword("");
             request.setRePassword("");
-            model.addAttribute("errorMessage", "Đăng kí tài khoản thất bại");
+            model.addAttribute("errorMessage", e.getMessage());
             return Views.Auth.REGISTER;
         }
     }
@@ -151,11 +146,17 @@ public class AuthController {
     public String verifyOtp(
             @RequestParam("email") String email,
             @RequestParam("otp") String otpCode,
+            HttpServletRequest request,
             Model model,
             RedirectAttributes redirectAttributes) {
         try {
             boolean isValid = authService.verifyOtp(email, otpCode);
             if (isValid) {
+                // Store OTP verified flag in session để dùng cho POST update-password
+                HttpSession session = request.getSession();
+                session.setAttribute("otpVerified", true);
+                session.setAttribute("otpEmail", email);
+                
                 redirectAttributes.addFlashAttribute("email", email);
                 redirectAttributes.addFlashAttribute("otpVerified", true);
                 return Routes.REDIRECT + Routes.Auth.ROOT + Routes.Auth.CHANGE_PASSWORD;

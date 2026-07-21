@@ -32,19 +32,30 @@ public final class Routes {
         public static final String PROFILE = "/profile";
         public static final String CHANGE_PASSWORD = "/change-password";
         public static final String UPDATE_PASSWORD = "/update-password";
+        public static final String UPDATE_INFORMATION = "/update-information";
+    }
+
+    public static final class Account {
+        public static final String ROOT = "/admin/accounts";
+        public static final String MANAGER = "/manager/accounts";
+        public static final String CREATE = "/create";
+        public static final String UPDATE = "/update";
+        public static final String DELETE = "/delete";
+        public static final String DEACTIVATE = "/deactivate";
+        public static final String ACTIVATE = "/activate";
+        public static final String UPDATE_INFORMATION = "/update-information";
     }
 
     public static final class Dashboard {
         public static final String ROOT = "/dashboard";
         public static final String ADMIN = "/admin";
         public static final String MANAGER = "/manager";
-        public static final String STUDENT = "/student";
+        public static final String EMPLOYEE = "/employee";
     }
     public static final class Attendance {
         public static final String ROOT = "/attendance";
         public static final String HISTORY = "/history";
         public static final String LEAVE = "/leave";
-        public static final String LEAVE_CREATE = "/leave/create";
         public static final String CHECK_IN = "/check-in";
         public static final String CHECK_OUT = "/check-out";
     }

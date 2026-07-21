@@ -9,7 +9,7 @@ import com.attendenceSystem.module.dashboard.dto.response.AccountTypeDistributio
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.dashboard.dto.response.AdminDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.ManagerDashboardResponse;
-import com.attendenceSystem.module.dashboard.dto.response.StudentDashboardResponse;
+import com.attendenceSystem.module.dashboard.dto.response.EmployeeDashboardResponse;
 
 @Component
 public class DashboardResponseMapper {
@@ -26,9 +26,9 @@ public class DashboardResponseMapper {
         return new ManagerDashboardResponse(totalEmployees, attendedEmployees, absentEmployees, attendanceHistory);
     }
 
-    public StudentDashboardResponse toStudentDashboardResponse(long totalReports, long acceptedReports,
+    public EmployeeDashboardResponse toEmployeeDashboardResponse(long totalReports, long acceptedReports,
             long rejectedReports, String attendanceRate, Page<AttendanceResponse> attendanceHistory) {
-        return new StudentDashboardResponse(totalReports, acceptedReports, rejectedReports, attendanceRate,
+        return new EmployeeDashboardResponse(totalReports, acceptedReports, rejectedReports, attendanceRate,
                 attendanceHistory);
     }
 }

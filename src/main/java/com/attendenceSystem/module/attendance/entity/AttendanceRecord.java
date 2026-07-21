@@ -18,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.Version;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,4 +58,8 @@ public class AttendanceRecord {
 
     @Column(name = "note", length = 1000)
     private String note;
+
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
 }

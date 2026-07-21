@@ -17,7 +17,7 @@ public class EmailOtpSenderImpl implements OtpSender {
     private static final String SUBJECT = "Mã OTP xác thực";
 
     @Override
-    public void send(String destination, String code) {
+    public void send(final String destination, final String code) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");

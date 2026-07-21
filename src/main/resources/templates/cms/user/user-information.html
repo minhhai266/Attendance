@@ -29,6 +29,10 @@
 
             <main class="main-container">
 
+                <div th:if="${param.success}" class="alert-success">Cập nhật thông tin thành công</div>
+                <div th:if="${param.error}" class="alert-error">Cập nhật thất bại</div>
+                <div th:if="${errorMessage}" class="alert-error" th:text="${errorMessage}"></div>
+
                 <!-- PROFILE CARD -->
                 <section class="container-card">
 
@@ -121,7 +125,8 @@
 
     <section class="edit-card" id="editInformation">
 
-        
+        <form th:action="@{/user/update-information}" method="post" th:object="${updateUserInformationRequest}" class="edit-form">
+
             <div class="edit-body">
                 <div class="edit-header">
                     <h2>Thông tin cá nhân</h2>
@@ -129,36 +134,43 @@
                 <div class="info-grid">
                     <div class="info-item">
                         <label >Họ và tên</label>
-                        <input type="text">
-                    </div>
-                    <div class="info-item">
-                        <label >Tên đăng nhập</label>
-                        <input type="text">
+                        <input type="text" name="fullName" th:value="${#authentication.principal.fullName}">
+                        <div class="error-message" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
                     </div>
                     <div class="info-item">
                         <label >Email</label>
-                        <input type="text">
+                        <input type="text" name="email" th:value="${#authentication.principal.email}">
+                        <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                     </div>
                     <div class="info-item">
                         <label >Số điện thoại</label>
-                        <input type="text">
+                        <input type="text" name="phone" th:value="${#authentication.principal.phone}">
+                        <div class="error-message" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
                     </div>
                     <div class="info-item">
-                        <label >Bộ phận</label>
-                        <input type="text">
+                        <label >Phòng ban</label>
+                        <select name="department">
+                            <option th:each="dept : ${T(com.attendenceSystem.module.user.entity.enums.Department).values()}"
+                                    th:value="${dept.name()}"
+                                    th:text="${dept.name()}"
+                                    th:selected="${#authentication.principal.department == dept.name()}">
+                            </option>
+                        </select>
                     </div>
                     <div class="btn-run">
-                        <button id="btnEdit" class="btn btn-primary">
-                            Sửa
+                        <button type="submit" class="btn btn-primary">
+                            Cập nhật
                         </button>
 
-                        <button id="btnClose" class="btn btn-close">
+                        <button type="button" id="btnClose" class="btn btn-close">
                             Đóng
                         </button>
                     </div>
                 </div>
             </div>
-        
+
+        </form>
+
     </section>
     <!-- FOOTER -->
     <script>

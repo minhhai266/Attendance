@@ -67,12 +67,12 @@
 
                                         <button class="icon-btn btn-role" th:if="${canManage}">Đổi quyền</button>
                                         <div th:if="${canManage and users.status() == 'ACTIVE'}">
-                                            <form th:action="@{/user/deactivate/{id}(id=${users.id()})}" method="post">
+                                            <form th:action="@{/admin/accounts/deactivate/{id}(id=${users.id()})}" method="post">
                                                 <button class="icon-btn lock">🔒</button>
                                             </form>
                                         </div>
                                         <div th:if="${canManage and users.status() != 'ACTIVE'}">
-                                            <form th:action="@{/user/activate/{id}(id=${users.id()})}" method="post">
+                                            <form th:action="@{/admin/accounts/activate/{id}(id=${users.id()})}" method="post">
                                                 <button class="icon-btn unlock">🔓</button>
                                             </form>
                                         </div>

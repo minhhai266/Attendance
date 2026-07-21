@@ -19,6 +19,12 @@ public final class Views {
         public static final String PROFILE = "cms/user/user-information";
     }
 
+    public static final class Account {
+        public static final String LIST = "cms/account/account-list";
+        public static final String EMPLOYEE_LIST = "cms/account/employee-list";
+        public static final String DETAIL = "cms/account/account-detail";
+    }
+
     public static final class Dashboard {
         public static final String ADMIN = "cms/dashboard/dashboard-admin";
         public static final String MANAGER = "cms/dashboard/dashboard-manager";

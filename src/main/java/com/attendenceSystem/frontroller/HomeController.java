@@ -46,7 +46,7 @@ public class HomeController {
     }
     @GetMapping("/dashboardEmployee")
     public String dashboardEmployee() {
-        return Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.STUDENT;
+        return Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.EMPLOYEE;
     }
     @GetMapping("/dashboardManager")
     public String dashboardManager() {
@@ -88,7 +88,7 @@ public class HomeController {
     }
     @GetMapping("/employeeList")
     public String employeeList() {
-        return "cms/account/employee-list";
+        return Routes.REDIRECT + Routes.Account.ROOT;
     }
     @GetMapping("/absentCreate")
     public String absentCreate() {

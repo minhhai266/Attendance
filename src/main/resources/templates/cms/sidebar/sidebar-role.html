@@ -5,7 +5,7 @@
     <th:block th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
         <th:block th:replace="~{cms/sidebar/sidebar-manage :: sidebar}"></th:block>
     </th:block>
-    <th:block th:if="${#authorization.expression('hasRole(''STUDENT'')')}">
+    <th:block th:if="${#authorization.expression('hasRole(''EMPLOYEE'')')}">
         <th:block th:replace="~{cms/sidebar/sidebar-employee :: sidebar}"></th:block>
     </th:block>
 </th:block>
