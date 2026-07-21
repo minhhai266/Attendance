@@ -122,10 +122,12 @@
                                             <span class="status pending">Trạng thái</span>
                                         </td>
                                         <td>
-                                            <a th:href="@{/leave/detail/{id}(id=${leave.id})}" class="btn btn-small btn-primary">
+                                            <button th:href="@{/leave/detail/{id}(id=${leave.id})}"
+                                                class="btn btn-small btn-primary" type="button"
+                                                onclick="openAbsentDetail()">
                                                 <i class="fa-solid fa-eye"></i>
                                                 Xem chi tiết
-                                            </a>
+                                            </button>
                                         </td>
 
 
@@ -173,13 +175,100 @@
 
                 </div>
 
+                <div id="absentDetailModal" class="absent-modal">
+
+                    <div class="absent-modal-content">
+
+                        <div class="absent-modal-header">
+                            <h2>Chi tiết đơn nghỉ phép</h2>
+
+                            <button class="close-btn" onclick="closeAbsentDetail()">
+                                ✕
+                            </button>
+                        </div>
+
+                        <div class="absent-modal-body">
+
+                            <div class="detail-grid">
+
+                                <div class="detail-item">
+                                    <label>Mã đơn</label>
+                                    <span>#LV001</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <label>Người gửi</label>
+                                    <span>Nguyễn Văn A</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <label>Từ ngày</label>
+                                    <span>20/07/2026</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <label>Đến ngày</label>
+                                    <span>22/07/2026</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <label>Số ngày nghỉ</label>
+                                    <span>3 ngày</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <label>Trạng thái</label>
+                                    <span class="status pending">
+                                        Chờ duyệt
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div class="detail-reason">
+                                <label>Lý do nghỉ phép</label>
+
+                                <div class="reason-box">
+                                    Nghỉ phép cá nhân.
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
             </main>
             <!-- FOOTER -->
             <div th:replace="~{cms/layout/footer :: footer}"></div>
         </div>
     </div>
 
+    <!-- DETAIL CARD -->
 
+    <script>
+        function openAbsentDetail() {
+            document
+                .getElementById("absentDetailModal")
+                .classList.add("show");
+        }
+
+        function closeAbsentDetail() {
+            document
+                .getElementById("absentDetailModal")
+                .classList.remove("show");
+        }
+
+        window.onclick = function (event) {
+
+            const modal =
+                document.getElementById("absentDetailModal");
+
+            if (event.target === modal) {
+                closeAbsentDetail();
+            }
+        };
+    </script>
 
 </body>
 
