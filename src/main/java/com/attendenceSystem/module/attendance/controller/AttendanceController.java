@@ -95,13 +95,13 @@ public class AttendanceController {
     })
     public String handleBadRequest(RuntimeException ex, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-        return Routes.REDIRECT + Routes.Attendance.ROOT;
+        return Routes.REDIRECT + Routes.Attendance.LEAVE;
     }
 
     @ExceptionHandler(Exception.class)
     public String handleUnexpectedError(Exception ex, RedirectAttributes redirectAttributes) {
         log.error("Unexpected error in AttendanceController", ex);
         redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra, vui lòng thử lại sau");
-        return Routes.REDIRECT + Routes.Attendance.ROOT;
+        return Routes.REDIRECT + Routes.Attendance.LEAVE;
     }
 }

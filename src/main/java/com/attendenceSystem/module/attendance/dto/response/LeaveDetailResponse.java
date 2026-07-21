@@ -5,8 +5,9 @@ import java.time.LocalDate;
 
 import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 
-public record LeaveRequestResponse(
+public record LeaveDetailResponse(
         Long id,
+        String username,
         String fullName,
         LocalDate startDate,
         LocalDate endDate,

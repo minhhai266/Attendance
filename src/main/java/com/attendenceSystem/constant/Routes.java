@@ -56,6 +56,7 @@ public final class Routes {
         public static final String ROOT = "/attendance";
         public static final String HISTORY = "/history";
         public static final String LEAVE = "/leave";
+        public static final String LEAVE_DETAIL = "/leave/detail";
         public static final String CHECK_IN = "/check-in";
         public static final String CHECK_OUT = "/check-out";
     }
