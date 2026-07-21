@@ -3,16 +3,14 @@ package com.attendenceSystem.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 
@@ -51,7 +49,17 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**", "/login/**", "/css/**", "/js/**").permitAll()
                         .requestMatchers("/dashboard/**").authenticated()
                         .anyRequest().permitAll())
-
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            // If it's an API request or AJAX request, return 401
+                            if (request.getRequestURI().startsWith("/api/") ||
+                                "XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                            } else {
+                                // For normal page requests, redirect to home page
+                                response.sendRedirect(request.getContextPath() + "/");
+                            }
+                        }))
                 .csrf(csrf -> csrf.disable());
         return http.build();
     }

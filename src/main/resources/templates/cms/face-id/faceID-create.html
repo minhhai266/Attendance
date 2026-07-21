@@ -270,25 +270,43 @@
 
             if (capturedSamples.length === 5) {
 
-                messageBox.innerHTML =
-                    "✅ Đã thu thập đủ 5 mẫu khuôn mặt. Có thể gửi lên server.";
+                // Gửi lên server
+                submitSamples();
 
-                /*
-                Ví dụ gửi về Spring Boot
+            }
+        });
 
-                fetch('/face/register', {
+        // Gửi ảnh lên server
+        async function submitSamples() {
+            const roomCode = document.getElementById('roomCode').value;
+            
+            try {
+                const response = await fetch('/api/face-id/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        roomCode: document.getElementById('roomCode').value,
+                        roomCode: roomCode,
                         samples: capturedSamples
                     })
                 });
-                */
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        messageBox.innerHTML = "✅ " + result.message;
+                    } else {
+                        messageBox.innerHTML = "❌ Lỗi: " + result.message;
+                    }
+                } else {
+                    messageBox.innerHTML = "❌ Lỗi: Không thể gửi dữ liệu lên server";
+                }
+            } catch (error) {
+                console.error(error);
+                messageBox.innerHTML = "❌ Lỗi kết nối: " + error.message;
             }
-        });
+        }
 
         // RESET
         resetBtn.addEventListener("click", () => {

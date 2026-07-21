@@ -18,7 +18,7 @@ public final class RegisterRequestMapper {
                 .password(hashPassword)
                 .fullName(request.getFullName())
                 .department(Department.UNASSIGNED)
-                .role(Role.STUDENT)
+                .role(Role.EMPLOYEE)
                 .status(Status.PENDING)
                 .mustChangePassword(false)
                 .build();

@@ -1,7 +1,7 @@
 package com.attendenceSystem.module.dashboard.service;
 
 import com.attendenceSystem.module.dashboard.dto.response.AdminDashboardResponse;
-import com.attendenceSystem.module.dashboard.dto.response.StudentDashboardResponse;
+import com.attendenceSystem.module.dashboard.dto.response.EmployeeDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.ManagerDashboardResponse;
 
 public interface DashboardService {
@@ -9,7 +9,7 @@ public interface DashboardService {
 
     ManagerDashboardResponse getManagerDashboard();
 
-    StudentDashboardResponse getStudentDashboard();
+    EmployeeDashboardResponse getEmployeeDashboard();
 
 }
 

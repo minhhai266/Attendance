@@ -31,7 +31,7 @@ public class OtpServiceImpl implements OptService {
 
     @Transactional
     @Override
-    public OtpResponse send(SendOtpRequest request) {
+    public OtpResponse send(final SendOtpRequest request) {
         invalidate(request.getDestination(), request.getPurpose());
         
         String code = generateOtpCode();
@@ -46,7 +46,7 @@ public class OtpServiceImpl implements OptService {
 
     @Transactional
     @Override
-    public OtpResponse verify(VerifyOtpRequest request) {
+    public OtpResponse verify(final VerifyOtpRequest request) {
         Otp otp = otpRepository.findTopByDestinationAndPurposeAndUsedFalseOrderByCreatedAtDesc(
                 request.getDestination(), request.getPurpose())
                 .orElseThrow(() -> new OtpNotFoundException("Không tìm thấy OTP cho mục đích này"));
@@ -66,7 +66,7 @@ public class OtpServiceImpl implements OptService {
     }
 
     @Override
-    public void invalidate(String destination, OtpPurpose purpose) {
+    public void invalidate(final String destination, final OtpPurpose purpose) {
         otpRepository.invalidateByDestinationAndPurpose(destination, purpose);
     }
 

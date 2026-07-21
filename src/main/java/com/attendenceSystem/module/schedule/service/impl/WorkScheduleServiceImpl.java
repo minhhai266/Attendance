@@ -30,7 +30,7 @@ public class WorkScheduleServiceImpl implements WorkScheduleService {
 
     @Override
     @Transactional
-    public WorkScheduleResponse updateSchedule(UpdateWorkScheduleRequest request) {
+    public WorkScheduleResponse updateSchedule(final UpdateWorkScheduleRequest request) {
         WorkSchedule schedule = workScheduleRepository.findById(DEFAULT_SCHEDULE_ID)
                 .orElseGet(this::createDefaultSchedule);
 

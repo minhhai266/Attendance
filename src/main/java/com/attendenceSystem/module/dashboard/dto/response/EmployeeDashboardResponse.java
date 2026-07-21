@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 
-public record StudentDashboardResponse(
+public record EmployeeDashboardResponse(
 
         Long totalReports,
         Long acceptedReports,

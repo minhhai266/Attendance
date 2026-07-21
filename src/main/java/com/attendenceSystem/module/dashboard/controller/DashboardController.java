@@ -31,7 +31,7 @@ public class DashboardController {
         return Views.Dashboard.MANAGER;
     }
 
-    @GetMapping(Routes.Dashboard.STUDENT)
+    @GetMapping(Routes.Dashboard.EMPLOYEE)
     public String toEmployeeDashboardPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("=== DASHBOARD AUTH ===");
@@ -41,7 +41,7 @@ public class DashboardController {
             System.out.println("authorities = " + auth.getAuthorities());
             System.out.println("authenticated = " + auth.isAuthenticated());
         }
-        model.addAttribute("dashboard", dashboardService.getStudentDashboard());
+        model.addAttribute("dashboard", dashboardService.getEmployeeDashboard());
         return Views.Dashboard.EMPLOYEE;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.attendenceSystem.module.user.dto.response.UserInformationResponse;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Status;
 
@@ -37,6 +38,19 @@ public class CustomUserDetails implements UserDetails {
                 user.getDepartment() == null ? null : user.getDepartment().name(),
                 user.getRole().name(),
                 user.getStatus());
+    }
+
+    public static CustomUserDetails fromUserInformationResponse(UserInformationResponse response) {
+        return new CustomUserDetails(
+                response.id(),
+                response.username(),
+                "",
+                response.fullName(),
+                response.email(),
+                response.phone(),
+                response.department() == null ? null : response.department().name(),
+                response.role().name(),
+                response.status());
     }
 
     @Override

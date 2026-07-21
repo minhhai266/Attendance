@@ -4,8 +4,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,10 @@ import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
+import com.attendenceSystem.module.attendance.exception.AlreadyCheckedInException;
+import com.attendenceSystem.module.attendance.exception.AlreadyCheckedOutException;
+import com.attendenceSystem.module.attendance.exception.InvalidAttendanceStateException;
+import com.attendenceSystem.module.attendance.exception.NotCheckedInException;
 import com.attendenceSystem.module.attendance.mapper.request.CreateLeaveRequestMapper;
 import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
 import com.attendenceSystem.module.attendance.entity.LeaveRequest;
@@ -21,6 +27,8 @@ import com.attendenceSystem.module.attendance.mapper.response.LeaveRequestRespon
 import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
+import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
+import com.attendenceSystem.module.attendance.util.TimeZoneProvider;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.repository.UserRepository;
 import com.attendenceSystem.util.SecurityUtil;
@@ -35,26 +43,38 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceResponseMapper attendanceResponseMapper;
     private final LeaveRequestRepository leaveRequestRepository;
     private final LeaveRequestResponseMapper leaveRequestResponseMapper;
+    private final AttendanceCalculator attendanceCalculator;
+    private final TimeZoneProvider timeZoneProvider;
 
     @Transactional
     @Override
     public AttendanceResponse checkIn() {
         User user = getCurrentUser();
 
-        LocalDate today = LocalDate.now();
-        Optional<AttendanceRecord> existing = attendanceRecordRepository
-                .findByUserAndAttendanceDateWithLock(user, today);
-        if (existing.isPresent()) {
-            throw new IllegalArgumentException("Bạn đã điểm danh hôm nay");
+        LocalDate today = LocalDate.now(timeZoneProvider.getZoneId());
+        try {
+            Optional<AttendanceRecord> existing = attendanceRecordRepository
+                    .findByUserAndAttendanceDateWithLock(user, today);
+            if (existing.isPresent()) {
+                throw new AlreadyCheckedInException("Bạn đã điểm danh hôm nay");
+            }
+            Instant checkInTime = Instant.now();
+            boolean late = attendanceCalculator.isLate(checkInTime);
+            AttendanceStatus status = late ? AttendanceStatus.LATE : AttendanceStatus.PRESENT;
+            AttendanceRecord attendanceRecord = AttendanceRecord.builder()
+                    .user(user)
+                    .attendanceDate(today)
+                    .checkInTime(checkInTime)
+                    .status(status)
+                    .note(late ? "Đi muộn" : null)
+                    .build();
+            attendanceRecordRepository.save(attendanceRecord);
+            return attendanceResponseMapper.fromEntity(attendanceRecord);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            throw new AlreadyCheckedInException("Bạn đã điểm danh hôm nay");
+        } catch (ObjectOptimisticLockingFailureException e) {
+            throw new AlreadyCheckedInException("Dữ liệu đã bị thay đổi, vui lòng thử lại");
         }
-        AttendanceRecord attendanceRecord = AttendanceRecord.builder()
-                .user(user)
-                .attendanceDate(today)
-                .checkInTime(Instant.now())
-                .status(AttendanceStatus.PRESENT)
-                .build();
-        attendanceRecordRepository.save(attendanceRecord);
-        return attendanceResponseMapper.fromEntity(attendanceRecord);
     }
 
     @Transactional
@@ -62,24 +82,32 @@ public class AttendanceServiceImpl implements AttendanceService {
     public AttendanceResponse checkOut() {
         User user = getCurrentUser();
 
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(timeZoneProvider.getZoneId());
         AttendanceRecord attendance = attendanceRecordRepository
-                .findByUserAndAttendanceDate(user, today)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .findByUserAndAttendanceDateWithLock(user, today)
+                .orElseThrow(() -> new NotCheckedInException(
                         "Bạn không điểm danh hôm nay nên không thể checkout"));
         if (attendance.getCheckOutTime() != null) {
-            throw new IllegalArgumentException("Bạn đã checkout rồi");
+            throw new AlreadyCheckedOutException("Bạn đã checkout rồi");
         }
-        if (attendance.getStatus() != AttendanceStatus.PRESENT) {
-            throw new IllegalArgumentException("Trạng thái điểm danh không hợp lệ");
+        if (attendance.getStatus() != AttendanceStatus.PRESENT && attendance.getStatus() != AttendanceStatus.LATE) {
+            throw new InvalidAttendanceStateException("Trạng thái điểm danh không hợp lệ");
         }
-        attendance.setCheckOutTime(Instant.now());
+        Instant checkOutTime = Instant.now();
+        if (checkOutTime.isBefore(attendance.getCheckInTime())) {
+            throw new InvalidAttendanceStateException("Thời gian checkout phải sau thời gian check-in");
+        }
+        boolean earlyLeave = attendanceCalculator.isEarlyLeave(checkOutTime);
+        attendance.setCheckOutTime(checkOutTime);
+        if (earlyLeave) {
+            attendance.setNote((attendance.getNote() != null ? attendance.getNote() + "; " : "") + "Về sớm");
+        }
         attendanceRecordRepository.save(attendance);
         return attendanceResponseMapper.fromEntity(attendance);
     }
 
     @Override
-    public Page<AttendanceResponse> getAttendanceHistory(Pageable pageable) {
+    public Page<AttendanceResponse> getAttendanceHistory(final Pageable pageable) {
         User user = getCurrentUser();
 
         return attendanceRecordRepository
@@ -89,7 +117,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Transactional
     @Override
-    public LeaveRequestResponse createLeaveRequest(CreateLeaveRequest request) {
+    public LeaveRequestResponse createLeaveRequest(final CreateLeaveRequest request) {
         if (request == null) {
             throw new IllegalArgumentException("Yêu cầu không hợp lệ");
         }
@@ -106,25 +134,24 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public Page<LeaveRequestResponse> getLeaveRequests(Pageable pageable) {
+    public Page<LeaveRequestResponse> getLeaveRequests(final Pageable pageable) {
         User user = getCurrentUser();
         return leaveRequestRepository.findByUser(user, pageable)
                 .map(leaveRequestResponseMapper::fromEntity);
     }
 
     @Override
-    public Page<LeaveRequestResponse> getAllLeaveRequests(Pageable pageable) {
+    public Page<LeaveRequestResponse> getAllLeaveRequests(final Pageable pageable) {
         return leaveRequestRepository.findAll(pageable).map(leaveRequestResponseMapper::fromEntity);
     }
 
     private User getCurrentUser() {
-        String currentUser = SecurityUtil.getCurrentUserName();
-        if (currentUser == null || currentUser.isEmpty() || currentUser.isBlank()) {
-            throw new IllegalArgumentException("Không tìm thấy người dùng");
+        if (!SecurityUtil.isAuthenticated()) {
+            throw new IllegalStateException("Người dùng chưa đăng nhập");
         }
-        return userRepository
-                .findByUsername(currentUser)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng"));
+        String currentUsername = SecurityUtil.getCurrentUserName();
+        return userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Không tìm thấy người dùng với tên đăng nhập: " + currentUsername));
     }
-
 }
