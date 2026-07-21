@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
+import com.attendenceSystem.module.attendance.dto.response.LeaveDetailResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
@@ -23,6 +24,7 @@ import com.attendenceSystem.module.attendance.exception.NotCheckedInException;
 import com.attendenceSystem.module.attendance.mapper.request.CreateLeaveRequestMapper;
 import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
 import com.attendenceSystem.module.attendance.entity.LeaveRequest;
+import com.attendenceSystem.module.attendance.mapper.response.LeaveDetailResponseMapper;
 import com.attendenceSystem.module.attendance.mapper.response.LeaveRequestResponseMapper;
 import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
@@ -43,6 +45,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceResponseMapper attendanceResponseMapper;
     private final LeaveRequestRepository leaveRequestRepository;
     private final LeaveRequestResponseMapper leaveRequestResponseMapper;
+    private final LeaveDetailResponseMapper leaveDetailResponseMapper;
     private final AttendanceCalculator attendanceCalculator;
     private final TimeZoneProvider timeZoneProvider;
 
@@ -143,6 +146,16 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public Page<LeaveRequestResponse> getAllLeaveRequests(final Pageable pageable) {
         return leaveRequestRepository.findAll(pageable).map(leaveRequestResponseMapper::fromEntity);
+    }
+
+    @Override
+    public LeaveDetailResponse getLeaveDetail(final Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID yêu cầu nghỉ phép không hợp lệ");
+        }
+        LeaveRequest leave = leaveRequestRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy yêu cầu nghỉ phép với ID: " + id));
+        return leaveDetailResponseMapper.fromEntity(leave);
     }
 
     private User getCurrentUser() {

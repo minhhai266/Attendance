@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
+import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 import com.attendenceSystem.module.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -49,7 +49,7 @@ public class LeaveRequest {
     private String reason;
 
     @Column(name = "status", nullable = false)
-    private AttendanceStatus status;
+    private LeaveStatus status;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

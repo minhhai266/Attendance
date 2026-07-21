@@ -66,6 +66,10 @@ public class UserServiceImpl implements UserService {
             currentUser.setFullName(request.getFullName());
         }
         if (StringUtils.hasText(request.getPhone())) {
+            if(!request.getPhone().equals(currentUser.getPhone())
+                    && userRepository.existsByPhone(request.getPhone())) {
+                throw new BadRequestException("Số điện thoại đã được sử dụng bởi người dùng khác!");
+            }
             currentUser.setPhone(request.getPhone());
         }
         if (StringUtils.hasText(request.getEmail())) {

@@ -122,9 +122,8 @@
                                             <span class="status pending">Trạng thái</span>
                                         </td>
                                         <td>
-                                            <button th:href="@{/leave/detail/{id}(id=${leave.id})}"
-                                                class="btn btn-small btn-primary" type="button"
-                                                onclick="openAbsentDetail()">
+                                            <button th:data-id="${leave.id}"
+                                                class="btn btn-small btn-primary btn-view-detail" type="button">
                                                 <i class="fa-solid fa-eye"></i>
                                                 Xem chi tiết
                                             </button>
@@ -193,33 +192,38 @@
 
                                 <div class="detail-item">
                                     <label>Mã đơn</label>
-                                    <span>#LV001</span>
+                                    <span id="detailId">#LV001</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <label>Tên đăng nhập</label>
+                                    <span id="detailUsername">--</span>
                                 </div>
 
                                 <div class="detail-item">
                                     <label>Người gửi</label>
-                                    <span>Nguyễn Văn A</span>
+                                    <span id="detailFullName">--</span>
                                 </div>
 
                                 <div class="detail-item">
                                     <label>Từ ngày</label>
-                                    <span>20/07/2026</span>
+                                    <span id="detailStartDate">--</span>
                                 </div>
 
                                 <div class="detail-item">
                                     <label>Đến ngày</label>
-                                    <span>22/07/2026</span>
+                                    <span id="detailEndDate">--</span>
                                 </div>
 
                                 <div class="detail-item">
                                     <label>Số ngày nghỉ</label>
-                                    <span>3 ngày</span>
+                                    <span id="detailDays">--</span>
                                 </div>
 
                                 <div class="detail-item">
                                     <label>Trạng thái</label>
-                                    <span class="status pending">
-                                        Chờ duyệt
+                                    <span id="detailStatus" class="status pending">
+                                        --
                                     </span>
                                 </div>
 
@@ -228,8 +232,8 @@
                             <div class="detail-reason">
                                 <label>Lý do nghỉ phép</label>
 
-                                <div class="reason-box">
-                                    Nghỉ phép cá nhân.
+                                <div id="detailReason" class="reason-box">
+                                    --
                                 </div>
                             </div>
 
@@ -268,6 +272,45 @@
                 closeAbsentDetail();
             }
         };
+
+        document.querySelectorAll('.btn-view-detail').forEach(button => {
+            button.addEventListener('click', async function () {
+                const leaveId = this.getAttribute('data-id');
+                try {
+                    const response = await fetch('/api/attendance/leave/detail/' + leaveId);
+                    if (!response.ok) {
+                        throw new Error('Không thể tải chi tiết đơn nghỉ phép');
+                    }
+                    const data = await response.json();
+
+                    document.getElementById('detailId').textContent = '#' + data.id;
+                    document.getElementById('detailUsername').textContent = data.username || '--';
+                    document.getElementById('detailFullName').textContent = data.fullName || '--';
+                    document.getElementById('detailStartDate').textContent = data.startDate || '--';
+                    document.getElementById('detailEndDate').textContent = data.endDate || '--';
+
+                    if (data.startDate && data.endDate) {
+                        const start = new Date(data.startDate);
+                        const end = new Date(data.endDate);
+                        const days = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1);
+                        document.getElementById('detailDays').textContent = days + ' ngày';
+                    } else {
+                        document.getElementById('detailDays').textContent = '--';
+                    }
+
+                    const statusEl = document.getElementById('detailStatus');
+                    statusEl.textContent = data.status || '--';
+                    statusEl.className = 'status ' + (data.status ? data.status.toLowerCase() : '');
+
+                    document.getElementById('detailReason').textContent = data.reason || '--';
+
+                    openAbsentDetail();
+                } catch (error) {
+                    console.error(error);
+                    alert(error.message || 'Có lỗi xảy ra, vui lòng thử lại');
+                }
+            });
+        });
     </script>
 
 </body>
