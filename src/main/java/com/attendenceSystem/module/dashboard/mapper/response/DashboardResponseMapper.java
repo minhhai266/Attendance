@@ -10,6 +10,7 @@ import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.dashboard.dto.response.AdminDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.ManagerDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.EmployeeDashboardResponse;
+import com.attendenceSystem.module.dashboard.dto.response.DailyAttendanceStats;
 
 @Component
 public class DashboardResponseMapper {
@@ -22,8 +23,9 @@ public class DashboardResponseMapper {
     }
 
     public ManagerDashboardResponse toManagerDashboardResponse(long totalEmployees, long attendedEmployees,
-            long absentEmployees, Page<AttendanceResponse> attendanceHistory) {
-        return new ManagerDashboardResponse(totalEmployees, attendedEmployees, absentEmployees, attendanceHistory);
+            long lateEmployees, long absentEmployees, Page<AttendanceResponse> attendanceHistory,
+            List<DailyAttendanceStats> weeklyStats) {
+        return new ManagerDashboardResponse(totalEmployees, attendedEmployees, lateEmployees, absentEmployees, attendanceHistory, weeklyStats);
     }
 
     public EmployeeDashboardResponse toEmployeeDashboardResponse(long totalReports, long acceptedReports,

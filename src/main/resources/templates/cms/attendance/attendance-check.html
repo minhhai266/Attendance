@@ -19,134 +19,136 @@
             </div>
 
             <div class="header-info">
-                <h1 class="header-title">Home Attendance 1</h1>
-                <div class="header-time">22/22/22</div>
+                <h1 class="header-title">Quản lý điểm danh</h1>
+                <div class="header-time" id="currentDate">--</div>
             </div>
         </div>
 
         <div class="header-right">
-
             <div class="header-clock" id="clock">
                 00:00:00
             </div>
-
             <button class="header-btn theme-toggle" id="themeToggle">
                 🌙
             </button>
-
-
-
         </div>
     </header>
+
     <!-- =======================================================================
                                     BODY
     ==========================================================================-->
     <div class="container">
-        <div class="container-attend-left history">
-            <h3 class="history-title">Lịch sử chấm công</h3>
-
-            <ul class="history-list">
-
-                <li class="history-item">
-                    <div class="history-card">
-                        <span class="history-date">
-                            Ngày 01/01/2024
-                        </span>
-
-                        <span class="history-status status-in">
-                            Vào lúc 08:00
-                        </span>
-
-                        <span class="history-status status-out">
-                            Ra lúc 17:00
-                        </span>
-                    </div>
-                </li>
-
-            </ul>
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card stat-total">
+                <p>Tổng nhân viên</p>
+                <span class="stat-number" id="statTotal">0</span>
+            </div>
+            <div class="stat-card stat-present">
+                <p>Đã điểm danh</p>
+                <span class="stat-number" id="statPresent">0</span>
+            </div>
+            <div class="stat-card stat-checked-out">
+                <p>Đã checkout</p>
+                <span class="stat-number" id="statCheckedOut">0</span>
+            </div>
+            <div class="stat-card stat-late">
+                <p>Đi muộn</p>
+                <span class="stat-number" id="statLate">0</span>
+            </div>
+            <div class="stat-card stat-absent">
+                <p>Vắng mặt</p>
+                <span class="stat-number" id="statAbsent">0</span>
+            </div>
         </div>
-        <div class="container-attend-main">
 
-            <div class="face-scanner scanner-card">
-
-                <!-- <video id="camera" autoplay playsinline></video> -->
-
-                <div class="scan-overlay">
-                    <div class="scan-frame"></div>
-                    <div class="scan-line"></div>
+        <!-- Filters -->
+        <div class="filters-bar">
+            <form id="filterForm" class="filters-form">
+                <div class="filter-item">
+                    <label for="dateFilter">Ngày</label>
+                    <input type="date" id="dateFilter" name="date" />
                 </div>
-
-                <div class="result-card success-result">
-                    ✓ Nhận diện thành công
+                <div class="filter-item">
+                    <label for="departmentFilter">Phòng ban</label>
+                    <select id="departmentFilter" name="departmentId">
+                        <option value="">Tất cả</option>
+                        <option value="IT">IT</option>
+                        <option value="HR">HR</option>
+                        <option value="MARKETING">MARKETING</option>
+                        <option value="FINANCE">FINANCE</option>
+                    </select>
                 </div>
-
-            </div>
-
-            <div class="face-guide guide-card">
-                <p class="guide-title">
-                    Hướng dẫn chấm công bằng nhận diện khuôn mặt:
-                </p>
-
-                <ol class="guide-list">
-                    <li>Đứng cách camera khoảng 50cm - 1m</li>
-                    <li>Nhìn thẳng vào camera</li>
-                    <li>Giữ khuôn mặt trong khung hình</li>
-                    <li>Hệ thống sẽ tự động nhận diện và ghi nhận</li>
-                </ol>
-            </div>
-
+                <div class="filter-actions">
+                    <button type="submit" class="btn btn-primary">Lọc</button>
+                    <button type="button" class="btn btn-secondary" id="btnRefresh">Làm mới</button>
+                </div>
+            </form>
         </div>
-        <div class="container-attend-right">
 
-            <h3 class="attendance-title">
-                Thống kê hôm nay
-            </h3>
-
-            <div class="stat-card success-card">
-                <p class="attendance-present">
-                    Đã chấm công
-                </p>
-                <span class="stat-number">42</span>
+        <!-- List -->
+        <div class="list-section">
+            <h3 class="section-title">Danh sách điểm danh</h3>
+            <div class="table-wrapper">
+                <table class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nhân viên</th>
+                            <th>Phòng ban</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceList">
+                        <tr>
+                            <td colspan="6" class="text-center">Đang tải dữ liệu...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-
-            <div class="stat-card warning-card">
-                <p class="attendance-late">
-                    Đi muộn
-                </p>
-                <span class="stat-number">8</span>
-            </div>
-
-            <div class="stat-card danger-card">
-                <p class="attendance-absent">
-                    Chưa chấm công
-                </p>
-                <span class="stat-number">12</span>
-            </div>
-
-            <div class="attendance-info">
-                <p class="attendance-sum">
-                    Tổng nhân viên: 50
-                </p>
-
-                <p class="attendance-date">
-                    Giờ làm việc: 08:00 - 17:00
-                </p>
-            </div>
-
         </div>
-        <script>
-            const btn = document.getElementById("themeToggle");
+    </div>
 
-            btn.addEventListener("click", () => {
-                document.body.classList.toggle("dark");
-
-                btn.textContent =
-                    document.body.classList.contains("dark")
-                        ? "☀️"
-                        : "🌙";
+    <script src="/js/attendance-manager.js"></script>
+    <script>
+        const dateInput = document.getElementById("dateFilter");
+        const today = new Date().toISOString().slice(0, 10);
+        if (dateInput) {
+            dateInput.value = today;
+        }
+        const currentDateEl = document.getElementById("currentDate");
+        if (currentDateEl) {
+            currentDateEl.textContent = new Date().toLocaleDateString("vi-VN", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
             });
-        </script>
+        }
+        const btnRefresh = document.getElementById("btnRefresh");
+        if (btnRefresh) {
+            btnRefresh.addEventListener("click", () => {
+                if (dateInput) dateInput.value = today;
+                document.getElementById("departmentFilter").value = "";
+                loadStats();
+                loadList();
+            });
+        }
+        const themeToggle = document.getElementById("themeToggle");
+        themeToggle.addEventListener("click", () => {
+            document.body.classList.toggle("dark");
+            themeToggle.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+        });
+        function updateClock() {
+            const now = new Date();
+            const clockEl = document.getElementById("clock");
+            if (clockEl) clockEl.textContent = now.toLocaleTimeString("vi-VN");
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
 </body>
-
 
 </html>

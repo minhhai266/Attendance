@@ -47,7 +47,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/login/**", "/css/**", "/js/**").permitAll()
-                        .requestMatchers("/dashboard/**").authenticated()
+                        .requestMatchers("/dashboard/**", "/attendance/**", "/attendance", "/attendanceCheck", "/attendanceHistory", "/attendanceLists").permitAll()
+                        .requestMatchers("/api/attendance/**").permitAll()
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {

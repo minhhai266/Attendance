@@ -13,7 +13,7 @@ import com.attendenceSystem.module.report.dto.response.ReportDetailResponse;
 import com.attendenceSystem.module.report.dto.response.ReportResponse;
 import com.attendenceSystem.module.report.service.ReportService;
 import com.attendenceSystem.module.user.entity.User;
-import com.attendenceSystem.module.user.entity.enums.Specialization;
+import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Role;
 import com.attendenceSystem.module.user.repository.UserRepository;
 
@@ -55,9 +55,12 @@ public class ReportApiController {
     }
 
     @GetMapping("/users/by-department/{departmentId}")
-    public ResponseEntity<List<User>> getUsersByDepartment(@PathVariable Integer departmentId) {
-        Specialization specialization = Specialization.fromValue(departmentId);
-        List<User> users = userRepository.findBySpecializationAndRoleNot(specialization, Role.ADMIN);
+    public ResponseEntity<List<User>> getUsersByDepartment(@PathVariable String departmentId) {
+        Department department = Department.fromValue(departmentId);
+        if (department == null) {
+            return ResponseEntity.ok(List.of());
+        }
+        List<User> users = userRepository.findByDepartmentAndRoleNot(department, Role.ADMIN);
         return ResponseEntity.ok(users);
     }
 }

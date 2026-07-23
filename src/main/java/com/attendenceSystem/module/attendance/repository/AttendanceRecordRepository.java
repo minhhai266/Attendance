@@ -1,6 +1,7 @@
 package com.attendenceSystem.module.attendance.repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -28,5 +29,15 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
     Page<AttendanceRecord> findAllByOrderByAttendanceDateDesc(Pageable pageable);
 
     long countByCheckInTimeNotNullAndCheckOutTimeNotNull();
+
+    List<AttendanceRecord> findByAttendanceDate(LocalDate attendanceDate);
+
+    List<AttendanceRecord> findByAttendanceDateBetween(LocalDate startDate, LocalDate endDate);
+
+    List<AttendanceRecord> findByAttendanceDateBetweenAndStatus(LocalDate startDate, LocalDate endDate, com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus status);
+
+    List<AttendanceRecord> findAllByOrderByAttendanceDateDesc();
+
+    long countByAttendanceDateAndStatus(LocalDate attendanceDate, com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus status);
 
 }

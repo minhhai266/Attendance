@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.th3.org">
 
 <head>
     <meta charset="UTF-8" />
@@ -27,22 +27,22 @@
                 <section class="dashboard-overview">
 
                     <div class="stat-card total">
-                        <h3>50</h3>
+                        <h3 th:text="${dashboard.totalEmployees}">0</h3>
                         <p>Tổng nhân viên</p>
                     </div>
 
                     <div class="stat-card present">
-                        <h3>42</h3>
+                        <h3 th:text="${dashboard.attendedEmployees}">0</h3>
                         <p>Có mặt hôm nay</p>
                     </div>
 
                     <div class="stat-card late">
-                        <h3>8</h3>
+                        <h3 th:text="${dashboard.lateEmployees}">0</h3>
                         <p>Đi muộn hôm nay</p>
                     </div>
 
                     <div class="stat-card absent">
-                        <h3>10</h3>
+                        <h3 th:text="${dashboard.absentEmployees}">0</h3>
                         <p>Vắng mặt hôm nay</p>
                     </div>
 
@@ -122,6 +122,11 @@
     </div>
     <script th:src="@{https://cdn.jsdelivr.net/npm/chart.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script th:inline="javascript">
+        var weeklyStatsData = /*[[${dashboard.weeklyStats}]]*/ [];
+        console.log('Dashboard data:', /*[[${dashboard}]]*/ 'null');
+        console.log('Weekly stats:', weeklyStatsData);
+    </script>
     <script th:src="@{/js/charts/Chart.js}"></script>
     <script th:src="@{/js/charts/TrendChart.js}"></script>
 </body>

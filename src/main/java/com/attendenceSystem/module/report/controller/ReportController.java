@@ -12,7 +12,7 @@ import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.constant.Views;
 import com.attendenceSystem.module.report.dto.request.CreateReportRequest;
 import com.attendenceSystem.module.report.service.ReportService;
-import com.attendenceSystem.module.user.entity.enums.Specialization;
+import com.attendenceSystem.module.user.entity.enums.Department;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
@@ -31,7 +31,7 @@ public class ReportController {
 
     @GetMapping(Routes.Action.CREATE)
     public String reportCreate(Model model) {
-        model.addAttribute("departments", Specialization.values());
+        model.addAttribute("departments", Department.values());
         return Views.Document.CREATE;
     }
 
@@ -39,7 +39,7 @@ public class ReportController {
     public String submitReport(
             @RequestParam("title") String title,
             @RequestParam("content") String content,
-            @RequestParam("departmentId") Integer departmentId,
+            @RequestParam("departmentId") String departmentId,
             @RequestParam(value = "sharedUserIds", required = false) Long[] sharedUserIds,
             @RequestParam(value = "files", required = false) MultipartFile[] files,
             @RequestParam(value = "link", required = false) String link,
@@ -58,7 +58,7 @@ public class ReportController {
             return Routes.REDIRECT + Routes.Report.ROOT + "?success=true";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("departments", Specialization.values());
+            model.addAttribute("departments", Department.values());
             return Views.Document.CREATE;
         }
     }

@@ -18,11 +18,7 @@ public class DepartmentConverter implements AttributeConverter<Department, Strin
         if (dbData == null) {
             return null;
         }
-        for (Department dept : Department.values()) {
-            if (dept.getRoomCode().equals(dbData)) {
-                return dept;
-            }
-        }
-        return null;
+        return Department.valueOf(dbData);
     }
+
 }
