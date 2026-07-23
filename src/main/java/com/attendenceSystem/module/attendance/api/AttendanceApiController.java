@@ -26,25 +26,25 @@ public class AttendanceApiController {
 
     private final AttendanceService attendanceService;
 
-    @PostMapping("/check-in")
+    @PostMapping(Routes.Attendance.CHECK_IN)
     public ResponseEntity<AttendanceResponse> checkIn() {
         AttendanceResponse resp = attendanceService.checkIn();
         return ResponseEntity.ok(resp);
     }
 
-    @PostMapping("/check-out")
+    @PostMapping(Routes.Attendance.CHECK_OUT)
     public ResponseEntity<AttendanceResponse> checkOut() {
         AttendanceResponse resp = attendanceService.checkOut();
         return ResponseEntity.ok(resp);
     }
 
-    @GetMapping("/history")
+    @GetMapping(Routes.Attendance.HISTORY)
     public ResponseEntity<Page<AttendanceResponse>> getHistory(Pageable pageable) {
         Page<AttendanceResponse> page = attendanceService.getAttendanceHistory(pageable);
         return ResponseEntity.ok(page);
     }
 
-    @PostMapping("/leave")
+    @PostMapping(Routes.Attendance.LEAVE)
     public ResponseEntity<LeaveRequestResponse> createLeave(@RequestBody CreateLeaveRequest request) {
         LeaveRequestResponse resp = attendanceService.createLeaveRequest(request);
         return ResponseEntity.ok(resp);
@@ -56,7 +56,7 @@ public class AttendanceApiController {
         return ResponseEntity.ok(page);
     }
 
-    @GetMapping("/leave/detail/{id}")
+    @GetMapping(Routes.Attendance.LEAVE_DETAIL + "/{id}")
     public ResponseEntity<LeaveDetailResponse> getLeaveDetail(@PathVariable Long id) {
         LeaveDetailResponse detail = attendanceService.getLeaveDetail(id);
         return ResponseEntity.ok(detail);

@@ -40,19 +40,19 @@
 
                         <!-- THÔNG TIN -->
                         <div class="face-register-meta">
-
+                            <h3>Chuyển phòng nhanh</h3>
+                            <h4>Lưu ý: Khi đã chuyển phòng</h4>
+                            <div>
+                                <input type="text" id="roomCode" placeholder="Nhập mã phòng (VD: P101)">
+                                <button id="btnSwitchRoom" type="button">
+                                    Chuyển phòng
+                                </button>
+                            </div>
                             <h3>Thông tin đăng ký</h3>
-
-                            <label for="roomCode">Mã phòng</label>
-                            <input type="text"
-                                   id="roomCode"
-                                   placeholder="Ví dụ: P101">
 
                             <div class="face-sample-summary">
 
-                                <button id="faceSampleCount"
-                                        class="face-sample-count-btn"
-                                        type="button">
+                                <button id="faceSampleCount" class="face-sample-count-btn" type="button">
                                     0 / 5 mẫu
                                 </button>
 
@@ -73,21 +73,18 @@
                                 <div class="panel-header">
                                     <h3>Camera đăng ký</h3>
 
-                                    <button id="faceRegisterToggleBtn"
-                                            type="button">
+                                    <button id="faceRegisterToggleBtn" type="button">
                                         Bật camera
                                     </button>
                                 </div>
 
                                 <!-- MODE -->
                                 <div class="mode-tabs">
-                                    <button class="active"
-                                            type="button">
+                                    <button class="active" type="button">
                                         Đăng ký mới
                                     </button>
 
-                                    <button type="button"
-                                            id="rescanBtn">
+                                    <button type="button" id="rescanBtn">
                                         Quét lại
                                     </button>
                                 </div>
@@ -112,14 +109,10 @@
                                 <!-- VIDEO -->
                                 <div class="video-wrap">
 
-                                    <video id="video"
-                                           autoplay
-                                           playsinline
-                                           muted>
+                                    <video id="video" autoplay playsinline muted>
                                     </video>
 
-                                    <canvas id="captureCanvas"
-                                            style="display:none;">
+                                    <canvas id="captureCanvas" style="display:none;">
                                     </canvas>
 
                                 </div>
@@ -127,22 +120,18 @@
                                 <!-- ACTION -->
                                 <div class="action-row">
 
-                                    <button type="button"
-                                            id="captureFaceBtn">
+                                    <button type="button" id="captureFaceBtn">
                                         📷 Chụp mẫu
                                     </button>
 
-                                    <button type="button"
-                                            id="resetFaceScanBtn"
-                                            class="secondary">
+                                    <button type="button" id="resetFaceScanBtn" class="secondary">
                                         Làm lại
                                     </button>
 
                                 </div>
 
                                 <!-- MESSAGE -->
-                                <div id="faceRegisterMessage"
-                                     class="message">
+                                <div id="faceRegisterMessage" class="message">
                                 </div>
 
                             </div>
@@ -279,7 +268,7 @@
         // Gửi ảnh lên server
         async function submitSamples() {
             const roomCode = document.getElementById('roomCode').value;
-            
+
             try {
                 const response = await fetch('/api/face-id/register', {
                     method: 'POST',
