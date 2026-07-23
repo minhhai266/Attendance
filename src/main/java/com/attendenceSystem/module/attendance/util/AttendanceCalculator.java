@@ -1,14 +1,14 @@
 package com.attendenceSystem.module.attendance.util;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 public interface AttendanceCalculator {
 
-    boolean isLate(Instant checkInTime);
+    boolean isLate(LocalDateTime checkInTime);
 
-    boolean isEarlyLeave(Instant checkOutTime);
+    boolean isEarlyLeave(LocalDateTime checkOutTime);
 
-    long workingMinutes(Instant checkInTime, Instant checkOutTime);
+    long workingMinutes(LocalDateTime checkInTime, LocalDateTime checkOutTime);
 
-    double totalWorkingHours(Instant checkInTime, Instant checkOutTime);
+    double totalWorkingHours(LocalDateTime checkInTime, LocalDateTime checkOutTime);
 }

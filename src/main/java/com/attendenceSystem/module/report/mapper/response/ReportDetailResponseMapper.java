@@ -15,6 +15,7 @@ public class ReportDetailResponseMapper {
                 report.getTitle(),
                 report.getContent(),
                 report.getAttachmentUrl(),
+                report.getAttachmentFiles(),
                 report.getEmployee().getFullName(),
                 report.getStatus(),
                 report.getRejectReason(),

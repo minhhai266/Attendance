@@ -1,6 +1,6 @@
 package com.attendenceSystem.module.faceid.dto.response;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 import lombok.Builder;
 
@@ -15,6 +15,6 @@ public record FaceProfileResponse(
         String userName,
         String userEmail,
         String userFullName,
-        Instant createdAt,
-        Instant updatedAt) {
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt) {
 }

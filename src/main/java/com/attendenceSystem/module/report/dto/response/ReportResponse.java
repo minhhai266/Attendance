@@ -1,6 +1,6 @@
 package com.attendenceSystem.module.report.dto.response;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 import com.attendenceSystem.module.report.entity.enums.ReportStatus;
 
@@ -10,5 +10,7 @@ public record ReportResponse(
         String content,
         String employeeName,
         ReportStatus status,
-        Instant createdAt) {
+        LocalDateTime createdAt,
+        String attachmentUrl,
+        String attachmentFiles) {
 }

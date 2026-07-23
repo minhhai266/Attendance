@@ -1,5 +1,7 @@
 package com.attendenceSystem.module.log.dto.response;
 
+import java.time.LocalDateTime;
+
 import com.attendenceSystem.module.log.entity.enums.LogAction;
 import com.attendenceSystem.module.log.entity.enums.LogEntityType;
 
@@ -14,5 +16,5 @@ public record AuditLogResponse(
                 Long entityId,
                 LogAction action,
                 String description,
-                String createdAt) {
+                LocalDateTime createdAt) {
 }

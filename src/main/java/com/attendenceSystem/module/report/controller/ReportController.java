@@ -52,6 +52,7 @@ public class ReportController {
             request.setContent(content);
             request.setAttachmentUrl(link);
             request.setSharedUserIds(sharedUserIds);
+            request.setFiles(files);
 
             reportService.createReport(request);
 

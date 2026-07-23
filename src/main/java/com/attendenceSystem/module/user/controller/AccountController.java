@@ -5,8 +5,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.constant.Views;
 import com.attendenceSystem.module.user.dto.response.UserResponse;

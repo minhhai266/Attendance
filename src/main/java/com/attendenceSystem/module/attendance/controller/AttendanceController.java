@@ -55,6 +55,7 @@ public class AttendanceController {
 
     @GetMapping(Routes.Attendance.HISTORY)
     public String attendanceHistory(@PageableDefault(size = 10) Pageable pageable, Model model) {
+        
         model.addAttribute("attendanceHistory", attendanceService.getAttendanceHistory(pageable));
         return Views.Attendance.HISTORY;
     }
@@ -83,7 +84,7 @@ public class AttendanceController {
         }
         attendanceService.createLeaveRequest(createLeaveRequest);
         redirectAttributes.addFlashAttribute("successMessage", "Yêu cầu nghỉ phép đã được gửi.");
-        return Views.Attendance.LEAVE_LIST;
+        return Routes.REDIRECT + Routes.Attendance.ROOT + Routes.Attendance.LEAVE    + Routes.Action.CREATE;
     }
 
     @ExceptionHandler({

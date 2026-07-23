@@ -1,7 +1,7 @@
 package com.attendenceSystem.module.attendance.util.impl;
 
 import java.time.Duration;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 
@@ -73,7 +73,7 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
     }
 
     @Override
-    public boolean isLate(final Instant checkInTime) {
+    public boolean isLate(final LocalDateTime checkInTime) {
         if (checkInTime == null) {
             return false;
         }
@@ -82,7 +82,7 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
     }
 
     @Override
-    public boolean isEarlyLeave(final Instant checkOutTime) {
+    public boolean isEarlyLeave(final LocalDateTime checkOutTime) {
         if (checkOutTime == null) {
             return false;
         }
@@ -91,7 +91,7 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
     }
 
     @Override
-    public long workingMinutes(final Instant checkInTime, final Instant checkOutTime) {
+    public long workingMinutes(final LocalDateTime checkInTime, final LocalDateTime checkOutTime) {
         if (checkInTime == null || checkOutTime == null) {
             return 0;
         }
@@ -99,7 +99,7 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
     }
 
     @Override
-    public double totalWorkingHours(final Instant checkInTime, final Instant checkOutTime) {
+    public double totalWorkingHours(final LocalDateTime checkInTime, final LocalDateTime checkOutTime) {
         long minutes = workingMinutes(checkInTime, checkOutTime);
         return minutes / 60.0;
     }

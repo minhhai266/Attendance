@@ -16,7 +16,9 @@ public class ReportResponseMapper {
                 report.getContent(),
                 report.getEmployee().getFullName(),
                 report.getStatus(),
-                report.getCreatedAt()
+                report.getCreatedAt(),
+                report.getAttachmentUrl(),
+                report.getAttachmentFiles()
         );
     }
 }

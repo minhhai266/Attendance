@@ -1,6 +1,7 @@
 package com.attendenceSystem.module.faceid.entity;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -45,5 +46,5 @@ public class FaceSample {
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 }
