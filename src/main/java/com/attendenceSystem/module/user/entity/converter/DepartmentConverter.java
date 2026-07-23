@@ -6,16 +6,23 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-public class DepartmentConverter implements AttributeConverter<Department, Integer> {
+public class DepartmentConverter implements AttributeConverter<Department, String> {
 
     @Override
-    public Integer convertToDatabaseColumn(Department attribute) {
-        return attribute == null ? null : attribute.value;
+    public String convertToDatabaseColumn(Department attribute) {
+        return attribute == null ? null : attribute.getRoomCode();
     }
 
     @Override
-    public Department convertToEntityAttribute(Integer dbData) {
-        return dbData == null ? null : Department.fromValue(dbData);
+    public Department convertToEntityAttribute(String dbData) {
+        if (dbData == null) {
+            return null;
+        }
+        for (Department dept : Department.values()) {
+            if (dept.getRoomCode().equals(dbData)) {
+                return dept;
+            }
+        }
+        return null;
     }
-
 }

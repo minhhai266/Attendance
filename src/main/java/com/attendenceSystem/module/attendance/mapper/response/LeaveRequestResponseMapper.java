@@ -15,6 +15,9 @@ public class LeaveRequestResponseMapper {
         return new LeaveRequestResponse(
                 leave.getId(),
                 leave.getUser() == null ? null : leave.getUser().getFullName(),
+                leave.getUser() == null || leave.getUser().getDepartment() == null
+                        ? "N/A"
+                        : leave.getUser().getDepartment().getDisplayName(),
                 leave.getStartDate(),
                 leave.getEndDate(),
                 leave.getReason(),

@@ -61,7 +61,7 @@
                             </div>
 
                             <div class="info-item">
-                                <label>Phòng ban</label>
+                                <label>Chuyên ngành</label>
                                 <p th:text="${#authentication.principal.department}">Không có   </p>
                             </div>
 
@@ -148,12 +148,12 @@
                         <div class="error-message" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
                     </div>
                     <div class="info-item">
-                        <label >Phòng ban</label>
-                        <select name="department">
-                            <option th:each="dept : ${T(com.attendenceSystem.module.user.entity.enums.Department).values()}"
-                                    th:value="${dept.name()}"
-                                    th:text="${dept.name()}"
-                                    th:selected="${#authentication.principal.department == dept.name()}">
+                        <label >Chuyên ngành</label>
+                        <select name="specialization">
+                            <option th:each="spec : ${T(com.attendenceSystem.module.user.entity.enums.Specialization).values()}"
+                                    th:value="${spec.name()}"
+                                    th:text="${spec.displayName}"
+                                    th:selected="${#authentication.principal.department == spec.name()}">
                             </option>
                         </select>
                     </div>

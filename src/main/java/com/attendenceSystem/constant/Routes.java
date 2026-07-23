@@ -32,18 +32,13 @@ public final class Routes {
         public static final String PROFILE = "/profile";
         public static final String CHANGE_PASSWORD = "/change-password";
         public static final String UPDATE_PASSWORD = "/update-password";
-        public static final String UPDATE_INFORMATION = "/update-information";
+        public static final String INFORMATION = "/information";
     }
 
     public static final class Account {
-        public static final String ROOT = "/admin/accounts";
+        public static final String ROOT = "/accounts";
+        public static final String ADMIN = "/admin/accounts";
         public static final String MANAGER = "/manager/accounts";
-        public static final String CREATE = "/create";
-        public static final String UPDATE = "/update";
-        public static final String DELETE = "/delete";
-        public static final String DEACTIVATE = "/deactivate";
-        public static final String ACTIVATE = "/activate";
-        public static final String UPDATE_INFORMATION = "/update-information";
     }
 
     public static final class Dashboard {
@@ -67,5 +62,9 @@ public final class Routes {
 
     public static final class Schedule {
         public static final String ROOT = "/schedule";
+    }
+
+    public static final class Report {
+        public static final String ROOT = "/report";
     }
 }

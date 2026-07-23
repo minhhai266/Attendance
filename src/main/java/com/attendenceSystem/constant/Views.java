@@ -22,6 +22,7 @@ public final class Views {
     public static final class Account {
         public static final String LIST = "cms/account/account-list";
         public static final String EMPLOYEE_LIST = "cms/account/employee-list";
+        public static final String EMPLOYEE_DETAIL = "cms/account/employee-detail";
         public static final String DETAIL = "cms/account/account-detail";
     }
 
@@ -42,5 +43,9 @@ public final class Views {
     public static final class FaceId {
         public static final String CREATE = "cms/face-id/faceID-create";
         public static final String LIST = "cms/face-id/faceID-list";
+    }
+    public static final class Document {
+        public static final String CREATE = "cms/document/document-create";
+        public static final String LIST = "cms/document/document-list";
     }
 }

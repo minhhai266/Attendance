@@ -100,7 +100,7 @@ public class UserController {
         }
     }
 
-    @PostMapping(Routes.User.UPDATE_INFORMATION)
+    @PostMapping(Routes.User.INFORMATION + Routes.Action.UPDATE)
     public String updateUserInformation(@Valid @ModelAttribute UpdateUserInformationRequest request, 
                                        BindingResult result,
                                        Model model) {

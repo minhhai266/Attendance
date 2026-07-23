@@ -35,7 +35,7 @@ public class CustomUserDetails implements UserDetails {
                 user.getFullName(),
                 user.getEmail(),
                 user.getPhone(),
-                user.getDepartment() == null ? null : user.getDepartment().name(),
+                user.getSpecialization() == null ? null : user.getSpecialization().name(),
                 user.getRole().name(),
                 user.getStatus());
     }
@@ -48,7 +48,7 @@ public class CustomUserDetails implements UserDetails {
                 response.fullName(),
                 response.email(),
                 response.phone(),
-                response.department() == null ? null : response.department().name(),
+                response.specialization() == null ? null : response.specialization().name(),
                 response.role().name(),
                 response.status());
     }

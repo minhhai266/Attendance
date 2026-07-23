@@ -2,6 +2,7 @@ package com.attendenceSystem.module.user.dto.response;
 
 import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Role;
+import com.attendenceSystem.module.user.entity.enums.Specialization;
 import com.attendenceSystem.module.user.entity.enums.Status;
 
 import lombok.Builder;
@@ -15,6 +16,7 @@ public record UserInformationResponse(
         String fullName,
         Role role,
         Status status,
+        Specialization specialization,
         Department department) {
 
 }

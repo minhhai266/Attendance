@@ -15,5 +15,7 @@ public interface ReportService {
 
     Page<ReportResponse> getMyReports(Pageable pageable);
 
+    Page<ReportResponse> getSharedWithMe(Pageable pageable);
+
     ReportDetailResponse getReportById(Long id);
 }

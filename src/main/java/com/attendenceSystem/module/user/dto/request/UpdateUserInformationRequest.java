@@ -1,6 +1,6 @@
 package com.attendenceSystem.module.user.dto.request;
 
-import com.attendenceSystem.module.user.entity.enums.Department;
+import com.attendenceSystem.module.user.entity.enums.Specialization;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -23,5 +23,5 @@ public class UpdateUserInformationRequest {
     @Size(max = 255, message = "Email không được vượt quá 255 ký tự")
     private String email;
 
-    private Department department;
+    private Specialization specialization;
 }
