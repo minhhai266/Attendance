@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
+import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
 
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class AttendanceManagerApiController {
         com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus attendanceStatus = null;
         if (status != null && !status.isEmpty()) {
             try {
-                attendanceStatus = com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus.valueOf(status);
+                attendanceStatus = AttendanceStatus.valueOf(status);
             } catch (IllegalArgumentException e) {
                 // Invalid status, ignore
             }
@@ -47,10 +48,10 @@ public class AttendanceManagerApiController {
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate,
             @RequestParam(required = false) String status) {
-        com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus attendanceStatus = null;
+        AttendanceStatus attendanceStatus = null;
         if (status != null && !status.isEmpty()) {
             try {
-                attendanceStatus = com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus.valueOf(status);
+                attendanceStatus = AttendanceStatus.valueOf(status);
             } catch (IllegalArgumentException e) {
                 // Invalid status, ignore
             }

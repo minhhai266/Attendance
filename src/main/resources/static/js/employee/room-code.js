@@ -1,13 +1,12 @@
+// Lấy dữ liệu từ biến global đã được HTML (Thymeleaf) nạp sẵn
+const roomCodes = window.serverRoomCodes || {};
+
+console.log("Dữ liệu đồng bộ từ Backend:", roomCodes);
+
+// Logic xử lý giao diện của FE giữ nguyên
 const roomSelect = document.getElementById("roomSelect");
 const roomCode = document.getElementById("roomCode");
 
-const roomCodes = {
-    DE211: "DE211-X7A9",
-    DE212: "DE212-LP81",
-    DE213: "DE213-KM32"
-};
-
 roomSelect.addEventListener("change", () => {
-    roomCode.textContent =
-        roomCodes[roomSelect.value] || "--------";
+    roomCode.textContent = roomCodes[roomSelect.value] || "--------";
 });

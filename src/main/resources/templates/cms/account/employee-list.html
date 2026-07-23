@@ -51,7 +51,8 @@
 
                             <select>
                                 <option>Tất cả phòng ban</option>
-                                <option th:each="dept : ${departments}" th:value="${dept.name()}" th:text="${dept.displayName}"></option>
+                                <option th:each="dept : ${departments}" th:value="${dept.name()}"
+                                    th:text="${dept.displayName}"></option>
                             </select>
 
                             <select>
@@ -98,7 +99,8 @@
 
                                     <div class="user">
 
-                                        <div class="avatar" th:text="${#strings.substring(user.fullName(), 0, 1)}">H</div>
+                                        <div class="avatar" th:text="${#strings.substring(user.fullName(), 0, 1)}">H
+                                        </div>
 
                                         <strong th:text="${user.fullName()}">Nguyễn Minh Hải</strong>
 
@@ -130,10 +132,12 @@
                                             Chi tiết
                                         </a>
 
-                                        <form th:action="@{/manager/accounts/update/{id}(id=${user.id()})}" method="post" style="display:inline;">
+                                        <form th:action="@{/manager/accounts/update/{id}(id=${user.id()})}"
+                                            method="post" style="display:inline;">
                                             <select name="department" onchange="this.form.submit()">
                                                 <option value="">Chuyển phòng</option>
-                                                <option th:each="dept : ${departments}" th:value="${dept.name()}" th:text="${dept.displayName}"></option>
+                                                <option th:each="dept : ${departments}" th:value="${dept.name()}"
+                                                    th:text="${dept.displayName}"></option>
                                             </select>
                                         </form>
 
@@ -201,15 +205,23 @@
                 </div>
                 <button id="closePopup" class="close-btn">
                     <i class="fas fa-times">Đóng</i>
-                    
+
                 </button>
             </div>
 
         </div>
     </section>
-    <script src="/js/employee/employee-popup.js"></script>
-    <script src="/js/employee/room-code.js"></script>
-    <script src="/js/employee/copy-code.js"></script>
+    <script th:inline="javascript">
+        // Tạo một biến global để cầu nối sang file JS tĩnh
+        window.serverRoomCodes = {};
+
+        /*[# th:each="dept : ${T(com.attendenceSystem.module.user.entity.enums.Department).values()}"]*/
+        window.serverRoomCodes[[${ dept.roomCode }]] = [[${ dept.joinCode }]];
+        /*[/]*/
+    </script>
+    <script th:src="@{/js/employee/employee-popup.js}"></script>
+    <script th:src="@{/js/employee/js/room-code.js}"></script>
+    <script th:src="@{/js/employee/copy-code.js}"></script>
 </body>
 
 </html>
