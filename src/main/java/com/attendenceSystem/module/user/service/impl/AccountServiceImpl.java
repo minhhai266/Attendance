@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.attendenceSystem.module.user.dto.response.UserResponse;
 import com.attendenceSystem.module.user.entity.User;
+import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Role;
 import com.attendenceSystem.module.user.entity.enums.Status;
 import com.attendenceSystem.module.user.mapper.response.UserResponseMapper;
@@ -25,6 +26,12 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Page<UserResponse> getUsers(final Pageable pageable) {
         return userRepository.findAll(pageable).map(userResponseMapper::fromEntity);
+    }
+
+    @Override
+    public Page<UserResponse> getEmployees(final Pageable pageable) {
+        return userRepository.findByRole(Role.EMPLOYEE, pageable)
+                .map(userResponseMapper::fromEntity);
     }
 
     @Override
@@ -54,6 +61,38 @@ public class AccountServiceImpl implements AccountService {
             throw new IllegalStateException("Tài khoản chưa bị khóa");
         }
         user.setStatus(Status.ACTIVE);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public void changeDepartment(final Long id, final String departmentCode) {
+        User user = findById(id);
+        
+        // Chỉ manager mới có quyền chuyển phòng
+        if (!SecurityUtil.isAuthenticated()) {
+            throw new IllegalStateException("Không xác định được tài khoản hiện tại");
+        }
+        Role currentUserRole = SecurityUtil.getCurrentUserRole();
+        if (currentUserRole != Role.MANAGER && currentUserRole != Role.ADMIN) {
+            throw new IllegalStateException("Bạn không có quyền thực hiện hành động này");
+        }
+        
+        // Chỉ thao tác trên employee
+        if (user.getRole() != Role.EMPLOYEE) {
+            throw new IllegalStateException("Chỉ có thể chuyển phòng cho nhân viên");
+        }
+        
+        Department department = null;
+        if (departmentCode != null && !departmentCode.isBlank()) {
+            try {
+                department = Department.valueOf(departmentCode);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Mã phòng không hợp lệ: " + departmentCode);
+            }
+        }
+        
+        user.setDepartment(department);
         userRepository.save(user);
     }
 

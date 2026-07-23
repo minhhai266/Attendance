@@ -20,6 +20,7 @@ public class UserInformationResponseMapper {
                 .fullName(user.getFullName())
                 .role(user.getRole())
                 .status(user.getStatus())
+                .specialization(user.getSpecialization())
                 .department(user.getDepartment())
                 .build();
     }

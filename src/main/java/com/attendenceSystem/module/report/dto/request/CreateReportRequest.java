@@ -22,4 +22,6 @@ public class CreateReportRequest {
     private String content;
 
     private String attachmentUrl;
+
+    private Long[] sharedUserIds;
 }

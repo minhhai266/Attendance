@@ -1,0 +1,127 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết nhân viên</title>
+
+    <link rel="stylesheet" th:href="@{/css/account/employee-detail.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="bg-image"></div>
+
+    <div class="layout">
+
+        <div th:replace="~{cms/sidebar/sidebar-role :: sidebar}"></div>
+
+        <div class="container-layout">
+
+            <!-- HEADER -->
+            <div class="container-header">
+                <h1>Chi tiết nhân viên</h1>
+                <p>Thông tin chi tiết của nhân viên</p>
+            </div>
+
+            <main class="main-container">
+
+                <section class="container-card">
+
+                    <!-- PROFILE CARD -->
+                    <div class="card-header">
+                        <h2>Thông tin cá nhân</h2>
+                        <a th:href="@{/manager/accounts}" class="back-btn">
+                            <i class="fas fa-arrow-left"></i>
+                            Quay lại
+                        </a>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="info-grid">
+
+                            <div class="info-item">
+                                <label>Họ và tên</label>
+                                <p th:text="${user.fullName()}">Nguyễn Văn A</p>
+                            </div>
+
+                            <div class="info-item">
+                                <label>Email</label>
+                                <p th:text="${user.email()}">nguyenvana@company.com</p>
+                            </div>
+
+                            <div class="info-item">
+                                <label>Số điện thoại</label>
+                                <p th:text="${user.phone() != null && !user.phone().isEmpty() ? user.phone() : 'Chưa có'}">Chưa có</p>
+                            </div>
+
+                            <div class="info-item">
+                                <label>Mã nhân viên</label>
+                                <p th:text="${user.username()}">EMP001</p>
+                            </div>
+
+                            <div class="info-item">
+                                <label>Phòng ban</label>
+                                <p th:text="${user.departmentDisplay()}">N/A</p>
+                            </div>
+
+                            <div class="info-item">
+                                <label>Vai trò</label>
+                                <p th:text="${user.role() == 'EMPLOYEE' ? 'Nhân viên' : (user.role() == 'MANAGER' ? 'Quản lý' : (user.role() == 'ADMIN' ? 'Quản trị viên' : user.role()))}">Nhân viên</p>
+                            </div>
+
+                            <div class="info-item">
+                                <label>Trạng thái</label>
+                                <span th:text="${user.status() == 'ACTIVE' ? 'Đang làm việc' : (user.status() == 'INACTIVE' ? 'Tạm khóa' : (user.status() == 'PENDING' ? 'Chờ duyệt' : 'Không xác định'))}"
+                                      th:class="${'status ' + (user.status() == 'ACTIVE' ? 'active' : (user.status() == 'INACTIVE' ? 'inactive' : 'locked'))}">
+                                    Đang làm việc
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- CHANGE DEPARTMENT CARD -->
+                <section class="dashboard-card">
+
+                    <div class="card-header">
+                        <h2>Chuyển phòng</h2>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form th:action="@{/manager/accounts/update/{id}(id=${user.id()})}" method="post" class="change-dept-form">
+
+                            <div class="form-group">
+                                <label for="department">Chọn phòng mới</label>
+                                <select id="department" name="department" onchange="this.form.submit()">
+                                    <option value="">-- Chọn phòng ban --</option>
+                                    <option th:each="dept : ${departments}"
+                                            th:value="${dept.name()}"
+                                            th:text="${dept.displayName}"
+                                            th:selected="${user.department() == dept.roomCode}">
+                                    </option>
+                                </select>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -40,84 +40,13 @@
                                 </tr>
                             </thead>
 
-                            <tbody>
-
+                            <tbody id="reportTableBody">
                                 <tr>
-
-                                    <td>
-                                        Nguyễn Văn A
-                                    </td>
-
-                                    <td>
-                                        Báo cáo tuần 01
-                                    </td>
-
-                                    <td>
-                                        15/02/2025
-                                    </td>
-
-                                    <td>
-                                        <a class=" file-link">
-                                            📎 Tải file
-                                        </a>
-
-                                        <span>
-                                            Không có
-                                        </span>
-                                    </td>
-
-                                    <td>
-                                        <a target="_blank" class="file-link">
-                                            🔗 Mở link
-                                        </a>
-
-                                        <span>
-                                            Không có
-                                        </span>
-                                    </td>
-
-                                    <td>
-
-                                        <span  class="status-pending">
-                                            Chờ duyệt
-                                        </span>
-
-                                        
-
-                                    </td>
-
-                                    
-
-                                    <td>
-
-                                        <div class="action-group" >
-
-                                            <form method="post">
-
-                                                <button class="btn btn-success">
-                                                    Duyệt
-                                                </button>
-
-                                            </form>
-
-                                            <form method="post">
-
-                                                <button class="btn btn-danger">
-                                                    Từ chối
-                                                </button>
-
-                                            </form>
-
-                                        </div>
-
-                                    </td>
-
+                                    <td colspan="7" style="text-align:center">Đang tải...</td>
                                 </tr>
-
                             </tbody>
                         </table>
                     </div>
-
 
                     <div class="pagination">
                         <a class="btn btn-pagination">
@@ -140,6 +69,76 @@
 
         </div>
     </div>
-</body>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableBody = document.getElementById('reportTableBody');
+
+            Promise.all([
+                fetch('/api/report/my-reports').then(res => res.json()),
+                fetch('/api/report/shared-with-me').then(res => res.json())
+            ])
+            .then(([myReports, sharedReports]) => {
+                tableBody.innerHTML = '';
+
+                const allReports = [];
+
+                if (myReports.content && myReports.content.length > 0) {
+                    allReports.push(...myReports.content);
+                }
+
+                if (sharedReports.content && sharedReports.content.length > 0) {
+                    // Add reports shared with me that are not already in my reports
+                    sharedReports.content.forEach(shared => {
+                        if (!allReports.some(r => r.id === shared.id)) {
+                            allReports.push(shared);
+                        }
+                    });
+                }
+
+                // Sort by createdAt descending
+                allReports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                if (allReports.length > 0) {
+                    allReports.forEach(report => {
+                        const row = document.createElement('tr');
+
+                        const date = new Date(report.createdAt);
+                        const formattedDate = date.toLocaleDateString('vi-VN');
+
+                        const employeeName = report.employeeName || 'N/A';
+                        const attachmentUrl = report.attachmentUrl || '';
+
+                        const statusClass = 'status-' + report.status.toLowerCase();
+                        const statusText = getStatusText(report.status);
+
+                        row.innerHTML = 
+                            '<td>' + employeeName + '</td>' +
+                            '<td>' + report.title + '</td>' +
+                            '<td>' + formattedDate + '</td>' +
+                            '<td>' + (attachmentUrl ? '<a href="' + attachmentUrl + '" class="file-link" download>📎 Tải file</a>' : '<span>Không có</span>') + '</td>' +
+                            '<td>' + (attachmentUrl ? '<a href="' + attachmentUrl + '" target="_blank" class="file-link">🔗 Mở link</a>' : '<span>Không có</span>') + '</td>' +
+                            '<td><span class="' + statusClass + '">' + statusText + '</span></td>' +
+                            '<td><div class="action-group"><form method="post"><button class="btn btn-success" type="submit">Duyệt</button></form><form method="post"><button class="btn btn-danger" type="submit">Từ chối</button></form></div></td>';
+
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center">Không có báo cáo nào</td></tr>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading reports:', error);
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center">Lỗi khi tải danh sách báo cáo</td></tr>';
+            });
+        });
+
+        function getStatusText(status) {
+            if (status === 'PENDING') return 'Chờ duyệt';
+            if (status === 'APPROVED') return 'Đã duyệt';
+            if (status === 'REJECTED') return 'Từ chối';
+            return status;
+        }
+    </script>
+</body>
 </html>

@@ -79,8 +79,8 @@ public class UserServiceImpl implements UserService {
             }
             currentUser.setEmail(request.getEmail());
         }
-        if (request.getDepartment() != null) {
-            currentUser.setDepartment(request.getDepartment());
+        if (request.getSpecialization() != null) {
+            currentUser.setSpecialization(request.getSpecialization());
         }
         userRepository.save(currentUser);
         return userInformationResponseMapper.fromEntity(currentUser);

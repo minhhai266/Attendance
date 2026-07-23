@@ -51,10 +51,7 @@
 
                             <select>
                                 <option>Tất cả phòng ban</option>
-                                <option>Phòng IT</option>
-                                <option>Phòng Nhân sự</option>
-                                <option>Phòng Kế toán</option>
-                                <option>Phòng Marketing</option>
+                                <option th:each="dept : ${departments}" th:value="${dept.name()}" th:text="${dept.displayName}"></option>
                             </select>
 
                             <select>
@@ -95,25 +92,25 @@
 
                         <tbody>
 
-                            <tr>
+                            <tr th:each="user : ${users.content}">
 
                                 <td>
 
                                     <div class="user">
 
-                                        <div class="avatar">H</div>
+                                        <div class="avatar" th:text="${#strings.substring(user.fullName(), 0, 1)}">H</div>
 
-                                        <strong>Nguyễn Minh Hải</strong>
+                                        <strong th:text="${user.fullName()}">Nguyễn Minh Hải</strong>
 
                                     </div>
 
                                 </td>
 
-                                <td>EMP001</td>
+                                <td th:text="${user.username()}">EMP001</td>
 
-                                <td>hai@gmail.com</td>
+                                <td th:text="${user.email()}">hai@gmail.com</td>
 
-                                <td>IT</td>
+                                <td th:text="${user.departmentDisplay()}">IT</td>
 
                                 <td>Nhân viên</td>
 
@@ -129,69 +126,16 @@
 
                                     <div class="actions">
 
-                                        <button class="icon-btn">
+                                        <a th:href="@{/manager/accounts/{id}(id=${user.id()})}" class="icon-btn">
                                             Chi tiết
-                                        </button>
+                                        </a>
 
-                                        <button class="icon-btn btn-role">
-                                            Chuyển phòng
-                                        </button>
-
-                                        <button class="icon-btn lock">
-                                            Khóa
-                                        </button>
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-                            <tr>
-
-                                <td>
-
-                                    <div class="user">
-
-                                        <div class="avatar">A</div>
-
-                                        <strong>Nguyễn Văn An</strong>
-
-                                    </div>
-
-                                </td>
-
-                                <td>EMP002</td>
-
-                                <td>an@gmail.com</td>
-
-                                <td>Nhân sự</td>
-
-                                <td>Trưởng phòng</td>
-
-                                <td>
-
-                                    <span class="status inactive">
-                                        Nghỉ việc
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <div class="actions">
-
-                                        <button class="icon-btn">
-                                            Chi tiết
-                                        </button>
-
-                                        <button class="icon-btn btn-role">
-                                            Chuyển phòng
-                                        </button>
-
-                                        <button class="icon-btn lock">
-                                            Mở khóa
-                                        </button>
+                                        <form th:action="@{/manager/accounts/update/{id}(id=${user.id()})}" method="post" style="display:inline;">
+                                            <select name="department" onchange="this.form.submit()">
+                                                <option value="">Chuyển phòng</option>
+                                                <option th:each="dept : ${departments}" th:value="${dept.name()}" th:text="${dept.displayName}"></option>
+                                            </select>
+                                        </form>
 
                                     </div>
 

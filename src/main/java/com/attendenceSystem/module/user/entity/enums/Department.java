@@ -6,17 +6,11 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Department {
-    UNASSIGNED(0),
-    SE(1);
+    DE213("DE213", "DE213-X7A9", "Phòng DE213"),
+    DE212("DE212", "DE212-X7A9", "Phòng DE212"),
+    DE211("DE211", "DE211-X7A9", "Phòng DE211");
 
-    public final int value;
-
-    public static Department fromValue(int value) {
-        for (Department d : Department.values()) {
-            if (d.value == value) {
-                return d;
-            }
-        }
-        return null;
-    }
+    private final String roomCode;
+    private final String joinCode;
+    private final String displayName;
 }

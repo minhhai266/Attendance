@@ -1,6 +1,8 @@
 package com.attendenceSystem.module.report.service.impl;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,10 +14,12 @@ import com.attendenceSystem.module.report.dto.request.CreateReportRequest;
 import com.attendenceSystem.module.report.dto.response.ReportDetailResponse;
 import com.attendenceSystem.module.report.dto.response.ReportResponse;
 import com.attendenceSystem.module.report.entity.Report;
+import com.attendenceSystem.module.report.entity.ReportShare;
 import com.attendenceSystem.module.report.mapper.request.CreateReportRequestMapper;
 import com.attendenceSystem.module.report.mapper.response.ReportDetailResponseMapper;
 import com.attendenceSystem.module.report.mapper.response.ReportResponseMapper;
 import com.attendenceSystem.module.report.repository.ReportRepository;
+import com.attendenceSystem.module.report.repository.ReportShareRepository;
 import com.attendenceSystem.module.report.service.ReportService;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.repository.UserRepository;
@@ -28,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
+    private final ReportShareRepository reportShareRepository;
     private final UserRepository userRepository;
 
     @Transactional
@@ -39,6 +44,22 @@ public class ReportServiceImpl implements ReportService {
         report.setCreatedAt(Instant.now());
 
         Report savedReport = reportRepository.save(report);
+
+        // Save shared users
+        if (request.getSharedUserIds() != null && request.getSharedUserIds().length > 0) {
+            List<ReportShare> shares = new ArrayList<>();
+            for (Long userId : request.getSharedUserIds()) {
+                User sharedUser = userRepository.findById(userId)
+                        .orElseThrow(() -> new IllegalArgumentException(
+                                "Không tìm thấy người dùng với id: " + userId));
+                shares.add(ReportShare.builder()
+                        .report(savedReport)
+                        .user(sharedUser)
+                        .build());
+            }
+            reportShareRepository.saveAll(shares);
+        }
+
         return ReportResponseMapper.fromEntity(savedReport);
     }
 
@@ -52,6 +73,13 @@ public class ReportServiceImpl implements ReportService {
     public Page<ReportResponse> getMyReports(final Pageable pageable) {
         User employee = findCurrentUser();
         return reportRepository.findByEmployeeOrderByCreatedAtDesc(employee, pageable)
+                .map(ReportResponseMapper::fromEntity);
+    }
+
+    @Override
+    public Page<ReportResponse> getSharedWithMe(final Pageable pageable) {
+        User currentUser = findCurrentUser();
+        return reportShareRepository.findReportsSharedWithUser(currentUser, pageable)
                 .map(ReportResponseMapper::fromEntity);
     }
 
