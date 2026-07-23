@@ -1,5 +1,8 @@
 package com.attendenceSystem.module.attendance.mapper.response;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 import org.springframework.stereotype.Component;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
@@ -14,9 +17,12 @@ public class AttendanceResponseMapper {
     private final AttendanceCalculator attendanceCalculator;
 
     public AttendanceResponse fromEntity(AttendanceRecord attendance) {
-        boolean late = attendanceCalculator.isLate(attendance.getCheckInTime());
-        boolean earlyLeave = attendanceCalculator.isEarlyLeave(attendance.getCheckOutTime());
-        long workingMinutes = attendanceCalculator.workingMinutes(attendance.getCheckInTime(), attendance.getCheckOutTime());
+    boolean late = attendanceCalculator.isLate(attendance.getCheckInTime());
+    boolean earlyLeave = attendanceCalculator.isEarlyLeave(attendance.getCheckOutTime());
+    long workingMinutes = attendanceCalculator.workingMinutes(
+            attendance.getCheckInTime(),
+            attendance.getCheckOutTime()
+    );
 
         return AttendanceResponse.builder()
                 .id(attendance.getId())

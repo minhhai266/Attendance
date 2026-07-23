@@ -1,12 +1,14 @@
 package com.attendenceSystem.module.attendance.service.impl;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponse
 import com.attendenceSystem.module.attendance.entity.LeaveRequest;
 import com.attendenceSystem.module.attendance.mapper.response.LeaveDetailResponseMapper;
 import com.attendenceSystem.module.attendance.mapper.response.LeaveRequestResponseMapper;
+import com.attendenceSystem.module.attendance.model.DateRange;
 import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
@@ -61,16 +64,26 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Transactional
     @Override
     public AttendanceResponse checkIn() {
-        User user = getCurrentUser();
+        return checkIn(getCurrentUser());
+    }
 
-        LocalDate today = LocalDate.now(timeZoneProvider.getZoneId());
+    @Transactional
+    @Override
+    public AttendanceResponse checkOut() {
+        return checkOut(getCurrentUser());
+    }
+
+    @Transactional
+    @Override
+    public AttendanceResponse checkIn(User user) {
+        LocalDate today = todayDate();
         try {
             Optional<AttendanceRecord> existing = attendanceRecordRepository
                     .findByUserAndAttendanceDateWithLock(user, today);
             if (existing.isPresent()) {
                 throw new AlreadyCheckedInException("Bạn đã điểm danh hôm nay");
             }
-            Instant checkInTime = Instant.now();
+            LocalDateTime checkInTime = LocalDateTime.now();
             boolean late = attendanceCalculator.isLate(checkInTime);
             AttendanceStatus status = late ? AttendanceStatus.LATE : AttendanceStatus.PRESENT;
             AttendanceRecord attendanceRecord = AttendanceRecord.builder()
@@ -82,7 +95,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                     .build();
             attendanceRecordRepository.save(attendanceRecord);
             return attendanceResponseMapper.fromEntity(attendanceRecord);
-        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new AlreadyCheckedInException("Bạn đã điểm danh hôm nay");
         } catch (ObjectOptimisticLockingFailureException e) {
             throw new AlreadyCheckedInException("Dữ liệu đã bị thay đổi, vui lòng thử lại");
@@ -91,10 +104,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Transactional
     @Override
-    public AttendanceResponse checkOut() {
-        User user = getCurrentUser();
-
-        LocalDate today = LocalDate.now(timeZoneProvider.getZoneId());
+    public AttendanceResponse checkOut(User user) {
+        LocalDate today = todayDate();
         AttendanceRecord attendance = attendanceRecordRepository
                 .findByUserAndAttendanceDateWithLock(user, today)
                 .orElseThrow(() -> new NotCheckedInException(
@@ -105,7 +116,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         if (attendance.getStatus() != AttendanceStatus.PRESENT && attendance.getStatus() != AttendanceStatus.LATE) {
             throw new InvalidAttendanceStateException("Trạng thái điểm danh không hợp lệ");
         }
-        Instant checkOutTime = Instant.now();
+        LocalDateTime checkOutTime = LocalDateTime.now();
         if (checkOutTime.isBefore(attendance.getCheckInTime())) {
             throw new InvalidAttendanceStateException("Thời gian checkout phải sau thời gian check-in");
         }
@@ -117,9 +128,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendanceRecordRepository.save(attendance);
         return attendanceResponseMapper.fromEntity(attendance);
     }
-
     @Override
-    public org.springframework.data.domain.Page<AttendanceResponse> getAttendanceHistory(final org.springframework.data.domain.Pageable pageable) {
+    public Page<AttendanceResponse> getAttendanceHistory(final Pageable pageable) {
         User user = getCurrentUser();
 
         return attendanceRecordRepository
@@ -167,19 +177,9 @@ public class AttendanceServiceImpl implements AttendanceService {
                     .absent(0)
                     .build();
         }
+        DateRange dateRange = getDateRange(startDate, endDate);
 
-        LocalDate effectiveStartDate = startDate;
-        LocalDate effectiveEndDate = endDate;
-        if (effectiveStartDate == null && effectiveEndDate == null) {
-            effectiveStartDate = LocalDate.now(timeZoneProvider.getZoneId()).minusMonths(6);
-            effectiveEndDate = LocalDate.now(timeZoneProvider.getZoneId());
-        } else if (effectiveStartDate != null && effectiveEndDate == null) {
-            effectiveEndDate = effectiveStartDate;
-        } else if (effectiveStartDate == null && effectiveEndDate != null) {
-            effectiveStartDate = effectiveEndDate;
-        }
-
-        List<AttendanceRecord> records = getFilteredRecords(effectiveStartDate, effectiveEndDate, status);
+        List<AttendanceRecord> records = getFilteredRecords(dateRange.startDate(), dateRange.endDate(), status);
 
         long checkedIn = 0;
         long checkedOut = 0;
@@ -227,19 +227,9 @@ public class AttendanceServiceImpl implements AttendanceService {
         } else {
             employees = userRepository.findByRoleNot(Role.ADMIN);
         }
+        DateRange dateRange = getDateRange(startDate, endDate);
 
-        LocalDate effectiveStartDate = startDate;
-        LocalDate effectiveEndDate = endDate;
-        if (effectiveStartDate == null && effectiveEndDate == null) {
-            effectiveStartDate = LocalDate.now(timeZoneProvider.getZoneId()).minusMonths(6);
-            effectiveEndDate = LocalDate.now(timeZoneProvider.getZoneId());
-        } else if (effectiveStartDate != null && effectiveEndDate == null) {
-            effectiveEndDate = effectiveStartDate;
-        } else if (effectiveStartDate == null && effectiveEndDate != null) {
-            effectiveStartDate = effectiveEndDate;
-        }
-
-        List<AttendanceRecord> records = getFilteredRecords(effectiveStartDate, effectiveEndDate, status);
+        List<AttendanceRecord> records = getFilteredRecords(dateRange.startDate(), dateRange.endDate(), status);
 
         return records.stream()
                 .map(attendanceResponseMapper::fromEntity)
@@ -271,14 +261,14 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public org.springframework.data.domain.Page<LeaveRequestResponse> getLeaveRequests(final org.springframework.data.domain.Pageable pageable) {
+    public Page<LeaveRequestResponse> getLeaveRequests(final Pageable pageable) {
         User user = getCurrentUser();
         return leaveRequestRepository.findByUser(user, pageable)
                 .map(leaveRequestResponseMapper::fromEntity);
     }
 
     @Override
-    public org.springframework.data.domain.Page<LeaveRequestResponse> getAllLeaveRequests(final org.springframework.data.domain.Pageable pageable) {
+    public Page<LeaveRequestResponse> getAllLeaveRequests(final Pageable pageable) {
         return leaveRequestRepository.findAll(pageable).map(leaveRequestResponseMapper::fromEntity);
     }
 
@@ -292,13 +282,43 @@ public class AttendanceServiceImpl implements AttendanceService {
         return leaveDetailResponseMapper.fromEntity(leave);
     }
 
+    @Override
+    public Optional<AttendanceRecord> getTodayAttendanceRecord(User user) {
+        if (user == null) {
+            return Optional.empty();
+        }
+        LocalDate today = todayDate();
+        return attendanceRecordRepository.findByUserAndAttendanceDateWithLock(user, today);
+    }
+
     private User getCurrentUser() {
         if (!SecurityUtil.isAuthenticated()) {
             throw new IllegalStateException("Người dùng chưa đăng nhập");
         }
         String currentUsername = SecurityUtil.getCurrentUserName();
         return userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new IllegalStateException(
                         "Không tìm thấy người dùng với tên đăng nhập: " + currentUsername));
     }
+
+    private LocalDate todayDate() {
+        return LocalDate.now(timeZoneProvider.getZoneId());
+    }
+
+    private DateRange getDateRange(LocalDate startDate, LocalDate endDate) {
+        LocalDate effectiveStartDate = startDate;
+        LocalDate effectiveEndDate = endDate;
+        if (effectiveStartDate == null && effectiveEndDate == null) {
+            LocalDate today = todayDate();
+            effectiveStartDate = today.minusMonths(6);
+            effectiveEndDate = today;
+        } else if (effectiveStartDate != null && effectiveEndDate == null) {
+            effectiveEndDate = effectiveStartDate;
+        } else if (effectiveStartDate == null && effectiveEndDate != null) {
+            effectiveStartDate = effectiveEndDate;
+        }
+        return new DateRange(effectiveStartDate, effectiveEndDate);
+    }
+
+
 }

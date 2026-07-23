@@ -1,6 +1,7 @@
 package com.attendenceSystem.module.report.entity;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 import com.attendenceSystem.module.report.entity.enums.ReportStatus;
 import com.attendenceSystem.module.user.entity.User;
@@ -12,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -47,6 +49,10 @@ public class Report {
     @Column(name = "attachment_url")
     private String attachmentUrl;
 
+    @Lob
+    @Column(name = "attachment_files")
+    private String attachmentFiles;
+
     @Column(name = "status", nullable = false)
     private ReportStatus status;
 
@@ -54,8 +60,8 @@ public class Report {
     private String rejectReason;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "reviewed_at")
-    private Instant reviewedAt;
+    private LocalDateTime reviewedAt;
 }

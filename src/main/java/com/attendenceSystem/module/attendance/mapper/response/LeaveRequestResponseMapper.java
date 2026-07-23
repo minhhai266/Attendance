@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
 import com.attendenceSystem.module.attendance.entity.LeaveRequest;
-import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 
 import lombok.RequiredArgsConstructor;
 

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import com.attendenceSystem.module.log.dto.response.AuditLogResponse;
 import com.attendenceSystem.module.log.entity.AuditLog;
-import com.attendenceSystem.util.TimeUtil;
 
 @Component
 public class AuditLogResponseMapper {
@@ -17,7 +16,7 @@ public class AuditLogResponseMapper {
                                 .entityId(auditLog.getEntityId())
                                 .action(auditLog.getAction())
                                 .description(auditLog.getDescription())
-                                .createdAt(TimeUtil.formatInstant(auditLog.getCreatedAt(), null))
+                                .createdAt(auditLog.getCreatedAt())
                                 .build();
         }
 }

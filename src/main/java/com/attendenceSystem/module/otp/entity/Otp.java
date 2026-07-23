@@ -1,6 +1,7 @@
 package com.attendenceSystem.module.otp.entity;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 import com.attendenceSystem.module.otp.entity.enums.OtpPurpose;
 
@@ -35,13 +36,13 @@ public class Otp {
     @Column(name = "purpose", nullable = false)
     private OtpPurpose purpose;
     @Column(name = "expired_at", nullable = false)
-    private Instant expiredAt;
+    private LocalDateTime expiredAt;
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
     @Column(name = "used", nullable = false)
     private boolean used;
 
     public boolean isExpired() {
-        return Instant.now().isAfter(expiredAt);
+        return LocalDateTime.now().isAfter(expiredAt);
     }
 }

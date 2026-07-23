@@ -42,31 +42,6 @@
 
                         <span class="employee-stat-card__trend">↗</span>
                     </div>
-
-                    <div class="employee-stat-card report-approved">
-                        <div class="employee-stat-card__icon">
-                            <i class="bi bi-file-earmark-check"></i>
-                        </div>
-
-                        <div class="employee-stat-card__content">
-                            <h3 class="employee-stat-card__number">10</h3>
-                            <p class="employee-stat-card__label">Báo cáo được duyệt</p>
-                        </div>
-                        <span class="employee-stat-card__trend">V</span>
-                    </div>
-
-                    <div class="employee-stat-card report-rejected">
-                        <div class="employee-stat-card__icon">
-                            <i class="bi bi-file-earmark-excel-fill"></i>
-                        </div>
-
-                        <div class="employee-stat-card__content">
-                            <h3 class="employee-stat-card__number">1</h3>
-                            <p class="employee-stat-card__label">Báo cáo bị từ chối</p>
-                        </div>
-                        <span class="employee-stat-card__trend">X</span>
-                    </div>
-
                     <div class="employee-stat-card attendance-rate">
                         <div class="employee-stat-card__icon">
                             <i class="bi bi-file-earmark-bar-graph-fill"></i>
@@ -241,17 +216,17 @@
 
                             <div class="profile-item">
                                 <label>Email</label>
-                                <span >haivuive266@gmail.com</span>
+                                <span th:text="${#authentication.principal.email}"></span>
                             </div>
 
                             <div class="profile-item">
                                 <label>Số điện thoại</label>
-                                <span >0987654321</span>
+                                <span th:text="${#authentication.principal.phone}"></span>
                             </div>
 
                             <div class="profile-item">
                                 <label>Phòng ban</label>
-                                <span >IT Department</span>
+                                <span th:text="${#authentication.principal.department}"></span>
                             </div>
 
                             <div class="profile-item">

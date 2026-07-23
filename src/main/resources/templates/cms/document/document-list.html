@@ -35,8 +35,6 @@
                                     <th>Ngày nộp</th>
                                     <th>File đính kèm</th>
                                     <th>Link tài liệu</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thao tác</th>
                                 </tr>
                             </thead>
 
@@ -108,18 +106,29 @@
 
                         const employeeName = report.employeeName || 'N/A';
                         const attachmentUrl = report.attachmentUrl || '';
+                        const attachmentFiles = report.attachmentFiles || '';
 
-                        const statusClass = 'status-' + report.status.toLowerCase();
-                        const statusText = getStatusText(report.status);
+                        // Hiển thị files đính kèm
+                        let filesHtml = '<span>Không có</span>';
+                        if (attachmentFiles) {
+                            const filePaths = attachmentFiles.split(',');
+                            filesHtml = filePaths.map(path => {
+                                const filename = path.split('/').pop();
+                                return '<a href="' + path + '" class="file-link" download>📎 ' + filename + '</a>';
+                            }).join('<br>');
+                        }
+
+                        // Hiển thị link
+                        const linkHtml = attachmentUrl ? 
+                            '<a href="' + attachmentUrl + '" target="_blank" class="file-link">🔗 Mở link</a>' : 
+                            '<span>Không có</span>';
 
                         row.innerHTML = 
                             '<td>' + employeeName + '</td>' +
                             '<td>' + report.title + '</td>' +
                             '<td>' + formattedDate + '</td>' +
-                            '<td>' + (attachmentUrl ? '<a href="' + attachmentUrl + '" class="file-link" download>📎 Tải file</a>' : '<span>Không có</span>') + '</td>' +
-                            '<td>' + (attachmentUrl ? '<a href="' + attachmentUrl + '" target="_blank" class="file-link">🔗 Mở link</a>' : '<span>Không có</span>') + '</td>' +
-                            '<td><span class="' + statusClass + '">' + statusText + '</span></td>' +
-                            '<td><div class="action-group"><form method="post"><button class="btn btn-success" type="submit">Duyệt</button></form><form method="post"><button class="btn btn-danger" type="submit">Từ chối</button></form></div></td>';
+                            '<td>' + filesHtml + '</td>' +
+                            '<td>' + linkHtml + '</td>' +
 
                         tableBody.appendChild(row);
                     });
@@ -132,13 +141,6 @@
                 tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center">Lỗi khi tải danh sách báo cáo</td></tr>';
             });
         });
-
-        function getStatusText(status) {
-            if (status === 'PENDING') return 'Chờ duyệt';
-            if (status === 'APPROVED') return 'Đã duyệt';
-            if (status === 'REJECTED') return 'Từ chối';
-            return status;
-        }
     </script>
 </body>
 </html>
