@@ -116,7 +116,7 @@
                                     </tr>
                                     <tr th:each="leave : ${leaveRequests.content}">
                                         <td th:text="${leave.fullName()}">Nhân viên</td>
-                                        <td>Phòng ban</td>
+                                        <td th:text="${leave.departmentDisplay()}">Phòng ban</td>
                                         <td th:text="${leave.startDate()}">Từ ngày</td>
                                         <td th:text="${leave.endDate()}">Đến ngày</td>
                                         <td>
