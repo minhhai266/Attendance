@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.attendenceSystem.module.user.entity.User;
+import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Specialization;
 import com.attendenceSystem.module.user.entity.enums.Role;
 import com.attendenceSystem.module.user.entity.enums.Status;
@@ -29,5 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
     boolean existsByPhone(String phone);
     List<User> findBySpecializationAndRoleNot(Specialization specialization, Role role);
+    List<User> findByDepartmentAndRoleNot(Department department, Role role);
     Page<User> findByRole(Role role, Pageable pageable);
+    List<User> findByRoleNot(Role role);
 }

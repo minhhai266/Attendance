@@ -242,7 +242,8 @@ public class FaceIdApiController {
             String directory = "face_samples";
             String relativePath = directory + "/" + userId + "/" + fileName;
             
-            Path targetPath = Paths.get(relativePath);
+            // Sử dụng Paths.get với nhiều tham số để tránh vấn đề với đường dẫn tương đối
+            Path targetPath = Paths.get(directory, String.valueOf(userId), fileName);
             
             // Tạo MultipartFile ảo
             MultipartFile multipartFile = createMultipartFile(fileName, imageBytes);

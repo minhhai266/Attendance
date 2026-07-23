@@ -43,14 +43,14 @@ public class AttendanceController {
     public String checkIn(RedirectAttributes redirectAttributes) {
         AttendanceResponse attendance = attendanceService.checkIn();
         redirectAttributes.addFlashAttribute("successMessage", "Điểm danh thành công cho " + attendance.fullName());
-        return Routes.REDIRECT + Routes.Attendance.ROOT;
+        return Views.Attendance.LIST;
     }
 
     @PostMapping(Routes.Attendance.CHECK_OUT)
     public String checkOut(RedirectAttributes redirectAttributes) {
         AttendanceResponse attendance = attendanceService.checkOut();
         redirectAttributes.addFlashAttribute("successMessage", "Checkout thành công cho " + attendance.fullName());
-        return Routes.REDIRECT + Routes.Attendance.ROOT;
+        return Views.Attendance.LIST;
     }
 
     @GetMapping(Routes.Attendance.HISTORY)
@@ -83,7 +83,7 @@ public class AttendanceController {
         }
         attendanceService.createLeaveRequest(createLeaveRequest);
         redirectAttributes.addFlashAttribute("successMessage", "Yêu cầu nghỉ phép đã được gửi.");
-        return Routes.REDIRECT + Routes.Attendance.ROOT + Routes.Attendance.LEAVE;
+        return Views.Attendance.LEAVE_LIST;
     }
 
     @ExceptionHandler({
@@ -95,13 +95,13 @@ public class AttendanceController {
     })
     public String handleBadRequest(RuntimeException ex, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-        return Routes.REDIRECT + Routes.Attendance.LEAVE;
+        return Views.Attendance.LIST;
     }
 
     @ExceptionHandler(Exception.class)
     public String handleUnexpectedError(Exception ex, RedirectAttributes redirectAttributes) {
         log.error("Unexpected error in AttendanceController", ex);
         redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra, vui lòng thử lại sau");
-        return Routes.REDIRECT + Routes.Attendance.LEAVE;
+        return Views.Attendance.LIST;
     }
 }

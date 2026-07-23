@@ -1,16 +1,50 @@
-var options = {
-    chart: {
-        type: 'line'
-    },
-    series: [{
-        data: [93, 95, 94, 96, 97, 96]
-    }],
-    xaxis: {
-        categories: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6']
-    }
-};
+document.addEventListener("DOMContentLoaded", function () {
 
-new ApexCharts(
-    document.querySelector("#weeklyAttendanceChart"),
-    options
-).render();
+    const ctx = document.getElementById("weeklyAttendanceChart");
+
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: weeklyStatsData.map(item => item.dayName),
+            datasets: [
+                {
+                    label: "Có mặt",
+                    data: weeklyStatsData.map(item => item.present),
+                    backgroundColor: "#10b981",
+                    borderRadius: 4
+                },
+                {
+                    label: "Đi muộn",
+                    data: weeklyStatsData.map(item => item.late),
+                    backgroundColor: "#f59e0b",
+                    borderRadius: 4
+                },
+                {
+                    label: "Vắng mặt",
+                    data: weeklyStatsData.map(item => item.absent),
+                    backgroundColor: "#ef4444",
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "top"
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+});

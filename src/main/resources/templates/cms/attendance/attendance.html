@@ -36,7 +36,7 @@
                     </div>
 
                     <div class="stats-card present">
-                        <span class="stats-value" id="presentCount">0</span>
+                        <span class="stats-value" id="checkedOutCount">0</span>
                         <span class="stats-label">Đã check out</span>
                     </div>
 
@@ -66,10 +66,9 @@
 
                         <select id="attendanceStatusFilter">
                             <option value="">Tất cả trạng thái</option>
-                            <option value="present_on_time">Đúng giờ</option>
-                            <option value="late">Đi muộn</option>
-                            <option value="early_leave">Về sớm</option>
-                            <option value="absent">Vắng mặt</option>
+                            <option value="PRESENT">Đã điểm danh</option>
+                            <option value="LATE">Đi muộn</option>
+                            <option value="ABSENT">Vắng mặt</option>
                         </select>
 
                         <input id="attendanceDateFrom" type="date">
@@ -131,6 +130,7 @@
 
 
 
+    <script src="/js/attendance-manager.js"></script>
 </body>
 
 </html>

@@ -13,4 +13,13 @@ public enum Department {
     private final String roomCode;
     private final String joinCode;
     private final String displayName;
+
+    public static Department fromValue(String value) {
+        for (Department d : Department.values()) {
+            if (d.getRoomCode().equals(value)) {
+                return d;
+            }
+        }
+        return null;
+    }
 }

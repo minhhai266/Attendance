@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
+import com.attendenceSystem.module.user.entity.enums.Department;
 
 import lombok.Builder;
 
@@ -12,6 +13,7 @@ public record AttendanceResponse(
                 Long id,
                 Long userId,
                 String fullName,
+                Department department,
                 LocalDate attendanceDate,
                 Instant checkInTime,
                 Instant checkOutTime,

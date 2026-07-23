@@ -1,7 +1,10 @@
 package com.attendenceSystem.module.dashboard.service.impl;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Locale;
+import java.util.stream.IntStream;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -61,13 +64,33 @@ public class DashboardServiceImpl implements DashboardService {
     public ManagerDashboardResponse getManagerDashboard() {
         long totalEmployees = userRepository.countByRoleNot(Role.ADMIN);
         LocalDate today = LocalDate.now();
-        long attendedEmployees = attendanceRecordRepository.countByAttendanceDate(today);
-        long absentEmployees = Math.max(0, totalEmployees - attendedEmployees);
+        long presentToday = attendanceRecordRepository.countByAttendanceDateAndStatus(today, com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus.PRESENT);
+        long lateToday = attendanceRecordRepository.countByAttendanceDateAndStatus(today, com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus.LATE);
+        long attendedToday = presentToday + lateToday;
+        long absentToday = Math.max(0, totalEmployees - attendedToday);
         Page<AttendanceResponse> attendanceHistory = attendanceRecordRepository
                 .findAllByOrderByAttendanceDateDesc(PageRequest.of(0, 10))
                 .map(attendanceResponseMapper::fromEntity);
-        return dashboardResponseMapper.toManagerDashboardResponse(totalEmployees, attendedEmployees, absentEmployees,
-                attendanceHistory);
+
+        var monday = TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY).adjustInto(today);
+        var weeklyStats = IntStream.rangeClosed(2, 6)
+                .mapToObj(dayOfWeek -> {
+                    LocalDate date = ((LocalDate) monday).plusDays(dayOfWeek - DayOfWeek.MONDAY.getValue());
+                    long present = attendanceRecordRepository.countByAttendanceDateAndStatus(date, com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus.PRESENT);
+                    long late = attendanceRecordRepository.countByAttendanceDateAndStatus(date, com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus.LATE);
+                    long attended = present + late;
+                    long absent = Math.max(0, totalEmployees - attended);
+                    return new com.attendenceSystem.module.dashboard.dto.response.DailyAttendanceStats(
+                            "T" + (dayOfWeek - 1),
+                            present,
+                            late,
+                            absent
+                    );
+                })
+                .toList();
+
+        return dashboardResponseMapper.toManagerDashboardResponse(totalEmployees, presentToday, lateToday, absentToday,
+                attendanceHistory, weeklyStats);
     }
 
     @Override

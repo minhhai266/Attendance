@@ -4,15 +4,20 @@ import org.springframework.data.domain.Page;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 
-public record ManagerDashboardResponse(
+import java.util.List;
 
+public record ManagerDashboardResponse(
         Long totalEmployees,
 
         Long attendedEmployees,
 
+        Long lateEmployees,
+
         Long absentEmployees,
 
-        Page<AttendanceResponse> attendanceHistory
+        Page<AttendanceResponse> attendanceHistory,
+
+        List<DailyAttendanceStats> weeklyStats
 
 ) {
 }

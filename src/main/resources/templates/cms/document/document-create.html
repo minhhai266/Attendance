@@ -61,7 +61,7 @@
                                 <select name="departmentId" id="departmentSelect" required>
                                     <option value="" disabled selected>Chọn phòng ban</option>
 
-                                    <option th:each="d : ${departments}" th:value="${d.value}" th:text="${d.displayName}">
+                                    <option th:each="d : ${departments}" th:value="${d.roomCode}" th:text="${d.displayName}">
                                     </option>
                                 </select>
                             </div>

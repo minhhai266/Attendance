@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -13,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class LocalStorageProvider implements StorageProvider {
+
+    private static final Logger log = LoggerFactory.getLogger(LocalStorageProvider.class);
 
     private final Path rootDir;
 
@@ -25,24 +29,44 @@ public class LocalStorageProvider implements StorageProvider {
         }
     }
 
+    /**
+     * Chuẩn hóa đường dẫn relative: loại bỏ dấu "/" ở đầu để tránh
+     * rootDir.resolve() coi là đường dẫn tuyệt đối.
+     */
+    private String normalizeRelativePath(String path) {
+        if (path == null) return null;
+        String normalized = path;
+        // Loại bỏ dấu "/" hoặc "\" ở đầu để tránh path traversal false positive
+        while (normalized.startsWith("/") || normalized.startsWith("\\")) {
+            normalized = normalized.substring(1);
+        }
+        return normalized;
+    }
+
     @Override
     public void save(Path targetPath, MultipartFile file) throws IOException {
-        Path fullPath = rootDir.resolve(targetPath).normalize();
+        // Chuẩn hóa path để tránh dấu "/" ở đầu gây lỗi path traversal
+        String pathStr = normalizeRelativePath(targetPath.toString());
+        Path normalizedPath = Paths.get(pathStr);
+        Path fullPath = rootDir.resolve(normalizedPath).normalize();
 
-        // Kiểm tra path traversal
+        // Kiểm tra path traversal thực sự (chứa ..)
         if (!fullPath.startsWith(rootDir)) {
+            log.warn("Path traversal detected! rootDir={}, targetPath={}, fullPath={}", rootDir, targetPath, fullPath);
             throw new SecurityException("Path traversal không hợp lệ: " + targetPath);
         }
 
+        log.debug("Saving file: rootDir={}, targetPath={}, fullPath={}", rootDir, targetPath, fullPath);
         Files.createDirectories(fullPath.getParent());
         file.transferTo(fullPath);
     }
 
     @Override
     public Resource load(String path) throws IOException {
-        Path fullPath = rootDir.resolve(path).normalize();
+        String normalizedPath = normalizeRelativePath(path);
+        Path fullPath = rootDir.resolve(normalizedPath).normalize();
 
-        // Kiểm tra path traversal
+        // Kiểm tra path traversal thực sự (chứa ..)
         if (!fullPath.startsWith(rootDir)) {
             throw new SecurityException("Path traversal không hợp lệ: " + path);
         }
@@ -56,9 +80,10 @@ public class LocalStorageProvider implements StorageProvider {
 
     @Override
     public void delete(String path) throws IOException {
-        Path fullPath = rootDir.resolve(path).normalize();
+        String normalizedPath = normalizeRelativePath(path);
+        Path fullPath = rootDir.resolve(normalizedPath).normalize();
 
-        // Kiểm tra path traversal
+        // Kiểm tra path traversal thực sự (chứa ..)
         if (!fullPath.startsWith(rootDir)) {
             throw new SecurityException("Path traversal không hợp lệ: " + path);
         }
@@ -73,7 +98,8 @@ public class LocalStorageProvider implements StorageProvider {
 
     @Override
     public Path resolvePath(String relativePath) {
-        Path fullPath = rootDir.resolve(relativePath).normalize();
+        String normalizedPath = normalizeRelativePath(relativePath);
+        Path fullPath = rootDir.resolve(normalizedPath).normalize();
         if (!fullPath.startsWith(rootDir)) {
             throw new SecurityException("Path traversal không hợp lệ: " + relativePath);
         }

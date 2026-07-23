@@ -22,6 +22,7 @@ public class AttendanceResponseMapper {
                 .id(attendance.getId())
                 .userId(attendance.getUser().getId())
                 .fullName(attendance.getUser().getFullName())
+                .department(attendance.getUser().getDepartment())
                 .attendanceDate(attendance.getAttendanceDate())
                 .checkInTime(attendance.getCheckInTime())
                 .checkOutTime(attendance.getCheckOutTime())
