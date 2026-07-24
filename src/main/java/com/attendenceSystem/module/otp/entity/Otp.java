@@ -1,6 +1,5 @@
 package com.attendenceSystem.module.otp.entity;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 import com.attendenceSystem.module.otp.entity.enums.OtpPurpose;

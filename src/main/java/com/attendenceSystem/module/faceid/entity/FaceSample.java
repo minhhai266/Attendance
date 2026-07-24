@@ -1,6 +1,5 @@
 package com.attendenceSystem.module.faceid.entity;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;

@@ -56,7 +56,7 @@ public class AttendanceManagerApiController {
                 // Invalid status, ignore
             }
         }
-        List<AttendanceResponse> list = attendanceService.getManagerAttendanceList(departmentId, startDate, endDate, attendanceStatus);
+        List<AttendanceResponse> list = attendanceService.getManagerAttendanceList(startDate, endDate, attendanceStatus);
         return ResponseEntity.ok(list);
     }
 }

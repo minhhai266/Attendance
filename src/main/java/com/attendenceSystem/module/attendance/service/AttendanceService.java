@@ -32,9 +32,9 @@ public interface AttendanceService {
 
     ManagerStatsResponse getManagerStats(String departmentId, LocalDate startDate, LocalDate endDate, AttendanceStatus status);
 
-    List<AttendanceResponse> getManagerAttendanceList(String departmentId, LocalDate startDate, LocalDate endDate);
+    List<AttendanceResponse> getManagerAttendanceList(LocalDate startDate, LocalDate endDate);
 
-    List<AttendanceResponse> getManagerAttendanceList(String departmentId, LocalDate startDate, LocalDate endDate, AttendanceStatus status);
+    List<AttendanceResponse> getManagerAttendanceList(LocalDate startDate, LocalDate endDate, AttendanceStatus status);
 
     LeaveRequestResponse createLeaveRequest(CreateLeaveRequest request);
 

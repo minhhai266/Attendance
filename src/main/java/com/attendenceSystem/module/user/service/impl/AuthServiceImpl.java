@@ -20,7 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.attendenceSystem.module.otp.dto.request.SendOtpRequest;
 import com.attendenceSystem.module.otp.dto.request.VerifyOtpRequest;
 import com.attendenceSystem.module.otp.entity.enums.OtpPurpose;
-import com.attendenceSystem.module.otp.service.OptService;
+import com.attendenceSystem.module.otp.service.OtpService;
 import com.attendenceSystem.module.user.dto.request.LoginRequest;
 import com.attendenceSystem.module.user.dto.request.RegisterRequest;
 import com.attendenceSystem.module.user.dto.response.UserResponse;
@@ -28,7 +28,6 @@ import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Status;
 import com.attendenceSystem.module.user.repository.UserRepository;
 import com.attendenceSystem.module.user.service.AuthService;
-import com.attendenceSystem.util.SecurityUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    private final OptService otpService;
+    private final OtpService otpService;
 
     @Transactional
     @Override
@@ -134,9 +133,5 @@ public class AuthServiceImpl implements AuthService {
 
     private boolean existsByKeyword(final String keyword) {
         return userRepository.existsByUsernameOrEmail(keyword, keyword);
-    }
-
-    private boolean isAuthenticated() {
-        return SecurityUtil.isAuthenticated();
     }
 }

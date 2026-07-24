@@ -10,7 +10,7 @@ import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.module.otp.dto.request.SendOtpRequest;
 import com.attendenceSystem.module.otp.dto.request.VerifyOtpRequest;
 import com.attendenceSystem.module.otp.dto.response.OtpResponse;
-import com.attendenceSystem.module.otp.service.OptService;
+import com.attendenceSystem.module.otp.service.OtpService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OtpApiController {
 
-    private final OptService otpService;
+    private final OtpService otpService;
 
     @PostMapping(Routes.Otp.SEND)
     public ResponseEntity<OtpResponse> sendOtp(@Valid @RequestBody SendOtpRequest request) {

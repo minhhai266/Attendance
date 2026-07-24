@@ -1,6 +1,5 @@
 package com.attendenceSystem.module.user.mapper.response;
 
-import java.time.ZoneId;
 
 import org.springframework.stereotype.Component;
 
@@ -12,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class UserResponseMapper {
-
-    private final ZoneId applicationZoneId;
 
     public UserResponse fromEntity(User user) {
         return UserResponse.builder()

@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.attendenceSystem.constant.FileConstants;
+import com.attendenceSystem.module.storage.exception.FileStorageException;
 import com.attendenceSystem.module.storage.provider.StorageProvider;
 import com.attendenceSystem.module.storage.service.FileStorageService;
 
@@ -29,7 +30,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public String saveFile(
             final MultipartFile file,
-            final String directory) throws IOException {
+            final String directory) {
 
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException(
@@ -48,23 +49,27 @@ public class FileStorageServiceImpl implements FileStorageService {
         validateDirectory(directory);
 
         // Tính SHA-256 hash từ nội dung file
-        String fileHash;
-        try {
-            fileHash = sha256Hex(file);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IOException("Lỗi khi tính hash file", e);
-        }
+        String fileHash = sha256Hex(file);
 
         String fileName = fileHash + "." + extension;
         String relativePath = directory + "/" + fileName;
         Path targetPath = Paths.get(directory, fileName);
 
         // Lưu file qua StorageProvider
-        storageProvider.save(targetPath, file);
+        try {
+            storageProvider.save(targetPath, file);
+        } catch (IOException e) {
+            throw new FileStorageException("Không thể lưu file", e);
+        }
 
         // Detect và kiểm tra MIME type từ file đã lưu
         Path savedPath = storageProvider.resolvePath(relativePath);
-        String detectedMime = Files.probeContentType(savedPath);
+        String detectedMime;
+        try {
+            detectedMime = Files.probeContentType(savedPath);
+        } catch (IOException e) {
+            throw new FileStorageException("Không thể xác định MIME type", e);
+        }
         String expectedMime = FileConstants.ALLOWED_EXTENSION_MIME.get(extension.toLowerCase());
         if (detectedMime == null || expectedMime == null || !expectedMime.equals(detectedMime)) {
             // Xóa file nếu MIME type không khớp
@@ -92,21 +97,28 @@ public class FileStorageServiceImpl implements FileStorageService {
         storageProvider.delete(path);
     }
 
-    private String sha256Hex(final MultipartFile file) throws IOException, NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] buffer = new byte[8192];
-        int bytesRead;
-        try (InputStream is = file.getInputStream()) {
-            while ((bytesRead = is.read(buffer)) != -1) {
-                digest.update(buffer, 0, bytesRead);
+    private String sha256Hex(final MultipartFile file) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            try (InputStream is = file.getInputStream()) {
+                while ((bytesRead = is.read(buffer)) != -1) {
+                    digest.update(buffer, 0, bytesRead);
+                }
             }
+
+            byte[] hashBytes = digest.digest();
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
+        } catch (IOException e) {
+            throw new FileStorageException("Không thể đọc nội dung file", e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 không được hỗ trợ", e);
         }
-        byte[] hashBytes = digest.digest();
-        StringBuilder hexString = new StringBuilder();
-        for (byte b : hashBytes) {
-            hexString.append(String.format("%02x", b));
-        }
-        return hexString.toString();
     }
 
     private void validateDirectory(final String directory) {
