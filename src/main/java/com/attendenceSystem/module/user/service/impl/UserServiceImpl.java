@@ -1,9 +1,14 @@
 package com.attendenceSystem.module.user.service.impl;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.attendenceSystem.exception.custom.BadRequestException;
 import com.attendenceSystem.module.user.dto.request.ChangePasswordRequest;
@@ -16,8 +21,10 @@ import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.mapper.response.UserInformationResponseMapper;
 import com.attendenceSystem.module.user.repository.UserRepository;
 import com.attendenceSystem.module.user.service.UserService;
+import com.attendenceSystem.security.CustomUserDetails;
 import com.attendenceSystem.util.SecurityUtil;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -34,6 +41,10 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(request.getOldPassword(), currentUser.getPassword())) {
             throw new IllegalArgumentException("Mật khẩu cũ không đúng");
         }
+
+        if (!request.getRequest().getPassword().equals(request.getRequest().getConfirmPassword())) {
+            throw new IllegalArgumentException("Mật khẩu xác nhận không khớp");
+        }
         updatePassword(currentUser, request.getRequest());
     }
 
@@ -47,11 +58,33 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void updatePasswordWithOtp(final UpdatePasswordWithOtpRequest request) {
-        User user = userRepository.findUserByUsernameOrEmail(request.getDestination(), request.getDestination())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Không tìm thấy người dùng với email: " + request.getDestination()));
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpSession session = attributes.getRequest().getSession(false);
+            Boolean otpVerified = (session != null) ? (Boolean) session.getAttribute("otpVerified") : null;
+            String otpEmail = (session != null) ? (String) session.getAttribute("otpEmail") : null;
 
-        updatePassword(user, request.getRequest());
+            if (otpVerified == null || !otpVerified || otpEmail == null || !otpEmail.equals(request.getDestination())) {
+                throw new IllegalArgumentException("Vui lòng xác thực OTP trước khi đổi mật khẩu");
+            }
+
+            if (!request.getRequest().getPassword().equals(request.getRequest().getConfirmPassword())) {
+                throw new IllegalArgumentException("Mật khẩu xác nhận không khớp");
+            }
+            User user = userRepository.findUserByUsernameOrEmail(request.getDestination(), request.getDestination())
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Không tìm thấy người dùng với email: " + request.getDestination()));
+
+            updatePassword(user, request.getRequest());
+
+            if (session != null) {
+                session.removeAttribute("otpVerified");
+                session.removeAttribute("otpEmail");
+            }
+        } else {
+            throw new IllegalStateException("Không thể xác thực luồng yêu cầu hệ thống.");
+        }
+
     }
 
     @Transactional
@@ -62,7 +95,7 @@ public class UserServiceImpl implements UserService {
             currentUser.setFullName(request.getFullName());
         }
         if (StringUtils.hasText(request.getPhone())) {
-            if(!request.getPhone().equals(currentUser.getPhone())
+            if (!request.getPhone().equals(currentUser.getPhone())
                     && userRepository.existsByPhone(request.getPhone())) {
                 throw new BadRequestException("Số điện thoại đã được sử dụng bởi người dùng khác!");
             }
@@ -79,7 +112,15 @@ public class UserServiceImpl implements UserService {
             currentUser.setSpecialization(request.getSpecialization());
         }
         userRepository.save(currentUser);
-        return userInformationResponseMapper.fromEntity(currentUser);
+        UserInformationResponse response = userInformationResponseMapper.fromEntity(currentUser);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            CustomUserDetails userDetails = CustomUserDetails.fromUserInformationResponse(response);
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(userDetails, auth.getCredentials(), auth.getAuthorities()));
+        }
+        return response;
     }
 
     private User findCurrentUser() {

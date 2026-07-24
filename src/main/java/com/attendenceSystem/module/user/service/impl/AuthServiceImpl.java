@@ -11,8 +11,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.attendenceSystem.module.otp.dto.request.SendOtpRequest;
 import com.attendenceSystem.module.otp.dto.request.VerifyOtpRequest;
@@ -25,7 +28,10 @@ import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Status;
 import com.attendenceSystem.module.user.repository.UserRepository;
 import com.attendenceSystem.module.user.service.AuthService;
+import com.attendenceSystem.util.SecurityUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -49,6 +55,19 @@ public class AuthServiceImpl implements AuthService {
         String hashPassword = passwordEncoder.encode(request.getPassword());
         User savedUser = RegisterRequestMapper.toEntity(request, hashPassword);
         userRepository.save(savedUser);
+    }
+
+    @Override
+    public void logout() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            if (attributes != null) {
+                HttpServletRequest request = attributes.getRequest();
+                HttpServletResponse response = attributes.getResponse();
+                new SecurityContextLogoutHandler().logout(request, response, auth);
+            }
+        }
     }
 
     @Transactional
@@ -115,5 +134,9 @@ public class AuthServiceImpl implements AuthService {
 
     private boolean existsByKeyword(final String keyword) {
         return userRepository.existsByUsernameOrEmail(keyword, keyword);
+    }
+
+    private boolean isAuthenticated() {
+        return SecurityUtil.isAuthenticated();
     }
 }

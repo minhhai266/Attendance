@@ -16,6 +16,12 @@ public final class Routes {
         public static final String ACTIVATE = "/activate";
     }
 
+    public static final class Role {
+        public static final String ADMIN = "/admin";
+        public static final String MANAGER = "/manager";
+        public static final String EMPLOYEE = "/employee";
+    }
+
     public static final class Auth {
         public static final String ROOT = "/auth";
         public static final String LOGIN = "/login";
@@ -37,16 +43,12 @@ public final class Routes {
 
     public static final class Account {
         public static final String ROOT = "/accounts";
-        public static final String ADMIN = "/admin/accounts";
-        public static final String MANAGER = "/manager/accounts";
     }
 
     public static final class Dashboard {
         public static final String ROOT = "/dashboard";
-        public static final String ADMIN = "/admin";
-        public static final String MANAGER = "/manager";
-        public static final String EMPLOYEE = "/employee";
     }
+
     public static final class Attendance {
         public static final String ROOT = "/attendance";
         public static final String HISTORY = "/history";
@@ -55,7 +57,7 @@ public final class Routes {
         public static final String CHECK_IN = "/check-in";
         public static final String CHECK_OUT = "/check-out";
     }
-    
+
     public static final class FaceId {
         public static final String ROOT = "/face-id";
     }
@@ -66,5 +68,12 @@ public final class Routes {
 
     public static final class Report {
         public static final String ROOT = "/report";
+    }
+
+    public static final class Otp {
+        public static final String ROOT = "/otp";
+        public static final String SEND = "/send";
+        public static final String VERIFY = "/verify";
+
     }
 }

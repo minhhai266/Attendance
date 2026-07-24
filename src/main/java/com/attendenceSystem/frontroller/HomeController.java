@@ -42,15 +42,15 @@ public class HomeController {
     }
     @GetMapping("/dashboardAdmin")
     public String dashboardAdmin() {
-        return Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.ADMIN;
+        return Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Role.ADMIN;
     }
     @GetMapping("/dashboardEmployee")
     public String dashboardEmployee() {
-        return Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.EMPLOYEE;
+        return Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Role.EMPLOYEE;
     }
     @GetMapping("/dashboardManager")
     public String dashboardManager() {
-        return Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.MANAGER;
+        return Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Role.MANAGER;
     }
 
     @GetMapping("/login")

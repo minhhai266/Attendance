@@ -16,19 +16,19 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping(Routes.API + "/otp")
+@RequestMapping(Routes.API + Routes.Otp.ROOT)
 @RequiredArgsConstructor
 public class OtpApiController {
 
     private final OptService otpService;
 
-    @PostMapping("/send")
+    @PostMapping(Routes.Otp.SEND)
     public ResponseEntity<OtpResponse> sendOtp(@Valid @RequestBody SendOtpRequest request) {
         OtpResponse response = otpService.send(request);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/verify")
+    @PostMapping(Routes.Otp.VERIFY)
     public ResponseEntity<OtpResponse> verifyOtp(@Valid @RequestBody VerifyOtpRequest request) {
         OtpResponse response = otpService.verify(request);
         return ResponseEntity.ok(response);

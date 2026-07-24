@@ -18,7 +18,6 @@ import com.attendenceSystem.module.user.dto.request.RegisterRequest;
 import com.attendenceSystem.module.user.dto.response.UserResponse;
 import com.attendenceSystem.module.user.service.AuthService;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -78,9 +77,9 @@ public class AuthController {
                     HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                     SecurityContextHolder.getContext());
             return switch (user.role()) {
-                case "ADMIN" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.ADMIN;
-                case "MANAGER" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.MANAGER;
-                case "EMPLOYEE" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Dashboard.EMPLOYEE;
+                case "ADMIN" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Role.ADMIN;
+                case "MANAGER" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Role.MANAGER;
+                case "EMPLOYEE" -> Routes.REDIRECT + Routes.Dashboard.ROOT + Routes.Role.EMPLOYEE;
                 default -> Routes.REDIRECT + Routes.Dashboard.ROOT;
             };
         } catch (DisabledException e) {
@@ -117,13 +116,8 @@ public class AuthController {
     public String logout(
             HttpServletRequest request,
             HttpServletResponse response) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            new SecurityContextLogoutHandler()
-                    .logout(request, response, authentication);
-        }
-
-        return Routes.REDIRECT+"/";
+        authService.logout();
+        return Routes.REDIRECT + "/";
     }
 
     @PostMapping(Routes.Auth.FORGOT_PASSWORD)
@@ -156,7 +150,7 @@ public class AuthController {
                 HttpSession session = request.getSession();
                 session.setAttribute("otpVerified", true);
                 session.setAttribute("otpEmail", email);
-                
+
                 redirectAttributes.addFlashAttribute("email", email);
                 redirectAttributes.addFlashAttribute("otpVerified", true);
                 return Routes.REDIRECT + Routes.Auth.ROOT + Routes.Auth.CHANGE_PASSWORD;
