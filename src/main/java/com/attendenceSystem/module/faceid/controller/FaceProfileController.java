@@ -39,13 +39,13 @@ public class FaceProfileController {
         return Views.FaceId.LIST;
     }
 
-    @GetMapping("/create")
+    @GetMapping(Routes.Action.CREATE)
     public String createForm(Model model) {
         model.addAttribute("createFaceProfileRequest", new CreateFaceProfileRequest());
         return Views.FaceId.CREATE;
     }
 
-    @PostMapping("/create")
+    @PostMapping(Routes.Action.CREATE)
     public String create(@Valid @ModelAttribute CreateFaceProfileRequest request,
             BindingResult result, Model model) {
         if (result.hasErrors()) {

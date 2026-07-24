@@ -1,12 +1,13 @@
 package com.attendenceSystem.module.faceid.entity;
 
-import com.attendenceSystem.module.faceid.dto.FaceIdAction;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.attendenceSystem.module.faceid.entity.enums.FaceIdAction;
 
 import java.time.LocalDateTime;
 

@@ -47,4 +47,6 @@ public interface StorageProvider {
      * @return Path thực tế trên filesystem
      */
     Path resolvePath(String relativePath);
+
+    void save(Path targetPath, byte[] data) throws IOException;
 }

@@ -1,4 +1,4 @@
-package com.attendenceSystem.module.faceid.dto;
+package com.attendenceSystem.module.faceid.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
