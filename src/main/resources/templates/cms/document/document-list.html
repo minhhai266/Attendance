@@ -35,12 +35,13 @@
                                     <th>Ngày nộp</th>
                                     <th>File đính kèm</th>
                                     <th>Link tài liệu</th>
+                                    
                                 </tr>
                             </thead>
 
                             <tbody id="reportTableBody">
                                 <tr>
-                                    <td colspan="7" style="text-align:center">Đang tải...</td>
+                                    <td colspan="5" style="text-align:center">Đang tải...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -128,17 +129,17 @@
                             '<td>' + report.title + '</td>' +
                             '<td>' + formattedDate + '</td>' +
                             '<td>' + filesHtml + '</td>' +
-                            '<td>' + linkHtml + '</td>'
+                            '<td>' + linkHtml + '</td>';
 
                         tableBody.appendChild(row);
                     });
                 } else {
-                    tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center">Không có báo cáo nào</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center">Không có báo cáo nào</td></tr>';
                 }
             })
             .catch(error => {
                 console.error('Error loading reports:', error);
-                tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center">Lỗi khi tải danh sách báo cáo</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center">Lỗi khi tải danh sách báo cáo</td></tr>';
             });
         });
     </script>
