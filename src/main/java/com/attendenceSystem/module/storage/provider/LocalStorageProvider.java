@@ -34,7 +34,8 @@ public class LocalStorageProvider implements StorageProvider {
      * rootDir.resolve() coi là đường dẫn tuyệt đối.
      */
     private String normalizeRelativePath(String path) {
-        if (path == null) return null;
+        if (path == null)
+            return null;
         String normalized = path;
         // Loại bỏ dấu "/" hoặc "\" ở đầu để tránh path traversal false positive
         while (normalized.startsWith("/") || normalized.startsWith("\\")) {
@@ -104,5 +105,23 @@ public class LocalStorageProvider implements StorageProvider {
             throw new SecurityException("Path traversal không hợp lệ: " + relativePath);
         }
         return fullPath;
+    }
+
+    @Override
+    public void save(Path targetPath, byte[] data) throws IOException {
+        String pathStr = normalizeRelativePath(targetPath.toString());
+        Path normalizedPath = Paths.get(pathStr);
+        Path fullPath = rootDir.resolve(normalizedPath).normalize();
+
+        // Kiểm tra path traversal
+        if (!fullPath.startsWith(rootDir)) {
+            log.warn("Path traversal detected! rootDir={}, targetPath={}, fullPath={}", rootDir, targetPath, fullPath);
+            throw new SecurityException("Path traversal không hợp lệ: " + targetPath);
+        }
+
+        log.debug("Saving byte array file: rootDir={}, targetPath={}, fullPath={}", rootDir, targetPath, fullPath);
+        Files.createDirectories(fullPath.getParent());
+
+        Files.write(fullPath, data);
     }
 }
