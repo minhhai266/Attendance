@@ -1,4 +1,4 @@
-package com.attendenceSystem.module.faceid.dto;
+package com.attendenceSystem.module.faceid.entity.enums;
 
 public enum FaceIdAction {
     CHECKIN,
