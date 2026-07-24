@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
+import com.attendenceSystem.module.faceid.dto.FaceIdAction;
 import com.attendenceSystem.module.faceid.dto.request.FaceIdAttendanceRequest;
 import com.attendenceSystem.module.faceid.dto.response.FaceIdAttendanceResponse;
 import com.attendenceSystem.module.faceid.entity.FaceIdRecognition;
-import com.attendenceSystem.module.faceid.entity.enums.FaceIdAction;
 import com.attendenceSystem.module.faceid.repository.FaceIdRecognitionRepository;
 import com.attendenceSystem.module.faceid.service.FaceIdLogService;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -12,29 +12,28 @@ import com.attendenceSystem.module.dashboard.dto.response.EmployeeDashboardRespo
 import com.attendenceSystem.module.dashboard.dto.response.ManagerDashboardResponse;
 import com.attendenceSystem.module.dashboard.service.DashboardService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping(Routes.API + Routes.Dashboard.ROOT)
+@RequiredArgsConstructor
 public class DashboardApiController {
 
     private final DashboardService dashboardService;
 
-    public DashboardApiController(DashboardService dashboardService) {
-        this.dashboardService = dashboardService;
-    }
-
-    @GetMapping(Routes.Dashboard.ADMIN)
+    @GetMapping(Routes.Role.ADMIN)
     public ResponseEntity<AdminDashboardResponse> admin() {
         AdminDashboardResponse resp = dashboardService.getAdminDashboard();
         return ResponseEntity.ok(resp);
     }
 
-    @GetMapping(Routes.Dashboard.MANAGER)
+    @GetMapping(Routes.Role.MANAGER)
     public ResponseEntity<ManagerDashboardResponse> manager(Pageable pageable) {
         ManagerDashboardResponse resp = dashboardService.getManagerDashboard();
         return ResponseEntity.ok(resp);
     }
 
-    @GetMapping(Routes.Dashboard.EMPLOYEE)
+    @GetMapping(Routes.Role.EMPLOYEE)
     public ResponseEntity<EmployeeDashboardResponse> employee(Pageable pageable) {
         EmployeeDashboardResponse resp = dashboardService.getEmployeeDashboard();
         return ResponseEntity.ok(resp);

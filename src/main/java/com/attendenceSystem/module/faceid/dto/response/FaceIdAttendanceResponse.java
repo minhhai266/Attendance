@@ -1,7 +1,7 @@
 package com.attendenceSystem.module.faceid.dto.response;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
-import com.attendenceSystem.module.faceid.entity.enums.FaceIdAction;
+import com.attendenceSystem.module.faceid.dto.FaceIdAction;
 
 import lombok.Builder;
 

@@ -20,7 +20,6 @@ import com.attendenceSystem.module.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(Routes.API + Routes.Report.ROOT)
