@@ -218,6 +218,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     public List<AttendanceResponse> getManagerAttendanceList(LocalDate startDate,
             LocalDate endDate, AttendanceStatus status) {
+                
         DateRange dateRange = getDateRange(startDate, endDate);
 
         List<AttendanceRecord> records = getFilteredRecords(dateRange.startDate(), dateRange.endDate(), status);
@@ -303,10 +304,10 @@ public class AttendanceServiceImpl implements AttendanceService {
         LocalDate today = todayDate();
 
         startDate = startDate == null
-        ? (endDate == null ? today.minusMonths(6) : endDate) : startDate;
+        ? (endDate == null ? today.minusMonths(1) : endDate) : startDate;
 
         endDate = endDate == null
-        ? startDate : endDate;
+        ? today : endDate;
         return new DateRange(startDate, endDate);
     }
 
