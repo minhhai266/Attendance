@@ -32,7 +32,7 @@ public interface StorageProvider {
      * @param path đường dẫn file (relative)
      * @throws IOException nếu lỗi I/O
      */
-    void delete(String path) throws IOException;
+    void delete(String path);
 
     /**
      * Tạo đường dẫn public để truy cập file (URL cho web)

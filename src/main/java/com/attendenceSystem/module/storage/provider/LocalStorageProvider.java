@@ -13,6 +13,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.attendenceSystem.module.storage.exception.FileStorageException;
+
 @Component
 public class LocalStorageProvider implements StorageProvider {
 
@@ -27,21 +29,6 @@ public class LocalStorageProvider implements StorageProvider {
         } catch (IOException e) {
             throw new RuntimeException("Không thể tạo thư mục gốc: " + this.rootDir, e);
         }
-    }
-
-    /**
-     * Chuẩn hóa đường dẫn relative: loại bỏ dấu "/" ở đầu để tránh
-     * rootDir.resolve() coi là đường dẫn tuyệt đối.
-     */
-    private String normalizeRelativePath(String path) {
-        if (path == null)
-            return null;
-        String normalized = path;
-        // Loại bỏ dấu "/" hoặc "\" ở đầu để tránh path traversal false positive
-        while (normalized.startsWith("/") || normalized.startsWith("\\")) {
-            normalized = normalized.substring(1);
-        }
-        return normalized;
     }
 
     @Override
@@ -80,7 +67,7 @@ public class LocalStorageProvider implements StorageProvider {
     }
 
     @Override
-    public void delete(String path) throws IOException {
+    public void delete(String path) {
         String normalizedPath = normalizeRelativePath(path);
         Path fullPath = rootDir.resolve(normalizedPath).normalize();
 
@@ -89,7 +76,11 @@ public class LocalStorageProvider implements StorageProvider {
             throw new SecurityException("Path traversal không hợp lệ: " + path);
         }
 
-        Files.deleteIfExists(fullPath);
+        try {
+            Files.deleteIfExists(resolvePath(path));
+        } catch (IOException e) {
+            throw new FileStorageException("Không thể xóa file", e);
+        }
     }
 
     @Override
@@ -123,5 +114,20 @@ public class LocalStorageProvider implements StorageProvider {
         Files.createDirectories(fullPath.getParent());
 
         Files.write(fullPath, data);
+    }
+
+    /**
+     * Chuẩn hóa đường dẫn relative: loại bỏ dấu "/" ở đầu để tránh
+     * rootDir.resolve() coi là đường dẫn tuyệt đối.
+     */
+    private String normalizeRelativePath(String path) {
+        if (path == null)
+            return null;
+        String normalized = path;
+        // Loại bỏ dấu "/" hoặc "\" ở đầu để tránh path traversal false positive
+        while (normalized.startsWith("/") || normalized.startsWith("\\")) {
+            normalized = normalized.substring(1);
+        }
+        return normalized;
     }
 }

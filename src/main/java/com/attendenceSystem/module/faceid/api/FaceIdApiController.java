@@ -1,6 +1,5 @@
 package com.attendenceSystem.module.faceid.api;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
@@ -23,6 +22,7 @@ import com.attendenceSystem.module.faceid.entity.FaceSample;
 import com.attendenceSystem.module.faceid.repository.FaceProfileRepository;
 import com.attendenceSystem.module.faceid.repository.FaceSampleRepository;
 import com.attendenceSystem.module.faceid.service.FaceIdAttendanceService;
+import com.attendenceSystem.module.storage.exception.FileStorageException;
 import com.attendenceSystem.module.storage.provider.StorageProvider;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.repository.UserRepository;
@@ -217,7 +217,7 @@ public class FaceIdApiController {
             if (path != null) {
                 storageProvider.delete(path);
             }
-        } catch (IOException e) {
+        } catch (FileStorageException e) {
             log.warn("Không thể xóa file: {}", url);
         }
     }

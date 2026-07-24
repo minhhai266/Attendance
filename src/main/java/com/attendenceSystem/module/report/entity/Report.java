@@ -1,7 +1,8 @@
 package com.attendenceSystem.module.report.entity;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.attendenceSystem.module.report.entity.enums.ReportStatus;
 import com.attendenceSystem.module.user.entity.User;
@@ -59,6 +60,7 @@ public class Report {
     @Column(name = "reject_reason", length = 1000)
     private String rejectReason;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

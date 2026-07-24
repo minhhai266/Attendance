@@ -16,14 +16,14 @@ import com.attendenceSystem.module.otp.exception.OtpNotFoundException;
 import com.attendenceSystem.module.otp.mapper.request.SendOtpRequestMapper;
 import com.attendenceSystem.module.otp.mapper.response.OtpResponseMapper;
 import com.attendenceSystem.module.otp.repository.OtpRepository;
-import com.attendenceSystem.module.otp.service.OptService;
+import com.attendenceSystem.module.otp.service.OtpService;
 import com.attendenceSystem.module.otp.service.OtpSender;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class OtpServiceImpl implements OptService {
+public class OtpServiceImpl implements OtpService {
     private final OtpRepository otpRepository;
     private final OtpSender otpSender;
 

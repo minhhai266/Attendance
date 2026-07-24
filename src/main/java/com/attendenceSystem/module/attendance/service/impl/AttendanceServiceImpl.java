@@ -3,7 +3,10 @@ package com.attendenceSystem.module.attendance.service.impl;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -128,6 +131,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendanceRecordRepository.save(attendance);
         return attendanceResponseMapper.fromEntity(attendance);
     }
+
     @Override
     public Page<AttendanceResponse> getAttendanceHistory(final Pageable pageable) {
         User user = getCurrentUser();
@@ -142,20 +146,10 @@ public class AttendanceServiceImpl implements AttendanceService {
         return getManagerStats(departmentId, startDate, endDate, null);
     }
 
-    @Override
-    public List<AttendanceResponse> getManagerAttendanceList(String departmentId, LocalDate startDate, LocalDate endDate) {
-        return getManagerAttendanceList(departmentId, startDate, endDate, null);
-    }
-
-    private List<AttendanceRecord> getFilteredRecords(LocalDate startDate, LocalDate endDate, AttendanceStatus status) {
-        if (status != null) {
-            return attendanceRecordRepository.findByAttendanceDateBetweenAndStatus(startDate, endDate, status);
-        }
-        return attendanceRecordRepository.findByAttendanceDateBetween(startDate, endDate);
-    }
-
-    public ManagerStatsResponse getManagerStats(String departmentId, LocalDate startDate, LocalDate endDate, AttendanceStatus status) {
+    public ManagerStatsResponse getManagerStats(String departmentId, LocalDate startDate, LocalDate endDate,
+            AttendanceStatus status) {
         List<User> employees;
+
         if (departmentId != null && !departmentId.isEmpty()) {
             Department dept = Department.fromValue(departmentId);
             if (dept == null) {
@@ -186,26 +180,27 @@ public class AttendanceServiceImpl implements AttendanceService {
         long lateArrivals = 0;
         long absent = 0;
 
+        Map<Long, AttendanceRecord> attendanceMap = records.stream()
+        .filter(r -> r.getUser() != null)
+        .collect(Collectors.toMap(
+            r -> r.getUser().getId(),
+            Function.identity(),
+            (a, b) -> a));
         for (User emp : employees) {
-            boolean hasRecord = false;
-            for (AttendanceRecord record : records) {
-                if (record.getUser() != null && record.getUser().getId().equals(emp.getId())) {
-                    hasRecord = true;
-                    if (record.getStatus() == AttendanceStatus.LATE) {
-                        lateArrivals++;
-                    }
-                    checkedIn++;
-                    if (record.getCheckOutTime() != null) {
-                        checkedOut++;
-                    }
-                    break;
-                }
-            }
-            if (!hasRecord) {
+            AttendanceRecord record = attendanceMap.get(emp.getId());
+            if (record == null){
                 absent++;
+                continue;
+            }
+            checkedIn++;
+            if(record.getStatus() == AttendanceStatus.LATE) {
+                lateArrivals++;
+            }
+            if (record.getCheckOutTime() !=null){
+                checkedOut++;
             }
         }
-
+        //
         return ManagerStatsResponse.builder()
                 .totalEmployees(totalEmployees)
                 .checkedIn(checkedIn)
@@ -215,18 +210,14 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .build();
     }
 
-    public List<AttendanceResponse> getManagerAttendanceList(String departmentId, LocalDate startDate, LocalDate endDate, AttendanceStatus status) {
-        List<User> employees;
-        if (departmentId != null && !departmentId.isEmpty()) {
-            Department dept = Department.fromValue(departmentId);
-            if (dept == null) {
-                employees = userRepository.findByRoleNot(Role.ADMIN);
-            } else {
-                employees = userRepository.findByDepartmentAndRoleNot(dept, Role.ADMIN);
-            }
-        } else {
-            employees = userRepository.findByRoleNot(Role.ADMIN);
-        }
+    @Override
+    public List<AttendanceResponse> getManagerAttendanceList(LocalDate startDate,
+            LocalDate endDate) {
+        return getManagerAttendanceList(startDate, endDate, null);
+    }
+
+    public List<AttendanceResponse> getManagerAttendanceList(LocalDate startDate,
+            LocalDate endDate, AttendanceStatus status) {
         DateRange dateRange = getDateRange(startDate, endDate);
 
         List<AttendanceRecord> records = getFilteredRecords(dateRange.startDate(), dateRange.endDate(), status);
@@ -234,9 +225,12 @@ public class AttendanceServiceImpl implements AttendanceService {
         return records.stream()
                 .map(attendanceResponseMapper::fromEntity)
                 .sorted((a, b) -> {
-                    if (a.attendanceDate() == null && b.attendanceDate() == null) return 0;
-                    if (a.attendanceDate() == null) return 1;
-                    if (b.attendanceDate() == null) return -1;
+                    if (a.attendanceDate() == null && b.attendanceDate() == null)
+                        return 0;
+                    if (a.attendanceDate() == null)
+                        return 1;
+                    if (b.attendanceDate() == null)
+                        return -1;
                     return b.attendanceDate().compareTo(a.attendanceDate());
                 })
                 .toList();
@@ -306,19 +300,21 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     private DateRange getDateRange(LocalDate startDate, LocalDate endDate) {
-        LocalDate effectiveStartDate = startDate;
-        LocalDate effectiveEndDate = endDate;
-        if (effectiveStartDate == null && effectiveEndDate == null) {
-            LocalDate today = todayDate();
-            effectiveStartDate = today.minusMonths(6);
-            effectiveEndDate = today;
-        } else if (effectiveStartDate != null && effectiveEndDate == null) {
-            effectiveEndDate = effectiveStartDate;
-        } else if (effectiveStartDate == null && effectiveEndDate != null) {
-            effectiveStartDate = effectiveEndDate;
-        }
-        return new DateRange(effectiveStartDate, effectiveEndDate);
+        LocalDate today = todayDate();
+
+        startDate = startDate == null
+        ? (endDate == null ? today.minusMonths(6) : endDate) : startDate;
+
+        endDate = endDate == null
+        ? startDate : endDate;
+        return new DateRange(startDate, endDate);
     }
 
+    private List<AttendanceRecord> getFilteredRecords(LocalDate startDate, LocalDate endDate, AttendanceStatus status) {
+        if (status != null) {
+            return attendanceRecordRepository.findByAttendanceDateBetweenAndStatus(startDate, endDate, status);
+        }
+        return attendanceRecordRepository.findByAttendanceDateBetween(startDate, endDate);
+    }
 
 }

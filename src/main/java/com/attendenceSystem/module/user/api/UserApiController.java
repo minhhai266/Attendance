@@ -1,7 +1,6 @@
 package com.attendenceSystem.module.user.api;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +12,6 @@ import com.attendenceSystem.module.user.dto.request.ChangePasswordRequest;
 import com.attendenceSystem.module.user.dto.request.UpdatePasswordWithOtpRequest;
 import com.attendenceSystem.module.user.dto.request.UpdateUserInformationRequest;
 import com.attendenceSystem.module.user.dto.response.UserInformationResponse;
-import com.attendenceSystem.module.user.dto.response.UserResponse;
 import com.attendenceSystem.module.user.service.UserService;
 
 import jakarta.validation.Valid;
