@@ -36,13 +36,5 @@ public interface AttendanceService {
 
     List<AttendanceResponse> getManagerAttendanceList(LocalDate startDate, LocalDate endDate, AttendanceStatus status);
 
-    LeaveRequestResponse createLeaveRequest(CreateLeaveRequest request);
-
-    Page<LeaveRequestResponse> getLeaveRequests(Pageable pageable);
-
-    Page<LeaveRequestResponse> getAllLeaveRequests(Pageable pageable);
-
-    LeaveDetailResponse getLeaveDetail(Long id);
-
     Optional<AttendanceRecord> getTodayAttendanceRecord(User user);
 }

@@ -16,10 +16,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
-import com.attendenceSystem.module.attendance.dto.response.LeaveDetailResponse;
-import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
@@ -27,22 +24,16 @@ import com.attendenceSystem.module.attendance.exception.AlreadyCheckedInExceptio
 import com.attendenceSystem.module.attendance.exception.AlreadyCheckedOutException;
 import com.attendenceSystem.module.attendance.exception.InvalidAttendanceStateException;
 import com.attendenceSystem.module.attendance.exception.NotCheckedInException;
-import com.attendenceSystem.module.attendance.mapper.request.CreateLeaveRequestMapper;
 import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
-import com.attendenceSystem.module.attendance.entity.LeaveRequest;
-import com.attendenceSystem.module.attendance.mapper.response.LeaveDetailResponseMapper;
-import com.attendenceSystem.module.attendance.mapper.response.LeaveRequestResponseMapper;
 import com.attendenceSystem.module.attendance.model.DateRange;
-import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
 import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
 import com.attendenceSystem.module.attendance.util.TimeZoneProvider;
 import com.attendenceSystem.module.user.entity.User;
-import com.attendenceSystem.module.user.entity.enums.Department;
-import com.attendenceSystem.module.user.entity.enums.Role;
-import com.attendenceSystem.module.user.repository.UserRepository;
-import com.attendenceSystem.util.SecurityUtil;
+
+import com.attendenceSystem.module.user.provider.UserContextProvider;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,13 +41,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceRecordRepository attendanceRecordRepository;
-    private final UserRepository userRepository;
     private final AttendanceResponseMapper attendanceResponseMapper;
-    private final LeaveRequestRepository leaveRequestRepository;
-    private final LeaveRequestResponseMapper leaveRequestResponseMapper;
-    private final LeaveDetailResponseMapper leaveDetailResponseMapper;
     private final AttendanceCalculator attendanceCalculator;
     private final TimeZoneProvider timeZoneProvider;
+    private final UserContextProvider userContextProvider;
 
     @Value("${attendance.start-work:08:00}")
     private String startWork;
@@ -67,13 +55,13 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Transactional
     @Override
     public AttendanceResponse checkIn() {
-        return checkIn(getCurrentUser());
+        return checkIn(userContextProvider.getCurrentUserEntity());
     }
 
     @Transactional
     @Override
     public AttendanceResponse checkOut() {
-        return checkOut(getCurrentUser());
+        return checkOut(userContextProvider.getCurrentUserEntity());
     }
 
     @Transactional
@@ -134,7 +122,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public Page<AttendanceResponse> getAttendanceHistory(final Pageable pageable) {
-        User user = getCurrentUser();
+        User user = userContextProvider.getCurrentUserEntity();
 
         return attendanceRecordRepository
                 .findByUser(user, pageable)
@@ -148,18 +136,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     public ManagerStatsResponse getManagerStats(String departmentId, LocalDate startDate, LocalDate endDate,
             AttendanceStatus status) {
-        List<User> employees;
-
-        if (departmentId != null && !departmentId.isEmpty()) {
-            Department dept = Department.fromValue(departmentId);
-            if (dept == null) {
-                employees = userRepository.findByRoleNot(Role.ADMIN);
-            } else {
-                employees = userRepository.findByDepartmentAndRoleNot(dept, Role.ADMIN);
-            }
-        } else {
-            employees = userRepository.findByRoleNot(Role.ADMIN);
-        }
+        List<User> employees = userContextProvider.getEmployeesByDepartment(departmentId);
 
         long totalEmployees = employees.size();
         if (totalEmployees == 0) {
@@ -237,45 +214,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .toList();
     }
 
-    @Transactional
-    @Override
-    public LeaveRequestResponse createLeaveRequest(final CreateLeaveRequest request) {
-        if (request == null) {
-            throw new IllegalArgumentException("Yêu cầu không hợp lệ");
-        }
-        if (request.getStartDate() == null || request.getEndDate() == null) {
-            throw new IllegalArgumentException("Ngày bắt đầu và ngày kết thúc không được để trống");
-        }
-        if (request.getStartDate().isAfter(request.getEndDate())) {
-            throw new IllegalArgumentException("Ngày bắt đầu phải trước ngày kết thúc");
-        }
-        User user = getCurrentUser();
-        LeaveRequest leave = CreateLeaveRequestMapper.toEntity(request, user);
-        LeaveRequest saved = leaveRequestRepository.save(leave);
-        return leaveRequestResponseMapper.fromEntity(saved);
-    }
 
-    @Override
-    public Page<LeaveRequestResponse> getLeaveRequests(final Pageable pageable) {
-        User user = getCurrentUser();
-        return leaveRequestRepository.findByUser(user, pageable)
-                .map(leaveRequestResponseMapper::fromEntity);
-    }
-
-    @Override
-    public Page<LeaveRequestResponse> getAllLeaveRequests(final Pageable pageable) {
-        return leaveRequestRepository.findAll(pageable).map(leaveRequestResponseMapper::fromEntity);
-    }
-
-    @Override
-    public LeaveDetailResponse getLeaveDetail(final Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID yêu cầu nghỉ phép không hợp lệ");
-        }
-        LeaveRequest leave = leaveRequestRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy yêu cầu nghỉ phép với ID: " + id));
-        return leaveDetailResponseMapper.fromEntity(leave);
-    }
 
     @Override
     public Optional<AttendanceRecord> getTodayAttendanceRecord(User user) {
@@ -284,16 +223,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
         LocalDate today = todayDate();
         return attendanceRecordRepository.findByUserAndAttendanceDateWithLock(user, today);
-    }
-
-    private User getCurrentUser() {
-        if (!SecurityUtil.isAuthenticated()) {
-            throw new IllegalStateException("Người dùng chưa đăng nhập");
-        }
-        String currentUsername = SecurityUtil.getCurrentUserName();
-        return userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Không tìm thấy người dùng với tên đăng nhập: " + currentUsername));
     }
 
     private LocalDate todayDate() {

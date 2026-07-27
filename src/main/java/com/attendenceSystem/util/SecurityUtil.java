@@ -2,15 +2,23 @@ package com.attendenceSystem.util;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.attendenceSystem.module.user.entity.enums.Role;
+import com.attendenceSystem.security.CustomUserDetails;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class SecurityUtil {
+
+    public static CustomUserDetails getCurrentUser() {
+        if (!isAuthenticated()) {
+            throw new IllegalStateException("Người dùng chưa đăng nhập");
+        }
+
+        return (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 
     public boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -18,30 +26,15 @@ public class SecurityUtil {
                 && !(authentication instanceof AnonymousAuthenticationToken);
     }
 
-    public String getCurrentUserName() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return null;
-        }
-        return authentication.getName();
+    public Role getCurrentUserRole() {
+        return Role.valueOf(getCurrentUser().getRole());
     }
 
-    public Role getCurrentUserRole() {
-        Authentication authentication = SecurityContextHolder
-                .getContext()
-                .getAuthentication();
-        if (authentication == null
-                || !authentication.isAuthenticated()
-                || authentication instanceof AnonymousAuthenticationToken) {
-            return null;
-        }
-        return authentication
-                .getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .filter(authority -> authority.startsWith("ROLE_"))
-                .findFirst()
-                .map(authority -> Role.valueOf(authority.substring(5)))
-                .orElse(null);
+    public String getCurrentUserName() {
+        return getCurrentUser().getUsername();
+    }
+
+    public Long getCurrentUserId() {
+        return getCurrentUser().getId();
     }
 }

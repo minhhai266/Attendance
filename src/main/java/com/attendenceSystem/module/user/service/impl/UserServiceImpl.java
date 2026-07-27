@@ -19,10 +19,10 @@ import com.attendenceSystem.module.user.dto.response.UserInformationResponse;
 import com.attendenceSystem.module.user.entity.User;
 
 import com.attendenceSystem.module.user.mapper.response.UserInformationResponseMapper;
+import com.attendenceSystem.module.user.provider.UserContextProvider;
 import com.attendenceSystem.module.user.repository.UserRepository;
 import com.attendenceSystem.module.user.service.UserService;
 import com.attendenceSystem.security.CustomUserDetails;
-import com.attendenceSystem.util.SecurityUtil;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -33,11 +33,12 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserInformationResponseMapper userInformationResponseMapper;
+    private final UserContextProvider userContextProvider;
 
     @Transactional
     @Override
     public void changePassword(final ChangePasswordRequest request) {
-        User currentUser = findCurrentUser();
+        User currentUser = userContextProvider.getCurrentUserEntity();
         if (!passwordEncoder.matches(request.getOldPassword(), currentUser.getPassword())) {
             throw new IllegalArgumentException("Mật khẩu cũ không đúng");
         }
@@ -90,7 +91,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserInformationResponse updateUserInformation(final UpdateUserInformationRequest request) {
-        User currentUser = findCurrentUser();
+        User currentUser = userContextProvider.getCurrentUserEntity();
         if (StringUtils.hasText(request.getFullName())) {
             currentUser.setFullName(request.getFullName());
         }
@@ -121,15 +122,5 @@ public class UserServiceImpl implements UserService {
                     new UsernamePasswordAuthenticationToken(userDetails, auth.getCredentials(), auth.getAuthorities()));
         }
         return response;
-    }
-
-    private User findCurrentUser() {
-        if (!SecurityUtil.isAuthenticated()) {
-            throw new IllegalStateException("Người dùng chưa đăng nhập");
-        }
-        String currentUsername = SecurityUtil.getCurrentUserName();
-        return userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Không tìm thấy người dùng với tên đăng nhập: " + currentUsername));
     }
 }

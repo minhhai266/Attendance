@@ -1,13 +1,23 @@
 package com.attendenceSystem.module.attendance.service.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
+import com.attendenceSystem.module.attendance.dto.response.LeaveDetailResponse;
+import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
 import com.attendenceSystem.module.attendance.entity.LeaveRequest;
 import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
+import com.attendenceSystem.module.attendance.mapper.request.CreateLeaveRequestMapper;
+import com.attendenceSystem.module.attendance.mapper.response.LeaveDetailResponseMapper;
+import com.attendenceSystem.module.attendance.mapper.response.LeaveRequestResponseMapper;
 import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
 import com.attendenceSystem.module.attendance.service.LeaveService;
+import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Role;
+import com.attendenceSystem.module.user.provider.UserContextProvider;
 import com.attendenceSystem.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +26,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LeaveServiceImpl implements LeaveService {
     private final LeaveRequestRepository leaveRequestRepository;
+    private final LeaveRequestResponseMapper leaveRequestResponseMapper;
+    private final LeaveDetailResponseMapper leaveDetailResponseMapper;
+    private final UserContextProvider userContextProvider;
 
     @Transactional
     @Override
@@ -31,6 +44,46 @@ public class LeaveServiceImpl implements LeaveService {
         validateManagerAction();
         LeaveRequest leaveRequest = findByIdWithStatusPending(id);
         leaveRequest.setStatus(LeaveStatus.REJECTED);
+    }
+
+    @Transactional
+    @Override
+    public LeaveRequestResponse createLeaveRequest(final CreateLeaveRequest request) {
+        if (request == null) {
+            throw new IllegalArgumentException("Yêu cầu không hợp lệ");
+        }
+        if (request.getStartDate() == null || request.getEndDate() == null) {
+            throw new IllegalArgumentException("Ngày bắt đầu và ngày kết thúc không được để trống");
+        }
+        if (request.getStartDate().isAfter(request.getEndDate())) {
+            throw new IllegalArgumentException("Ngày bắt đầu phải trước ngày kết thúc");
+        }
+        User user = userContextProvider.getCurrentUserEntity();
+        LeaveRequest leave = CreateLeaveRequestMapper.toEntity(request, user);
+        LeaveRequest saved = leaveRequestRepository.save(leave);
+        return leaveRequestResponseMapper.fromEntity(saved);
+    }
+
+    @Override
+    public Page<LeaveRequestResponse> getLeaveRequests(final Pageable pageable) {
+        User user = userContextProvider.getCurrentUserEntity();
+        return leaveRequestRepository.findByUser(user, pageable)
+                .map(leaveRequestResponseMapper::fromEntity);
+    }
+
+    @Override
+    public Page<LeaveRequestResponse> getAllLeaveRequests(final Pageable pageable) {
+        return leaveRequestRepository.findAll(pageable).map(leaveRequestResponseMapper::fromEntity);
+    }
+
+    @Override
+    public LeaveDetailResponse getLeaveDetail(final Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID yêu cầu nghỉ phép không hợp lệ");
+        }
+        LeaveRequest leave = leaveRequestRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy yêu cầu nghỉ phép với ID: " + id));
+        return leaveDetailResponseMapper.fromEntity(leave);
     }
 
     private void validateManagerAction() {

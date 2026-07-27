@@ -16,6 +16,7 @@ import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveDetailResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
+import com.attendenceSystem.module.attendance.service.LeaveService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class AttendanceApiController {
 
     private final AttendanceService attendanceService;
+    private final LeaveService leaveService;
 
     @PostMapping(Routes.Attendance.CHECK_IN)
     public ResponseEntity<AttendanceResponse> checkIn() {
@@ -46,19 +48,19 @@ public class AttendanceApiController {
 
     @PostMapping(Routes.Attendance.LEAVE)
     public ResponseEntity<LeaveRequestResponse> createLeave(@RequestBody CreateLeaveRequest request) {
-        LeaveRequestResponse resp = attendanceService.createLeaveRequest(request);
+        LeaveRequestResponse resp = leaveService.createLeaveRequest(request);
         return ResponseEntity.ok(resp);
     }
 
     @GetMapping("/leaves")
     public ResponseEntity<Page<LeaveRequestResponse>> getLeaves(Pageable pageable) {
-        Page<LeaveRequestResponse> page = attendanceService.getLeaveRequests(pageable);
+        Page<LeaveRequestResponse> page = leaveService.getLeaveRequests(pageable);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping(Routes.Attendance.LEAVE_DETAIL + "/{id}")
     public ResponseEntity<LeaveDetailResponse> getLeaveDetail(@PathVariable Long id) {
-        LeaveDetailResponse detail = attendanceService.getLeaveDetail(id);
+        LeaveDetailResponse detail = leaveService.getLeaveDetail(id);
         return ResponseEntity.ok(detail);
     }
 }

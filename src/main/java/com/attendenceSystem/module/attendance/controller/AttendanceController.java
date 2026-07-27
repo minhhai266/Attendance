@@ -65,7 +65,7 @@ public class AttendanceController {
 
     @GetMapping(Routes.Attendance.LEAVE)
     public String leaveRequestList(@PageableDefault(size = 10) Pageable pageable, Model model) {
-        model.addAttribute("leaveRequests", attendanceService.getAllLeaveRequests(pageable));
+        model.addAttribute("leaveRequests", leaveService.getAllLeaveRequests(pageable));
         return Views.Attendance.LEAVE_LIST;
     }
 
@@ -85,7 +85,7 @@ public class AttendanceController {
             model.addAttribute("createLeaveRequest", createLeaveRequest);
             return Views.Attendance.LEAVE_CREATE;
         }
-        attendanceService.createLeaveRequest(createLeaveRequest);
+        leaveService.createLeaveRequest(createLeaveRequest);
         redirectAttributes.addFlashAttribute("successMessage", "Yêu cầu nghỉ phép đã được gửi.");
         return Routes.REDIRECT + Routes.Attendance.ROOT + Routes.Attendance.LEAVE + Routes.Action.CREATE;
     }

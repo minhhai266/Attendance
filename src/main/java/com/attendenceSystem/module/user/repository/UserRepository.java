@@ -16,6 +16,7 @@ import com.attendenceSystem.module.user.entity.enums.Status;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findById(Long id);
     Optional<User> findUserByUsername(String username);
     Optional<User> findUserByEmail(String email);
     boolean existsByUsername(String username);

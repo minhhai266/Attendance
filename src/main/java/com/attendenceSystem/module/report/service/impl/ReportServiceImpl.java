@@ -23,6 +23,7 @@ import com.attendenceSystem.module.report.repository.ReportShareRepository;
 import com.attendenceSystem.module.report.service.ReportService;
 import com.attendenceSystem.module.storage.service.FileStorageService;
 import com.attendenceSystem.module.user.entity.User;
+import com.attendenceSystem.module.user.provider.UserContextProvider;
 import com.attendenceSystem.module.user.repository.UserRepository;
 import com.attendenceSystem.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class ReportServiceImpl implements ReportService {
     private final ReportShareRepository reportShareRepository;
     private final UserRepository userRepository;
     private final FileStorageService fileStorageService;
+    private final UserContextProvider userContextProvider;
 
     @Value("${app.storage.upload-dir:uploads}")
     private String storageBaseDir;
@@ -46,7 +48,7 @@ public class ReportServiceImpl implements ReportService {
     @Transactional
     @Override
     public ReportResponse createReport(final CreateReportRequest request) {
-        User employee = findCurrentUser();
+        User employee = userContextProvider.getCurrentUserEntity();
 
         Report report = CreateReportRequestMapper.toEntity(request, employee);
 
@@ -96,14 +98,14 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public Page<ReportResponse> getMyReports(final Pageable pageable) {
-        User employee = findCurrentUser();
+        User employee = userContextProvider.getCurrentUserEntity();
         return reportRepository.findByEmployeeOrderByCreatedAtDesc(employee, pageable)
                 .map(ReportResponseMapper::fromEntity);
     }
 
     @Override
     public Page<ReportResponse> getSharedWithMe(final Pageable pageable) {
-        User currentUser = findCurrentUser();
+        User currentUser = userContextProvider.getCurrentUserEntity();
         return reportShareRepository.findReportsSharedWithUser(currentUser, pageable)
                 .map(ReportResponseMapper::fromEntity);
     }
@@ -114,16 +116,4 @@ public class ReportServiceImpl implements ReportService {
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy báo cáo với id: " + id));
         return ReportDetailResponseMapper.fromEntity(report);
     }
-
-    private User findCurrentUser() {
-        if (!SecurityUtil.isAuthenticated()) {
-            throw new IllegalStateException("Người dùng chưa đăng nhập");
-        }
-        String currentUsername = SecurityUtil.getCurrentUserName();
-        return userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Không tìm thấy người dùng với tên đăng nhập: " + currentUsername));
-    }
-
-
 }
