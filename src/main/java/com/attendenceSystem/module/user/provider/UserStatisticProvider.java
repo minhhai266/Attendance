@@ -1,6 +1,5 @@
 package com.attendenceSystem.module.user.provider;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,8 +29,13 @@ public class UserStatisticProvider {
     }
 
     public Map<String, Long> getRoleCounts() {
-        return Arrays.stream(Role.values())
-                .collect(Collectors.toMap(Enum::name, userRepository::countByRole));
+        return userRepository.countUsersGroupByRole()
+                .stream()
+                .filter(p -> p != null && p.getRole() != null)
+                .collect(
+                        Collectors.toMap(
+                                p -> p.getRole().name(),
+                                p -> p.getCount()));
     }
-    
+
 }

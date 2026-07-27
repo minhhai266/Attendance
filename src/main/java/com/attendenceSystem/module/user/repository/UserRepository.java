@@ -16,9 +16,11 @@ import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Specialization;
 import com.attendenceSystem.module.user.entity.enums.Role;
 import com.attendenceSystem.module.user.entity.enums.Status;
+import com.attendenceSystem.module.user.repository.projection.RoleCountProjection;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
     Optional<User> findById(Long id);
 
     Optional<User> findUserByUsername(String username);
@@ -60,4 +62,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<UserSimpleResponse> findFullNameByDepartmentAndRoleNot(
             @Param("department") Department department,
             @Param("role") Role role);
+
+    @Query("SELECT u.role AS role, COUNT(u) AS count FROM User u GROUP BY u.role")
+    List<RoleCountProjection> countUsersGroupByRole();
 }
