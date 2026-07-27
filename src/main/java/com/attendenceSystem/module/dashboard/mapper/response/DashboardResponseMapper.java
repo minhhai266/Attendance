@@ -15,22 +15,43 @@ import com.attendenceSystem.module.dashboard.dto.response.DailyAttendanceStats;
 @Component
 public class DashboardResponseMapper {
 
-    public AdminDashboardResponse toAdminDashboardResponse(long totalAccounts, long activeAccounts,
-            long inactiveAccounts, long pendingAccounts,
+    public AdminDashboardResponse toAdminDashboardResponse(
+            long totalAccounts,
+            long activeAccounts,
+            long inactiveAccounts,
+            long pendingAccounts,
             List<AccountTypeDistributionResponse> accountTypeDistribution) {
-        return new AdminDashboardResponse(totalAccounts, activeAccounts, inactiveAccounts, pendingAccounts,
+        return new AdminDashboardResponse(
+                totalAccounts,
+                activeAccounts,
+                inactiveAccounts,
+                pendingAccounts,
                 accountTypeDistribution);
     }
 
-    public ManagerDashboardResponse toManagerDashboardResponse(long totalEmployees, long attendedEmployees,
-            long lateEmployees, long absentEmployees, Page<AttendanceResponse> attendanceHistory,
+    public ManagerDashboardResponse toManagerDashboardResponse(
+            long totalEmployees,
+            long attendedEmployees,
+            long lateEmployees,
+            long absentEmployees,
+            Page<AttendanceResponse> attendanceHistory,
             List<DailyAttendanceStats> weeklyStats) {
-        return new ManagerDashboardResponse(totalEmployees, attendedEmployees, lateEmployees, absentEmployees, attendanceHistory, weeklyStats);
+        return new ManagerDashboardResponse(
+                totalEmployees,
+                attendedEmployees,
+                lateEmployees,
+                absentEmployees,
+                attendanceHistory,
+                weeklyStats);
     }
 
-    public EmployeeDashboardResponse toEmployeeDashboardResponse(long totalReports, long acceptedReports,
-            long rejectedReports, String attendanceRate, Page<AttendanceResponse> attendanceHistory) {
-        return new EmployeeDashboardResponse(totalReports, acceptedReports, rejectedReports, attendanceRate,
+    public EmployeeDashboardResponse toEmployeeDashboardResponse(
+            long totalReports,
+            String attendanceRate,
+            Page<AttendanceResponse> attendanceHistory) {
+        return new EmployeeDashboardResponse(
+                totalReports,
+                attendanceRate,
                 attendanceHistory);
     }
 }

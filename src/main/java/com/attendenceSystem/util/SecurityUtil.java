@@ -41,7 +41,7 @@ public class SecurityUtil {
                 .map(GrantedAuthority::getAuthority)
                 .filter(authority -> authority.startsWith("ROLE_"))
                 .findFirst()
-                .map(authority -> Role.valueOf(authority.replace("ROLE_", "")))
+                .map(authority -> Role.valueOf(authority.substring(5)))
                 .orElse(null);
     }
 }

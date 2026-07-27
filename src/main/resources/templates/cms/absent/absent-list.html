@@ -117,10 +117,13 @@
                                     <tr th:each="leave : ${leaveRequests.content}">
                                         <td th:text="${leave.fullName()}">Nhân viên</td>
                                         <td th:text="${leave.departmentDisplay()}">Phòng ban</td>
-                                        <td th:text="${leave.startDate()}">Từ ngày</td>
-                                        <td th:text="${leave.endDate()}">Đến ngày</td>
+                                        <td th:text="${#temporals.format(leave.startDate(), 'dd/MM/yyyy')}">Từ ngày</td>
+                                        <td th:text="${#temporals.format(leave.endDate(), 'dd/MM/yyyy')}">Đến ngày</td>
                                         <td>
-                                            <span class="status pending">Trạng thái</span>
+                                            <span th:classappend="${leave.status()} ? 'status-' + ${leave.status().name().toLowerCase()}" 
+                                                  class="status"
+                                                  th:text="${leave.status()}">
+                                            </span>
                                         </td>
                                         <td>
                                             <button th:data-id="${leave.id}"
@@ -133,20 +136,18 @@
 
                                         
                                         <td>
-                                            <div class="action-group">
-
-                                                <form method="post">
-                                                    <button class="btn-primary btn-small">
+                                            <div class="action-group" th:if="${leave.status().toString() == 'PENDING'}">
+                                                <form th:action="@{'/attendance/leave/accept/' + ${leave.id()}}" method="post" style="display:inline;">
+                                                    <button class="btn-primary btn-small" type="submit" onclick="return confirm('Bạn có chắc phê duyệt đơn nghỉ phép này?')">
                                                         Phê duyệt
                                                     </button>
                                                 </form>
 
-                                                <form method="post">
-                                                    <button class="btn-secondary btn-small">
+                                                <form th:action="@{'/attendance/leave/reject/' + ${leave.id()}}" method="post" style="display:inline;">
+                                                    <button class="btn-secondary btn-small" type="submit" onclick="return confirm('Bạn có chắc từ chối đơn nghỉ phép này?')">
                                                         Từ chối
                                                     </button>
                                                 </form>
-
                                             </div>
                                         </td>
                                     </tr>

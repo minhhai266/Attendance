@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="employee-stat-card__content">
-                            <h3 class="employee-stat-card__number">12</h3>
+                            <h3 class="employee-stat-card__number" th:text="${dashboard.totalReports}">0</h3>
                             <p class="employee-stat-card__label">Báo cáo đã nộp</p>
                         </div>
 
@@ -48,7 +48,7 @@
                         </div>
 
                         <div class="employee-stat-card__content">
-                            <h3 class="employee-stat-card__number">95%</h3>
+                            <h3 class="employee-stat-card__number" th:text="${dashboard.attendanceRate}">0%</h3>
                             <p class="employee-stat-card__label">Tỷ lệ chuyên cần</p>
                         </div>
 
@@ -147,51 +147,23 @@
                                     </thead>
 
                                     <tbody>
-
-                                        <tr>
-                                            <td>2/6/2026</td>
-                                            <td>07:58</td>
-                                            <td>17:05</td>
+                                        <tr th:each="record : ${dashboard.attendanceHistory.content}">
+                                            <td th:text="${#temporals.format(record.attendanceDate, 'dd/MM/yyyy')}"></td>
+                                            <td th:text="${record.checkInTime != null ? #temporals.format(record.checkInTime, 'HH:mm') : '--'}"></td>
+                                            <td th:text="${record.checkOutTime != null ? #temporals.format(record.checkOutTime, 'HH:mm') : '--'}"></td>
                                             <td>
-                                                <span class="status-badge status-success">
-                                                    Đúng giờ
+                                                <span th:classappend="${record.late} ? 'status-warning' : (${record.earlyLeave} ? 'status-danger' : 'status-success')"
+                                                      class="status-badge"
+                                                      th:text="${record.late} ? 'Đi muộn' : (${record.earlyLeave} ? 'Về sớm' : 'Đúng giờ')">
                                                 </span>
                                             </td>
                                         </tr>
 
-                                        <tr>
-                                            <td>1/6/2026</td>
-                                            <td>08:12</td>
-                                            <td>17:02</td>
-                                            <td>
-                                                <span class="status-badge status-warning">
-                                                    Đi muộn
-                                                </span>
+                                        <tr th:if="${dashboard.attendanceHistory.content.empty}">
+                                            <td colspan="4" style="text-align: center; padding: 20px;">
+                                                Chưa có dữ liệu điểm danh
                                             </td>
                                         </tr>
-
-                                        <tr>
-                                            <td>31/5/2026</td>
-                                            <td>08:00</td>
-                                            <td>17:00</td>
-                                            <td>
-                                                <span class="status-badge status-success">
-                                                    Đúng giờ
-                                                </span>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>30/5/2026</td>
-                                            <td>07:55</td>
-                                            <td>16:45</td>
-                                            <td>
-                                                <span class="status-badge status-danger">
-                                                    Về sớm
-                                                </span>
-                                            </td>
-                                        </tr>
-
                                     </tbody>
 
                                 </table>

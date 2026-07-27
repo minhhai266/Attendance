@@ -7,8 +7,6 @@ import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 public record EmployeeDashboardResponse(
 
         Long totalReports,
-        Long acceptedReports,
-        Long rejectedReports,
         String attendanceRate,
         Page<AttendanceResponse> attendanceHistory
 

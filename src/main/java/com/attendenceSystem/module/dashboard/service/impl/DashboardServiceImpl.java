@@ -23,7 +23,6 @@ import com.attendenceSystem.module.dashboard.dto.response.ManagerDashboardRespon
 import com.attendenceSystem.module.dashboard.mapper.response.DashboardResponseMapper;
 import com.attendenceSystem.module.dashboard.service.DashboardService;
 import com.attendenceSystem.module.dashboard.util.DashboardCalculator;
-import com.attendenceSystem.module.report.entity.enums.ReportStatus;
 import com.attendenceSystem.module.report.repository.ReportRepository;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Role;
@@ -64,8 +63,9 @@ public class DashboardServiceImpl implements DashboardService {
 
         @Override
         public ManagerDashboardResponse getManagerDashboard() {
-                long totalEmployees = userRepository.countByRoleNot(Role.ADMIN);
                 LocalDate today = LocalDate.now();
+                
+                long totalEmployees = userRepository.countByRoleNot(Role.ADMIN);
                 long presentToday = attendanceRecordRepository.countByAttendanceDateAndStatus(
                                 today,
                                 AttendanceStatus.PRESENT);
@@ -110,8 +110,6 @@ public class DashboardServiceImpl implements DashboardService {
         public EmployeeDashboardResponse getEmployeeDashboard() {
                 User user = getCurrentUser();
                 long totalReports = reportRepository.countByEmployee(user);
-                long acceptedReports = reportRepository.countByEmployeeAndStatus(user, ReportStatus.ACCEPTED);
-                long rejectedReports = reportRepository.countByEmployeeAndStatus(user, ReportStatus.REJECTED);
                 long totalDays = attendanceRecordRepository.count();
                 long attendedDays = attendanceRecordRepository.countByCheckInTimeNotNullAndCheckOutTimeNotNull();
                 String attendenceRate = DashboardCalculator.showResultStr(attendedDays, totalDays);
@@ -120,8 +118,6 @@ public class DashboardServiceImpl implements DashboardService {
                                 .map(attendanceResponseMapper::fromEntity);
                 return dashboardResponseMapper.toEmployeeDashboardResponse(
                                 totalReports,
-                                acceptedReports,
-                                rejectedReports,
                                 attendenceRate,
                                 attendanceHistory);
         }

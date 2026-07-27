@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -21,6 +22,7 @@ import com.attendenceSystem.module.attendance.exception.AlreadyCheckedOutExcepti
 import com.attendenceSystem.module.attendance.exception.InvalidAttendanceStateException;
 import com.attendenceSystem.module.attendance.exception.NotCheckedInException;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
+import com.attendenceSystem.module.attendance.service.LeaveService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(Routes.Attendance.ROOT)
 public class AttendanceController {
     private final AttendanceService attendanceService;
+    private final LeaveService leaveService;
 
     @GetMapping
     public String toAttendanceListPage(@PageableDefault(size = 10) Pageable pageable, Model model) {
@@ -55,7 +58,7 @@ public class AttendanceController {
 
     @GetMapping(Routes.Attendance.HISTORY)
     public String attendanceHistory(@PageableDefault(size = 10) Pageable pageable, Model model) {
-        
+
         model.addAttribute("attendanceHistory", attendanceService.getAttendanceHistory(pageable));
         return Views.Attendance.HISTORY;
     }
@@ -84,7 +87,25 @@ public class AttendanceController {
         }
         attendanceService.createLeaveRequest(createLeaveRequest);
         redirectAttributes.addFlashAttribute("successMessage", "Yêu cầu nghỉ phép đã được gửi.");
-        return Routes.REDIRECT + Routes.Attendance.ROOT + Routes.Attendance.LEAVE    + Routes.Action.CREATE;
+        return Routes.REDIRECT + Routes.Attendance.ROOT + Routes.Attendance.LEAVE + Routes.Action.CREATE;
+    }
+
+    @PostMapping(Routes.Attendance.LEAVE + Routes.Action.ACCEPT + "/{id}")
+    public String acceptLeaveRequest(
+            @PathVariable("id") Long id,
+            RedirectAttributes redirectAttributes) {
+        leaveService.acceptLeave(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Đã duyệt đơn nghỉ phép.");
+        return Routes.REDIRECT + Routes.Attendance.ROOT + Routes.Attendance.LEAVE;
+    }
+
+    @PostMapping(Routes.Attendance.LEAVE + Routes.Action.REJECT + "/{id}")
+    public String rejectLeaveRequest(
+            @PathVariable("id") Long id,
+            RedirectAttributes redirectAttributes) {
+        leaveService.rejectLeave(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Đã từ chối đơn nghỉ phép.");
+        return Routes.REDIRECT + Routes.Attendance.ROOT + Routes.Attendance.LEAVE;
     }
 
     @ExceptionHandler({

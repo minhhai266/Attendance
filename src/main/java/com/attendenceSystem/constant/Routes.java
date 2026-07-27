@@ -14,6 +14,8 @@ public final class Routes {
         public static final String DELETE = "/delete";
         public static final String DEACTIVATE = "/deactivate";
         public static final String ACTIVATE = "/activate";
+        public static final String ACCEPT = "/accept";
+        public static final String REJECT = "/reject";
     }
 
     public static final class Role {

@@ -13,6 +13,7 @@ import com.attendenceSystem.module.user.dto.request.RegisterRequest;
 import com.attendenceSystem.module.user.dto.response.UserResponse;
 import com.attendenceSystem.module.user.service.AuthService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,13 +24,13 @@ public class AuthApiController {
     private final AuthService authService;
 
     @PostMapping(Routes.Auth.LOGIN)
-    public ResponseEntity<UserResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest request) {
         UserResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping(Routes.Auth.REGISTER)
-    public ResponseEntity<Void> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequest request) {
         authService.register(request);
         return ResponseEntity.ok().build();
     }
@@ -44,7 +45,7 @@ public class AuthApiController {
         return ResponseEntity.ok().build();
     }
     @PostMapping(Routes.Auth.VERIFY_OTP)
-    public ResponseEntity<Boolean> verifyOtp(@RequestBody VerifyOtpRequest request) {
+    public ResponseEntity<Boolean> verifyOtp(@Valid @RequestBody VerifyOtpRequest request) {
         boolean isValid = authService.verifyOtp(request.getDestination(), request.getCode());
         return ResponseEntity.ok(isValid);
     }
