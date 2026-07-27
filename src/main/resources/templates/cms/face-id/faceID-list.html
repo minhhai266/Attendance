@@ -58,11 +58,32 @@
                                 </td>
                                 <td th:text="${faceProfile.userEmail}">user@example.com</td>
                                 <td>
-                                    <img th:src="${faceProfile.thumbnailUrl}" alt="Face" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" th:if="${faceProfile.thumbnailUrl}">
+                                    <button class="detail-btn btn-small" type="button" th:data-id="${faceProfile.id}"
+                                        th:data-name="${faceProfile.userFullName}"
+                                        th:data-face-code="${faceProfile.faceCode}"
+                                        th:data-sample-count="${faceProfile.sampleCount}"
+                                        th:data-email="${faceProfile.userEmail}"
+                                        th:data-thumbnail-url="${faceProfile.thumbnailUrl}">
+                                        Chi tiết
+                                    </button>
                                 </td>
 
                                 <td>
-                                    <button class="detail-btn btn-primary" type="button">Chi tiết</button>
+                                    <div class="action-group">
+
+                                        <form method="post">
+                                            <button class="btn-primary btn-small">
+                                                Phê duyệt
+                                            </button>
+                                        </form>
+
+                                        <form method="post">
+                                            <button class="btn-secondary btn-small">
+                                                Từ chối
+                                            </button>
+                                        </form>
+
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -81,7 +102,7 @@
         <div class="face-modal-content">
 
             <div class="face-modal-header">
-                <h2>Ảnh Face ID</h2>
+                <h2>Chi tiết Face ID</h2>
 
                 <button class="close-btn" onclick="closeFaceGallery()">
                     ✕
@@ -90,7 +111,37 @@
 
             <div class="face-gallery">
 
-                <img id="facePreviewImage" src="https://i.pinimg.com/736x/6a/5e/fc/6a5efc25bf7c7603afac79d7046f999c.jpg" alt="Face ID">
+                <div class="face-gallery-image">
+                    <img id="facePreviewImage"
+                        src="https://i.pinimg.com/736x/6a/5e/fc/6a5efc25bf7c7603afac79d7046f999c.jpg" alt="Face ID">
+                </div>
+
+                <div class="face-detail-panel">
+                    <div class="detail-item">
+                        <span>Mã SV</span>
+                        <p id="detailId">--</p>
+                    </div>
+                    <div class="detail-item">
+                        <span>Họ tên</span>
+                        <p id="detailName">--</p>
+                    </div>
+                    <div class="detail-item">
+                        <span>Face ID</span>
+                        <p id="detailFaceCode">--</p>
+                    </div>
+                    <div class="detail-item">
+                        <span>Số mẫu</span>
+                        <p id="detailSampleCount">--</p>
+                    </div>
+                    <div class="detail-item">
+                        <span>Email</span>
+                        <p id="detailEmail">--</p>
+                    </div>
+                    <div class="detail-item">
+                        <span>Trạng thái</span>
+                        <p id="detailStatus">--</p>
+                    </div>
+                </div>
 
             </div>
 
@@ -98,25 +149,57 @@
 
     </div>
     <script>
-        function openFaceGallery() {
+        const facePreviewImage = document.getElementById("facePreviewImage");
+        const detailId = document.getElementById("detailId");
+        const detailName = document.getElementById("detailName");
+        const detailFaceCode = document.getElementById("detailFaceCode");
+        const detailSampleCount = document.getElementById("detailSampleCount");
+        const detailEmail = document.getElementById("detailEmail");
+        const detailStatus = document.getElementById("detailStatus");
 
-            document
-                .getElementById("faceGalleryModal")
-                .classList.add("show");
+        function openFaceGallery() {
+            document.getElementById("faceGalleryModal").classList.add("show");
         }
 
         function closeFaceGallery() {
-
-            document
-                .getElementById("faceGalleryModal")
-                .classList.remove("show");
+            document.getElementById("faceGalleryModal").classList.remove("show");
         }
 
+        function formatDetailValue(value, suffix = "") {
+            return value !== undefined && value !== null && value !== "" ? `${value}${suffix}` : "--";
+        }
+
+        function getFaceStatus(sampleCount) {
+            const count = Number(sampleCount);
+            if (Number.isNaN(count)) {
+                return "--";
+            }
+            return count >= 5 ? "Đã đăng ký" : "Chưa đủ mẫu";
+        }
+
+        document.querySelectorAll('.detail-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const faceId = button.dataset.id;
+                const name = button.dataset.name;
+                const faceCode = button.dataset.faceCode;
+                const sampleCount = button.dataset.sampleCount;
+                const email = button.dataset.email;
+                const thumbnailUrl = button.dataset.thumbnailUrl;
+
+                detailId.textContent = formatDetailValue(faceId);
+                detailName.textContent = formatDetailValue(name);
+                detailFaceCode.textContent = formatDetailValue(faceCode);
+                detailSampleCount.textContent = formatDetailValue(sampleCount, ' mẫu');
+                detailEmail.textContent = formatDetailValue(email);
+                detailStatus.textContent = getFaceStatus(sampleCount);
+                facePreviewImage.src = thumbnailUrl ? thumbnailUrl : "https://i.pinimg.com/736x/6a/5e/fc/6a5efc25bf7c7603afac79d7046f999c.jpg";
+
+                openFaceGallery();
+            });
+        });
+
         window.onclick = function (event) {
-
-            const modal =
-                document.getElementById("faceGalleryModal");
-
+            const modal = document.getElementById("faceGalleryModal");
             if (event.target === modal) {
                 closeFaceGallery();
             }

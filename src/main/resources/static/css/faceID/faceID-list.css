@@ -173,9 +173,65 @@
 
     object-fit: cover;
 }
-/* ==========================
-   FACE MODAL
-========================== */
+
+    .face-gallery {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .face-gallery-image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .face-detail-panel {
+        display: grid;
+        gap: 14px;
+    }
+
+    .action-group {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-small {
+    height: 38px;
+
+    padding: 0 16px;
+
+    font-size: .85rem;
+
+    border-radius: 10px;
+}
+    .face-detail-panel .detail-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+    }
+
+    .face-detail-panel .detail-item span {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--text-light);
+        margin-bottom: 6px;
+    }
+
+    .face-detail-panel .detail-item p {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-white);
+    }
+
+    .face-detail-panel .detail-item p#detailStatus {
+        color: var(--success);
+    }
+
+
 
 .face-modal {
     display: none;
