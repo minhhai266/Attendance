@@ -7,10 +7,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
-import com.attendenceSystem.module.attendance.dto.response.LeaveDetailResponse;
-import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
+
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
@@ -30,7 +28,8 @@ public interface AttendanceService {
 
     ManagerStatsResponse getManagerStats(String departmentId, LocalDate startDate, LocalDate endDate);
 
-    ManagerStatsResponse getManagerStats(String departmentId, LocalDate startDate, LocalDate endDate, AttendanceStatus status);
+    ManagerStatsResponse getManagerStats(String departmentId, LocalDate startDate, LocalDate endDate,
+            AttendanceStatus status);
 
     List<AttendanceResponse> getManagerAttendanceList(LocalDate startDate, LocalDate endDate);
 
