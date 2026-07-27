@@ -24,8 +24,6 @@ import com.attendenceSystem.module.report.service.ReportService;
 import com.attendenceSystem.module.storage.service.FileStorageService;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.provider.UserContextProvider;
-import com.attendenceSystem.module.user.repository.UserRepository;
-import com.attendenceSystem.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +36,6 @@ public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
     private final ReportShareRepository reportShareRepository;
-    private final UserRepository userRepository;
     private final FileStorageService fileStorageService;
     private final UserContextProvider userContextProvider;
 
@@ -76,9 +73,7 @@ public class ReportServiceImpl implements ReportService {
         if (request.getSharedUserIds() != null && request.getSharedUserIds().length > 0) {
             List<ReportShare> shares = new ArrayList<>();
             for (Long userId : request.getSharedUserIds()) {
-                User sharedUser = userRepository.findById(userId)
-                        .orElseThrow(() -> new IllegalArgumentException(
-                                "Không tìm thấy người dùng với id: " + userId));
+                User sharedUser = userContextProvider.getUserById(userId);
                 shares.add(ReportShare.builder()
                         .report(savedReport)
                         .user(sharedUser)

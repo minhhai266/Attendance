@@ -3,18 +3,17 @@ package com.attendenceSystem.module.dashboard.service.impl;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.stream.IntStream;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
-import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
+import com.attendenceSystem.module.attendance.provider.AttendanceStatisticsProvider;
 import com.attendenceSystem.module.dashboard.dto.response.AccountTypeDistributionResponse;
 import com.attendenceSystem.module.dashboard.dto.response.AdminDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.DailyAttendanceStats;
@@ -23,35 +22,36 @@ import com.attendenceSystem.module.dashboard.dto.response.ManagerDashboardRespon
 import com.attendenceSystem.module.dashboard.mapper.response.DashboardResponseMapper;
 import com.attendenceSystem.module.dashboard.service.DashboardService;
 import com.attendenceSystem.module.dashboard.util.DashboardCalculator;
-import com.attendenceSystem.module.report.repository.ReportRepository;
+import com.attendenceSystem.module.report.provider.ReportStatisticsProvider;
 import com.attendenceSystem.module.user.entity.User;
-import com.attendenceSystem.module.user.entity.enums.Role;
 import com.attendenceSystem.module.user.entity.enums.Status;
-import com.attendenceSystem.module.user.repository.UserRepository;
-import com.attendenceSystem.util.SecurityUtil;
+import com.attendenceSystem.module.user.provider.UserContextProvider;
+import com.attendenceSystem.module.user.provider.UserStatisticProvider;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class DashboardServiceImpl implements DashboardService {
-        private final UserRepository userRepository;
-        private final AttendanceRecordRepository attendanceRecordRepository;
-        private final ReportRepository reportRepository;
-        private final AttendanceResponseMapper attendanceResponseMapper;
+        private final UserContextProvider userContextProvider;
+        private final AttendanceStatisticsProvider attendanceStatisticsProvider;
+        private final UserStatisticProvider userStatisticProvider;
+        private final ReportStatisticsProvider reportStatisticsProvider;
         private final DashboardResponseMapper dashboardResponseMapper;
 
         @Override
         public AdminDashboardResponse getAdminDashboard() {
-                long totalAccounts = userRepository.count();
-                long activeAccounts = userRepository.countByStatus(Status.ACTIVE);
-                long inactiveAccounts = userRepository.countByStatus(Status.INACTIVE);
-                long pendingAccounts = userRepository.countByStatus(Status.PENDING);
-                var accountTypeDistribution = Arrays.stream(Role.values())
-                                .map(role -> new AccountTypeDistributionResponse(
-                                                role.name(),
-                                                roleLabel(role),
-                                                userRepository.countByRole(role)))
+                long totalAccounts = userStatisticProvider.getTotalAccounts();
+                long activeAccounts = userStatisticProvider.getAccountsByStatus(Status.ACTIVE);
+                long inactiveAccounts = userStatisticProvider.getAccountsByStatus(Status.INACTIVE);
+                long pendingAccounts = userStatisticProvider.getAccountsByStatus(Status.PENDING);
+                var accountTypeDistribution = userStatisticProvider.getRoleCounts()
+                                .entrySet()
+                                .stream()
+                                .map(entry -> new AccountTypeDistributionResponse(
+                                                entry.getKey(),
+                                                roleLabel(entry.getKey()),
+                                                entry.getValue()))
                                 .toList();
                 return dashboardResponseMapper.toAdminDashboardResponse(
                                 totalAccounts,
@@ -64,33 +64,28 @@ public class DashboardServiceImpl implements DashboardService {
         @Override
         public ManagerDashboardResponse getManagerDashboard() {
                 LocalDate today = LocalDate.now();
-                
-                long totalEmployees = userRepository.countByRoleNot(Role.ADMIN);
-                long presentToday = attendanceRecordRepository.countByAttendanceDateAndStatus(
-                                today,
-                                AttendanceStatus.PRESENT);
-                long lateToday = attendanceRecordRepository.countByAttendanceDateAndStatus(
-                                today,
-                                AttendanceStatus.LATE);
+
+                long totalEmployees = userStatisticProvider.getTotalEmployeeAndManager();
+                long presentToday = attendanceStatisticsProvider
+                                .getCountByDateAndStatus(today, AttendanceStatus.PRESENT);
+                long lateToday = attendanceStatisticsProvider
+                                .getCountByDateAndStatus(today, AttendanceStatus.LATE);
                 long attendedToday = presentToday + lateToday;
                 long absentToday = Math.max(0, totalEmployees - attendedToday);
-                Page<AttendanceResponse> attendanceHistory = attendanceRecordRepository
-                                .findAllByOrderByAttendanceDateDesc(PageRequest.of(0, 10))
-                                .map(attendanceResponseMapper::fromEntity);
-
+                Page<AttendanceResponse> attendanceHistory = attendanceStatisticsProvider.getRecentHistory(10);
                 var monday = TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY).adjustInto(today);
                 var weeklyStats = IntStream.rangeClosed(2, 6)
                                 .mapToObj(dayOfWeek -> {
                                         LocalDate date = ((LocalDate) monday)
-                                                        .plusDays(dayOfWeek - DayOfWeek.MONDAY.getValue());
-                                        long present = attendanceRecordRepository.countByAttendanceDateAndStatus(date,
+                                                        .plusDays(dayOfWeek - 2);
+                                        long present = attendanceStatisticsProvider.getCountByDateAndStatus(date,
                                                         AttendanceStatus.PRESENT);
-                                        long late = attendanceRecordRepository.countByAttendanceDateAndStatus(date,
+                                        long late = attendanceStatisticsProvider.getCountByDateAndStatus(date,
                                                         AttendanceStatus.LATE);
                                         long attended = present + late;
                                         long absent = Math.max(0, totalEmployees - attended);
                                         return new DailyAttendanceStats(
-                                                        "T" + (dayOfWeek - 1),
+                                                        "T" + dayOfWeek,
                                                         present,
                                                         late,
                                                         absent);
@@ -108,31 +103,24 @@ public class DashboardServiceImpl implements DashboardService {
 
         @Override
         public EmployeeDashboardResponse getEmployeeDashboard() {
-                User user = getCurrentUser();
-                long totalReports = reportRepository.countByEmployee(user);
-                long totalDays = attendanceRecordRepository.count();
-                long attendedDays = attendanceRecordRepository.countByCheckInTimeNotNullAndCheckOutTimeNotNull();
+                User user = userContextProvider.getCurrentUserEntity();
+                long totalReports = reportStatisticsProvider.countReportsByEmployee(user);
+                long totalDays = attendanceStatisticsProvider.getTotalDaysByUser(user);
+                long attendedDays = attendanceStatisticsProvider.getAttendedDaysByUser(user);
                 String attendenceRate = DashboardCalculator.showResultStr(attendedDays, totalDays);
-                Page<AttendanceResponse> attendanceHistory = attendanceRecordRepository
-                                .findByUser(user, PageRequest.of(0, 10))
-                                .map(attendanceResponseMapper::fromEntity);
+                Page<AttendanceResponse> attendanceHistory = attendanceStatisticsProvider
+                                .getRecentHistoryByUser(user, 10);
                 return dashboardResponseMapper.toEmployeeDashboardResponse(
                                 totalReports,
                                 attendenceRate,
                                 attendanceHistory);
         }
 
-        private User getCurrentUser() {
-                String username = SecurityUtil.getCurrentUserName();
-                if (username == null) {
-                        throw new IllegalArgumentException("Không tìm thấy người dùng");
+        private String roleLabel(String roleName) {
+                if (!StringUtils.hasText(roleName)) {
+                        return "";
                 }
-                return userRepository.findByUsername(username)
-                                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng"));
-        }
-
-        private String roleLabel(Role role) {
-                String roleName = role.name().toLowerCase(Locale.ROOT);
-                return roleName.substring(0, 1).toUpperCase(Locale.ROOT) + roleName.substring(1);
+                String lower = roleName.toLowerCase(Locale.ROOT);
+                return lower.substring(0, 1).toUpperCase(Locale.ROOT) + lower.substring(1);
         }
 }

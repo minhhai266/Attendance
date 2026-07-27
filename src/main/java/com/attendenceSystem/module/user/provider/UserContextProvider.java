@@ -24,6 +24,11 @@ public class UserContextProvider {
                         "Không tìm thấy người dùng với tên đăng nhập: " + currentUserId));
     }
 
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(
+                "Không tìm thấy người dùng với id: " + id));
+    }
+
     public List<User> getEmployeesByDepartment(String departmentId) {
         if (departmentId == null || departmentId.isEmpty()) {
             return userRepository.findByRoleNot(Role.ADMIN);

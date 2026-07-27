@@ -1,7 +1,7 @@
 package com.attendenceSystem.module.dashboard.dto.response;
 
 import java.util.List;
-import java.util.Locale;
+import com.attendenceSystem.module.dashboard.util.DashboardCalculator;
 
 public record AdminDashboardResponse(
         long totalAccounts,
@@ -11,21 +11,14 @@ public record AdminDashboardResponse(
         List<AccountTypeDistributionResponse> accountTypeDistribution
 ) {
     public String activeRate() {
-        return formatRate(activeAccounts);
+        return DashboardCalculator.showResultStr(activeAccounts, totalAccounts);
     }
 
     public String inactiveRate() {
-        return formatRate(inactiveAccounts);
+        return DashboardCalculator.showResultStr(inactiveAccounts, totalAccounts);
     }
 
     public String pendingRate() {
-        return formatRate(pendingAccounts);
-    }
-
-    private String formatRate(long value) {
-        if (totalAccounts == 0) {
-            return "0.0%";
-        }
-        return String.format(Locale.ROOT, "%.1f%%", value * 100.0 / totalAccounts);
+        return DashboardCalculator.showResultStr(pendingAccounts, totalAccounts);
     }
 }

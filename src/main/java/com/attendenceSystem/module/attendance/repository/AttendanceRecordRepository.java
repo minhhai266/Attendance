@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
+import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.user.entity.User;
 import jakarta.persistence.LockModeType;
 
@@ -20,7 +21,9 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT a FROM AttendanceRecord a WHERE a.user = :user AND a.attendanceDate = :date")
-    Optional<AttendanceRecord> findByUserAndAttendanceDateWithLock(@Param("user") User user, @Param("date") LocalDate date);
+    Optional<AttendanceRecord> findByUserAndAttendanceDateWithLock(
+            @Param("user") User user,
+            @Param("date") LocalDate date);
 
     Page<AttendanceRecord> findByUser(User user, Pageable pageable);
 
@@ -28,16 +31,21 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
 
     Page<AttendanceRecord> findAllByOrderByAttendanceDateDesc(Pageable pageable);
 
-    long countByCheckInTimeNotNullAndCheckOutTimeNotNull();
-
     List<AttendanceRecord> findByAttendanceDate(LocalDate attendanceDate);
 
     List<AttendanceRecord> findByAttendanceDateBetween(LocalDate startDate, LocalDate endDate);
 
-    List<AttendanceRecord> findByAttendanceDateBetweenAndStatus(LocalDate startDate, LocalDate endDate, com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus status);
+    List<AttendanceRecord> findByAttendanceDateBetweenAndStatus(
+            LocalDate startDate,
+            LocalDate endDate,
+            AttendanceStatus status);
 
     List<AttendanceRecord> findAllByOrderByAttendanceDateDesc();
 
-    long countByAttendanceDateAndStatus(LocalDate attendanceDate, com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus status);
+    long countByAttendanceDateAndStatus(LocalDate attendanceDate, AttendanceStatus status);
+
+    long countByUser(User user);
+
+    long countByUserAndCheckInTimeNotNullAndCheckOutTimeNotNull(User user);
 
 }
