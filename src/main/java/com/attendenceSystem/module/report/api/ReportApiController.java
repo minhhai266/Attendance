@@ -12,10 +12,9 @@ import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.module.report.dto.response.ReportDetailResponse;
 import com.attendenceSystem.module.report.dto.response.ReportResponse;
 import com.attendenceSystem.module.report.service.ReportService;
-import com.attendenceSystem.module.user.entity.User;
+import com.attendenceSystem.module.user.dto.response.UserSimpleResponse;
 import com.attendenceSystem.module.user.entity.enums.Department;
-import com.attendenceSystem.module.user.entity.enums.Role;
-import com.attendenceSystem.module.user.repository.UserRepository;
+import com.attendenceSystem.module.user.provider.UserContextProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +26,7 @@ import java.util.List;
 public class ReportApiController {
 
     private final ReportService reportService;
-    private final UserRepository userRepository;
+    private final UserContextProvider userContextProvider;
 
     @GetMapping
     public ResponseEntity<Page<ReportResponse>> getAllReports(Pageable pageable) {
@@ -35,13 +34,13 @@ public class ReportApiController {
         return ResponseEntity.ok(reports);
     }
 
-    @GetMapping("/my-reports")
+    @GetMapping(Routes.Report.MY_REPORT)
     public ResponseEntity<Page<ReportResponse>> getMyReports(Pageable pageable) {
         Page<ReportResponse> reports = reportService.getMyReports(pageable);
         return ResponseEntity.ok(reports);
     }
 
-    @GetMapping("/shared-with-me")
+    @GetMapping(Routes.Report.SHARED)
     public ResponseEntity<Page<ReportResponse>> getSharedWithMe(Pageable pageable) {
         Page<ReportResponse> reports = reportService.getSharedWithMe(pageable);
         return ResponseEntity.ok(reports);
@@ -53,13 +52,9 @@ public class ReportApiController {
         return ResponseEntity.ok(report);
     }
 
-    @GetMapping("/users/by-department/{departmentId}")
-    public ResponseEntity<List<User>> getUsersByDepartment(@PathVariable String departmentId) {
-        Department department = Department.fromValue(departmentId);
-        if (department == null) {
-            return ResponseEntity.ok(List.of());
-        }
-        List<User> users = userRepository.findByDepartmentAndRoleNot(department, Role.ADMIN);
+    @GetMapping(Routes.Report.DEPARTMENT_USERS)
+    public ResponseEntity<List<UserSimpleResponse>> getUsersByDepartment(@PathVariable String departmentId) {
+        List<UserSimpleResponse> users = userContextProvider.getFullNamesByDepartmentAndRoleNotAdmin(departmentId);
         return ResponseEntity.ok(users);
     }
 }

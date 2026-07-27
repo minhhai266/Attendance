@@ -1,9 +1,11 @@
 package com.attendenceSystem.module.user.provider;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.attendenceSystem.module.user.dto.response.UserSimpleResponse;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Role;
@@ -40,5 +42,13 @@ public class UserContextProvider {
         }
 
         return userRepository.findByDepartmentAndRoleNot(dept, Role.ADMIN);
+    }
+
+    public List<UserSimpleResponse> getFullNamesByDepartmentAndRoleNotAdmin(String departmentId) {
+        Department department = Department.fromValue(departmentId);
+        if (department == null) {
+            return Collections.emptyList();
+        }
+        return userRepository.findFullNameByDepartmentAndRoleNot(department, Role.ADMIN);
     }
 }

@@ -61,19 +61,20 @@
                                 <select name="departmentId" id="departmentSelect" required>
                                     <option value="" disabled selected>Chọn phòng ban</option>
 
-                                    <option th:each="d : ${departments}" th:value="${d.roomCode}" th:text="${d.displayName}">
+                                    <option th:each="d : ${departments}" th:value="${d.roomCode}"
+                                        th:text="${d.displayName}">
                                     </option>
                                 </select>
                             </div>
 
-                             <!-- Người được xem -->
-                             <div class="form-group">
-                                 <label>Người được chia sẻ</label>
+                            <!-- Người được xem -->
+                            <div class="form-group">
+                                <label>Người được chia sẻ</label>
 
-                                 <div id="userCheckboxes" class="checkbox-container">
-                                     <p class="placeholder-text">Chọn phòng ban trước</p>
-                                 </div>
-                             </div>
+                                <div id="userCheckboxes" class="checkbox-container">
+                                    <p class="placeholder-text">Chọn phòng ban trước</p>
+                                </div>
+                            </div>
 
                             <!-- Upload file -->
                             <div class="form-group">
@@ -122,15 +123,18 @@
         document.getElementById("departmentSelect").addEventListener("change", function () {
 
             const departmentId = this.value;
+            const container = document.getElementById("userCheckboxes");
 
-            fetch(`/api/report/users/by-department/${departmentId}`)
+            if (!departmentId) {
+                container.innerHTML = "";
+                return;
+            }
+            fetch(`/api/report/departments/${departmentId}/users`)
                 .then(res => res.json())
                 .then(data => {
-
-                    const container = document.getElementById("userCheckboxes");
                     container.innerHTML = "";
 
-                    if (data.length === 0) {
+                    if (!data || data.length === 0) {
                         container.innerHTML = "<p class='placeholder-text'>Không có người dùng trong phòng ban này</p>";
                         return;
                     }

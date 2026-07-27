@@ -70,12 +70,14 @@ public final class Routes {
 
     public static final class Report {
         public static final String ROOT = "/report";
+        public static final String MY_REPORT = "/my-reports";
+        public static final String SHARED = "/shared-with-me";
+        public static final String DEPARTMENT_USERS = "/departments/{departmentId}/users";
     }
 
     public static final class Otp {
         public static final String ROOT = "/otp";
         public static final String SEND = "/send";
         public static final String VERIFY = "/verify";
-
     }
 }
