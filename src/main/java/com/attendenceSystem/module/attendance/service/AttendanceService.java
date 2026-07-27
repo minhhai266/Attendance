@@ -16,14 +16,6 @@ import com.attendenceSystem.module.user.entity.User;
 
 public interface AttendanceService {
 
-    AttendanceResponse checkIn();
-
-    AttendanceResponse checkOut();
-
-    AttendanceResponse checkIn(User user);
-
-    AttendanceResponse checkOut(User user);
-
     Page<AttendanceResponse> getAttendanceHistory(Pageable pageable);
 
     ManagerStatsResponse getManagerStats(String departmentId, LocalDate startDate, LocalDate endDate);

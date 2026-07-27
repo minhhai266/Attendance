@@ -12,7 +12,6 @@ import org.springframework.util.StringUtils;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
-import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
 import com.attendenceSystem.module.attendance.provider.AttendanceStatisticsProvider;
 import com.attendenceSystem.module.dashboard.dto.response.AccountTypeDistributionResponse;
 import com.attendenceSystem.module.dashboard.dto.response.AdminDashboardResponse;
@@ -72,16 +71,19 @@ public class DashboardServiceImpl implements DashboardService {
                                 .getCountByDateAndStatus(today, AttendanceStatus.LATE);
                 long attendedToday = presentToday + lateToday;
                 long absentToday = Math.max(0, totalEmployees - attendedToday);
-                Page<AttendanceResponse> attendanceHistory = attendanceStatisticsProvider.getRecentHistory(10);
+                Page<AttendanceResponse> attendanceHistory = attendanceStatisticsProvider
+                                .getRecentHistory(10);
                 var monday = TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY).adjustInto(today);
                 var weeklyStats = IntStream.rangeClosed(2, 6)
                                 .mapToObj(dayOfWeek -> {
                                         LocalDate date = ((LocalDate) monday)
                                                         .plusDays(dayOfWeek - 2);
-                                        long present = attendanceStatisticsProvider.getCountByDateAndStatus(date,
-                                                        AttendanceStatus.PRESENT);
-                                        long late = attendanceStatisticsProvider.getCountByDateAndStatus(date,
-                                                        AttendanceStatus.LATE);
+                                        long present = attendanceStatisticsProvider
+                                                        .getCountByDateAndStatus(date,
+                                                                        AttendanceStatus.PRESENT);
+                                        long late = attendanceStatisticsProvider
+                                                        .getCountByDateAndStatus(date,
+                                                                        AttendanceStatus.LATE);
                                         long attended = present + late;
                                         long absent = Math.max(0, totalEmployees - attended);
                                         return new DailyAttendanceStats(
@@ -107,12 +109,12 @@ public class DashboardServiceImpl implements DashboardService {
                 long totalReports = reportStatisticsProvider.countReportsByEmployee(user);
                 long totalDays = attendanceStatisticsProvider.getTotalDaysByUser(user);
                 long attendedDays = attendanceStatisticsProvider.getAttendedDaysByUser(user);
-                String attendenceRate = DashboardCalculator.showResultStr(attendedDays, totalDays);
+                String attendanceRate = DashboardCalculator.showResultStr(attendedDays, totalDays);
                 Page<AttendanceResponse> attendanceHistory = attendanceStatisticsProvider
                                 .getRecentHistoryByUser(user, 10);
                 return dashboardResponseMapper.toEmployeeDashboardResponse(
                                 totalReports,
-                                attendenceRate,
+                                attendanceRate,
                                 attendanceHistory);
         }
 

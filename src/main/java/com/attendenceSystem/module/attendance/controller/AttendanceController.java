@@ -21,6 +21,7 @@ import com.attendenceSystem.module.attendance.exception.AlreadyCheckedInExceptio
 import com.attendenceSystem.module.attendance.exception.AlreadyCheckedOutException;
 import com.attendenceSystem.module.attendance.exception.InvalidAttendanceStateException;
 import com.attendenceSystem.module.attendance.exception.NotCheckedInException;
+import com.attendenceSystem.module.attendance.service.AttendanceActionService;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
 import com.attendenceSystem.module.attendance.service.LeaveService;
 
@@ -35,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AttendanceController {
     private final AttendanceService attendanceService;
     private final LeaveService leaveService;
+    private final AttendanceActionService attendanceActionService;
 
     @GetMapping
     public String toAttendanceListPage(@PageableDefault(size = 10) Pageable pageable, Model model) {
@@ -44,14 +46,14 @@ public class AttendanceController {
 
     @PostMapping(Routes.Attendance.CHECK_IN)
     public String checkIn(RedirectAttributes redirectAttributes) {
-        AttendanceResponse attendance = attendanceService.checkIn();
+        AttendanceResponse attendance = attendanceActionService.checkIn();
         redirectAttributes.addFlashAttribute("successMessage", "Điểm danh thành công cho " + attendance.fullName());
         return Views.Attendance.LIST;
     }
 
     @PostMapping(Routes.Attendance.CHECK_OUT)
     public String checkOut(RedirectAttributes redirectAttributes) {
-        AttendanceResponse attendance = attendanceService.checkOut();
+        AttendanceResponse attendance = attendanceActionService.checkOut();
         redirectAttributes.addFlashAttribute("successMessage", "Checkout thành công cho " + attendance.fullName());
         return Views.Attendance.LIST;
     }

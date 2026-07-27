@@ -15,6 +15,7 @@ import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveDetailResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
+import com.attendenceSystem.module.attendance.service.AttendanceActionService;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
 import com.attendenceSystem.module.attendance.service.LeaveService;
 
@@ -26,17 +27,18 @@ import lombok.RequiredArgsConstructor;
 public class AttendanceApiController {
 
     private final AttendanceService attendanceService;
+    private final AttendanceActionService attendanceActionService;
     private final LeaveService leaveService;
 
     @PostMapping(Routes.Attendance.CHECK_IN)
     public ResponseEntity<AttendanceResponse> checkIn() {
-        AttendanceResponse resp = attendanceService.checkIn();
+        AttendanceResponse resp = attendanceActionService.checkIn();
         return ResponseEntity.ok(resp);
     }
 
     @PostMapping(Routes.Attendance.CHECK_OUT)
     public ResponseEntity<AttendanceResponse> checkOut() {
-        AttendanceResponse resp = attendanceService.checkOut();
+        AttendanceResponse resp = attendanceActionService.checkOut();
         return ResponseEntity.ok(resp);
     }
 

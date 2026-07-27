@@ -3,14 +3,13 @@ package com.attendenceSystem.module.attendance.util.impl;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
-import com.attendenceSystem.module.attendance.util.TimeZoneProvider;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,58 +17,34 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 public class AttendanceCalculatorImpl implements AttendanceCalculator {
-    
-    private final TimeZoneProvider timeZoneProvider;
 
     @Value("${attendance.start-work:08:00}")
-    private String startWorkTime;
+    private String startWorkTimeStr;
 
     @Value("${attendance.end-work:17:00}")
-    private String endWorkTime;
+    private String endWorkTimeStr;
 
     // Cache thời gian làm việc
-    private volatile LocalTime cachedStartWorkTime;
-    private volatile LocalTime cachedEndWorkTime;
+    private LocalTime startWorkTime;
+    private LocalTime endWorkTime;
 
-    private ZoneId getZoneId() {
+    @PostConstruct
+    public void init() {
+        // Init Start Time
         try {
-            return timeZoneProvider.getZoneId();
+            this.startWorkTime = LocalTime.parse(startWorkTimeStr);
         } catch (Exception e) {
-            log.warn("Cannot get timezone from TimeZoneProvider, using default", e);
-            return ZoneId.of("Asia/Ho_Chi_Minh");
+            log.warn("Invalid start work time: {}, using default 08:00", startWorkTimeStr);
+            this.startWorkTime = LocalTime.of(8, 0);
         }
-    }
 
-    private LocalTime getStartWorkTime() {
-        if (cachedStartWorkTime == null) {
-            synchronized (this) {
-                if (cachedStartWorkTime == null) {
-                    try {
-                        cachedStartWorkTime = LocalTime.parse(startWorkTime);
-                    } catch (Exception e) {
-                        log.warn("Invalid start work time: {}, using default 08:00", startWorkTime);
-                        cachedStartWorkTime = LocalTime.of(8, 0);
-                    }
-                }
-            }
+        // Init End Time
+        try {
+            this.endWorkTime = LocalTime.parse(endWorkTimeStr);
+        } catch (Exception e) {
+            log.warn("Invalid end work time: {}, using default 17:00", endWorkTimeStr);
+            this.endWorkTime = LocalTime.of(17, 0);
         }
-        return cachedStartWorkTime;
-    }
-
-    private LocalTime getEndWorkTime() {
-        if (cachedEndWorkTime == null) {
-            synchronized (this) {
-                if (cachedEndWorkTime == null) {
-                    try {
-                        cachedEndWorkTime = LocalTime.parse(endWorkTime);
-                    } catch (Exception e) {
-                        log.warn("Invalid end work time: {}, using default 17:00", endWorkTime);
-                        cachedEndWorkTime = LocalTime.of(17, 0);
-                    }
-                }
-            }
-        }
-        return cachedEndWorkTime;
     }
 
     @Override
@@ -77,8 +52,7 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
         if (checkInTime == null) {
             return false;
         }
-        LocalTime checkIn = checkInTime.atZone(getZoneId()).toLocalTime();
-        return checkIn.isAfter(getStartWorkTime());
+        return checkInTime.toLocalTime().isAfter(startWorkTime);
     }
 
     @Override
@@ -86,8 +60,7 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
         if (checkOutTime == null) {
             return false;
         }
-        LocalTime checkOut = checkOutTime.atZone(getZoneId()).toLocalTime();
-        return checkOut.isBefore(getEndWorkTime());
+        return checkOutTime.toLocalTime().isBefore(endWorkTime);
     }
 
     @Override

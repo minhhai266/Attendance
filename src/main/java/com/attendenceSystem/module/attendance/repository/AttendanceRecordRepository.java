@@ -17,35 +17,35 @@ import com.attendenceSystem.module.user.entity.User;
 import jakarta.persistence.LockModeType;
 
 public interface AttendanceRecordRepository extends JpaRepository<AttendanceRecord, Long> {
-    Optional<AttendanceRecord> findByUserAndAttendanceDate(User user, LocalDate attendanceDate);
+        Optional<AttendanceRecord> findByUserAndAttendanceDate(User user, LocalDate attendanceDate);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT a FROM AttendanceRecord a WHERE a.user = :user AND a.attendanceDate = :date")
-    Optional<AttendanceRecord> findByUserAndAttendanceDateWithLock(
-            @Param("user") User user,
-            @Param("date") LocalDate date);
+        @Lock(LockModeType.PESSIMISTIC_WRITE)
+        @Query("SELECT a FROM AttendanceRecord a WHERE a.user = :user AND a.attendanceDate = :date")
+        Optional<AttendanceRecord> findByUserAndAttendanceDateWithLock(
+                        @Param("user") User user,
+                        @Param("date") LocalDate date);
 
-    Page<AttendanceRecord> findByUser(User user, Pageable pageable);
+        Page<AttendanceRecord> findByUser(User user, Pageable pageable);
 
-    long countByAttendanceDate(LocalDate attendanceDate);
+        long countByAttendanceDate(LocalDate attendanceDate);
 
-    Page<AttendanceRecord> findAllByOrderByAttendanceDateDesc(Pageable pageable);
+        Page<AttendanceRecord> findAllByOrderByAttendanceDateDesc(Pageable pageable);
 
-    List<AttendanceRecord> findByAttendanceDate(LocalDate attendanceDate);
+        List<AttendanceRecord> findByAttendanceDate(LocalDate attendanceDate);
 
-    List<AttendanceRecord> findByAttendanceDateBetween(LocalDate startDate, LocalDate endDate);
+        List<AttendanceRecord> findByAttendanceDateBetween(LocalDate startDate, LocalDate endDate);
 
-    List<AttendanceRecord> findByAttendanceDateBetweenAndStatus(
-            LocalDate startDate,
-            LocalDate endDate,
-            AttendanceStatus status);
+        List<AttendanceRecord> findByAttendanceDateBetweenAndStatus(
+                        LocalDate startDate,
+                        LocalDate endDate,
+                        AttendanceStatus status);
 
-    List<AttendanceRecord> findAllByOrderByAttendanceDateDesc();
+        List<AttendanceRecord> findAllByOrderByAttendanceDateDesc();
 
-    long countByAttendanceDateAndStatus(LocalDate attendanceDate, AttendanceStatus status);
+        long countByAttendanceDateAndStatus(LocalDate attendanceDate, AttendanceStatus status);
 
-    long countByUser(User user);
+        long countByUser(User user);
 
-    long countByUserAndCheckInTimeNotNullAndCheckOutTimeNotNull(User user);
+        long countByUserAndCheckInTimeNotNullAndCheckOutTimeNotNull(User user);
 
 }

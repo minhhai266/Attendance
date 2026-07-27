@@ -2,6 +2,7 @@ package com.attendenceSystem.module.faceid.service.impl;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
+import com.attendenceSystem.module.attendance.service.AttendanceActionService;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
 import com.attendenceSystem.module.faceid.dto.FaceIdAction;
 import com.attendenceSystem.module.faceid.dto.request.FaceIdAttendanceRequest;
@@ -29,6 +30,7 @@ import java.util.Optional;
 public class FaceIdAttendanceServiceImpl implements FaceIdAttendanceService {
 
     private final AttendanceService attendanceService;
+    private final AttendanceActionService attendanceActionService;
     private final UserRepository userRepository;
     private final FaceIdLogService faceIdLogService;
 
@@ -81,12 +83,12 @@ public class FaceIdAttendanceServiceImpl implements FaceIdAttendanceService {
 
             if (todayRecord.isEmpty()) {
                 // Not checked in yet -> CHECKIN
-                attendanceResponse = attendanceService.checkIn(user);
+                attendanceResponse = attendanceActionService.checkIn(user);
                 action = FaceIdAction.CHECKIN;
                 message = "Checked in successfully";
             } else if (todayRecord.get().getCheckOutTime() == null) {
                 // Checked in, not checked out -> CHECKOUT
-                attendanceResponse = attendanceService.checkOut(user);
+                attendanceResponse = attendanceActionService.checkOut(user);
                 action = FaceIdAction.CHECKOUT;
                 message = "Checked out successfully";
             } else {

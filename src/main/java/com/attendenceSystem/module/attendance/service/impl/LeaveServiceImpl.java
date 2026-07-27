@@ -32,7 +32,7 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Transactional
     @Override
-    public void acceptLeave(Long id) {
+    public void acceptLeave(final Long id) {
         validateManagerAction();
         LeaveRequest leaveRequest = findByIdWithStatusPending(id);
         leaveRequest.setStatus(LeaveStatus.APPROVED);
@@ -40,7 +40,7 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Transactional
     @Override
-    public void rejectLeave(Long id) {
+    public void rejectLeave(final Long id) {
         validateManagerAction();
         LeaveRequest leaveRequest = findByIdWithStatusPending(id);
         leaveRequest.setStatus(LeaveStatus.REJECTED);
