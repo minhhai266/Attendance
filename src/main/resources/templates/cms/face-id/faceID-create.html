@@ -15,128 +15,101 @@
 
     <div class="layout">
 
-        <!-- SIDEBAR -->
         <div th:replace="~{cms/sidebar/sidebar-role :: sidebar}"></div>
 
-        <!-- CONTENT -->
         <div class="container-layout">
 
-            <!-- HEADER -->
             <div class="container-header">
                 <h1>Đăng ký Face ID</h1>
                 <p>Đăng ký khuôn mặt để sử dụng hệ thống ra vào phòng</p>
             </div>
 
-            <!-- MAIN -->
             <main class="main-container">
 
                 <section class="dashboard-card">
 
                     <div class="card-header">
-                        <h2>Đăng ký khuôn mặt</h2>
+                        <div>
+                            <h2>Đăng ký khuôn mặt</h2>
+                            <p>Thu thập 5 góc khuôn mặt để tăng độ chính xác nhận diện.</p>
+                        </div>
+                        <span class="card-badge">Face ID</span>
                     </div>
 
                     <div class="card-body">
 
-                        <!-- THÔNG TIN -->
                         <div class="face-register-meta">
-                            <h3>Chuyển phòng nhanh</h3>
-                            <h4>Lưu ý: Khi đã chuyển phòng</h4>
-                            <div>
-                                <input type="text" id="roomCode" placeholder="Nhập mã phòng (VD: P101)">
-                                <button id="btnSwitchRoom" type="button">
-                                    Chuyển phòng
-                                </button>
+                            <div class="meta-card">
+                                <div class="meta-card-header">
+                                    <h3>Thông tin đăng ký</h3>
+                                    <span class="meta-badge">Bắt buộc</span>
+                                </div>
+
+                                <div class="room-code-field">
+                                    <label for="roomCode">Mã phòng</label>
+                                    <input type="text" id="roomCode" placeholder="VD: P101">
+                                    <small>Nhập mã phòng trước khi bật camera và bắt đầu quét.</small>
+                                </div>
+
+                                <div class="face-sample-summary">
+                                    <button id="faceSampleCount" class="face-sample-count-btn" type="button">
+                                        0 / 5 mẫu
+                                    </button>
+                                    <span id="faceSampleStatusText">
+                                        Chờ nhập mã phòng để bắt đầu.
+                                    </span>
+                                </div>
                             </div>
-                            <h3>Thông tin đăng ký</h3>
-
-                            <div class="face-sample-summary">
-
-                                <button id="faceSampleCount" class="face-sample-count-btn" type="button">
-                                    0 / 5 mẫu
-                                </button>
-
-                                <span id="faceSampleStatusText">
-                                    Nhập mã phòng và bắt đầu quét khuôn mặt.
-                                </span>
-
-                            </div>
-
                         </div>
 
-                        <!-- GRID -->
                         <div class="face-register-grid">
 
-                            <!-- CAMERA -->
                             <div class="panel">
 
                                 <div class="panel-header">
                                     <h3>Camera đăng ký</h3>
-
                                     <button id="faceRegisterToggleBtn" type="button">
                                         Bật camera
                                     </button>
                                 </div>
 
-                                <!-- MODE -->
                                 <div class="mode-tabs">
                                     <button class="active" type="button">
                                         Đăng ký mới
                                     </button>
-
                                     <button type="button" id="rescanBtn">
                                         Quét lại
                                     </button>
                                 </div>
 
                                 <p class="face-mode-hint">
-                                    Hệ thống yêu cầu 5 góc khuôn mặt để tăng độ chính xác nhận diện.
+                                    Hệ thống yêu cầu 5 góc khuôn mặt để tăng độ chính xác nhận diện. Hãy giữ khoảng cách vừa đủ và quay mặt chậm.
                                 </p>
 
-                                <!-- GUIDE -->
                                 <div class="guide-box">
+                                    <div id="scanGuideCurrent">Nhìn thẳng vào camera</div>
+                                    <div id="scanGuideSteps">Bước 1 / 5</div>
 
-                                    <div id="scanGuideCurrent">
-                                        Nhìn thẳng vào camera
+                                    <div id="detectionResult" class="detection-result">
+                                        <div id="detectedFace">Chưa phát hiện gương mặt</div>
+                                        <div id="detectionConfidence"></div>
                                     </div>
-
-                                    <div id="scanGuideSteps">
-                                        Bước 1 / 5
-                                    </div>
-
                                 </div>
 
-                                <!-- VIDEO -->
                                 <div class="video-wrap">
-
-                                    <video id="video" autoplay playsinline muted>
-                                    </video>
-
-                                    <canvas id="captureCanvas" style="display:none;">
-                                    </canvas>
-
+                                    <video id="video" autoplay playsinline muted></video>
+                                    <canvas id="captureCanvas" style="display:none;"></canvas>
                                 </div>
 
-                                <!-- ACTION -->
                                 <div class="action-row">
-
-                                    <button type="button" id="captureFaceBtn">
-                                        📷 Chụp mẫu
-                                    </button>
-
-                                    <button type="button" id="resetFaceScanBtn" class="secondary">
-                                        Làm lại
-                                    </button>
-
+                                    <button type="button" id="captureFaceBtn">📷 Chụp mẫu</button>
+                                    <button type="button" id="resetFaceScanBtn" class="secondary">Làm lại</button>
                                 </div>
 
-                                <!-- MESSAGE -->
-                                <div id="faceRegisterMessage" class="message">
-                                </div>
+                                <div id="faceRegisterMessage" class="message">Sẵn sàng để đăng ký Face ID.</div>
 
                             </div>
 
-                            <!-- GUIDE PANEL -->
                             <div class="panel">
 
                                 <div class="panel-header">
@@ -152,8 +125,19 @@
                                 </ul>
 
                                 <p class="muted">
-                                    Đảm bảo khuôn mặt đủ sáng, không bị che bởi khẩu trang hoặc kính râm.
+                                    Đảm bảo khuôn mặt đủ sáng, không bị che bởi khẩu trang hoặc kính râm. Tránh quay quá nhanh để camera đủ thời gian nhận diện.
                                 </p>
+
+                                <div class="status-box">
+                                    <div class="status-item">
+                                        <h4>Trạng thái</h4>
+                                        <p id="statusText">Chờ kích hoạt camera</p>
+                                    </div>
+                                    <div class="status-item">
+                                        <h4>Tiến trình</h4>
+                                        <p id="progressText">Bước 1 / 5</p>
+                                    </div>
+                                </div>
 
                             </div>
 
@@ -177,15 +161,25 @@
         const toggleBtn = document.getElementById("faceRegisterToggleBtn");
         const captureBtn = document.getElementById("captureFaceBtn");
         const resetBtn = document.getElementById("resetFaceScanBtn");
+        const rescanBtn = document.getElementById("rescanBtn");
+        const roomCodeInput = document.getElementById("roomCode");
 
         const sampleCountBtn = document.getElementById("faceSampleCount");
         const sampleStatusText = document.getElementById("faceSampleStatusText");
         const scanGuideCurrent = document.getElementById("scanGuideCurrent");
         const scanGuideSteps = document.getElementById("scanGuideSteps");
         const messageBox = document.getElementById("faceRegisterMessage");
+        const detectionResult = document.getElementById("detectionResult");
+        const detectedFace = document.getElementById("detectedFace");
+        const detectionConfidence = document.getElementById("detectionConfidence");
+        const statusText = document.getElementById("statusText");
+        const progressText = document.getElementById("progressText");
 
         let stream = null;
         let capturedSamples = [];
+        let autoCaptureTimer = null;
+        let isAutoCapturing = false;
+        let isStreaming = false;
 
         const guideSteps = [
             "Nhìn thẳng vào camera",
@@ -195,79 +189,164 @@
             "Cúi mặt xuống"
         ];
 
-        // MỞ CAMERA
-        toggleBtn.addEventListener("click", async () => {
+        function setMessage(text, type = "info") {
+            messageBox.innerHTML = text;
+            messageBox.className = `message ${type}`;
+        }
 
+        function updateDetectionStatus(message, color) {
+            detectedFace.textContent = message;
+            detectedFace.style.color = color;
+            detectionConfidence.textContent = "";
+        }
+
+        function startAutoCapture() {
+            if (isAutoCapturing || !isStreaming) return;
+
+            isAutoCapturing = true;
+            autoCaptureTimer = setInterval(() => {
+                if (!stream || capturedSamples.length >= 5) {
+                    return;
+                }
+                captureFrame();
+            }, 1000);
+        }
+
+        function stopAutoCapture() {
+            isAutoCapturing = false;
+            if (autoCaptureTimer) {
+                clearInterval(autoCaptureTimer);
+                autoCaptureTimer = null;
+            }
+        }
+
+        function captureFrame() {
+            try {
+                if (!stream || capturedSamples.length >= 5) {
+                    return;
+                }
+
+                const ctx = canvas.getContext("2d");
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 480;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const imageBase64 = canvas.toDataURL("image/jpeg", 0.9);
+                capturedSamples.push({
+                    imageBase64: imageBase64,
+                    timestamp: new Date().toISOString()
+                });
+
+                updateUI();
+                setMessage(`✅ Đã thu thập mẫu ${capturedSamples.length}/5`, "success");
+                updateDetectionStatus("📷 Mẫu đã được ghi nhận", "#27ae60");
+
+                if (capturedSamples.length === 5) {
+                    stopAutoCapture();
+                    setMessage("✅ Đã thu thập đủ 5 mẫu, đang gửi...", "success");
+                    submitSamples();
+                }
+            } catch (error) {
+                console.error("Auto-capture error:", error);
+            }
+        }
+
+        toggleBtn.addEventListener("click", async () => {
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
                 stream = null;
                 video.srcObject = null;
                 toggleBtn.textContent = "Bật camera";
+                isStreaming = false;
+                stopAutoCapture();
+                detectionResult.style.display = "none";
+                setMessage("Camera đã được tắt.", "info");
+                updateUI();
+                return;
+            }
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                setMessage("❌ Trình duyệt không hỗ trợ camera.", "error");
                 return;
             }
 
             try {
-
                 stream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
+                    video: {
+                        facingMode: "user",
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    },
                     audio: false
                 });
 
                 video.srcObject = stream;
+                await video.play().catch(() => {});
                 toggleBtn.textContent = "Tắt camera";
-
+                isStreaming = true;
+                detectionResult.style.display = "block";
+                setMessage("📹 Camera đã sẵn sàng. Đang thu thập mẫu tự động...", "info");
+                updateDetectionStatus("Đang chờ mẫu khuôn mặt", "#3498db");
+                startAutoCapture();
+                updateUI();
             } catch (error) {
-
                 console.error(error);
-                alert("Không thể mở camera");
-
+                setMessage("❌ Không thể mở camera. Vui lòng kiểm tra quyền truy cập.", "error");
             }
         });
 
-        // CHỤP ẢNH
         captureBtn.addEventListener("click", () => {
+            const roomCode = roomCodeInput.value.trim();
 
-            if (!video.srcObject) {
-                alert("Vui lòng bật camera trước.");
+            if (!isStreaming) {
+                setMessage("❌ Vui lòng bật camera trước.", "error");
+                return;
+            }
+
+            if (!roomCode) {
+                setMessage("❌ Vui lòng nhập mã phòng trước khi chụp.", "error");
                 return;
             }
 
             if (capturedSamples.length >= 5) {
-                alert("Đã đủ 5 mẫu.");
+                setMessage("✅ Đã đủ 5 mẫu. Đang xử lý đăng ký.", "success");
                 return;
             }
 
-            const ctx = canvas.getContext("2d");
-
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-
-            ctx.drawImage(
-                video,
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
-
-            const imageBase64 =
-                canvas.toDataURL("image/jpeg");
-
-            capturedSamples.push(imageBase64);
-
-            updateUI();
-
-            if (capturedSamples.length === 5) {
-
-                // Gửi lên server
-                submitSamples();
-
-            }
+            captureFrame();
         });
 
-        // Gửi ảnh lên server
+        resetBtn.addEventListener("click", () => {
+            capturedSamples = [];
+            stopAutoCapture();
+            if (isStreaming) {
+                startAutoCapture();
+            }
+            updateUI();
+            setMessage("Đã làm lại quá trình quét.", "info");
+            updateDetectionStatus("Đang chờ mẫu mới", "#3498db");
+        });
+
+        rescanBtn.addEventListener("click", () => {
+            capturedSamples = [];
+            stopAutoCapture();
+            if (isStreaming) {
+                startAutoCapture();
+            }
+            updateUI();
+            setMessage("Đã bắt đầu quét lại từ đầu.", "info");
+            updateDetectionStatus("Đang chờ mẫu mới", "#3498db");
+        });
+
+        roomCodeInput.addEventListener("input", updateUI);
+
         async function submitSamples() {
-            const roomCode = document.getElementById('roomCode').value;
+            const roomCode = roomCodeInput.value.trim();
+
+            if (!roomCode) {
+                setMessage("❌ Vui lòng nhập mã phòng", "error");
+                return;
+            }
 
             try {
                 const response = await fetch('/api/face-id/register', {
@@ -277,66 +356,55 @@
                     },
                     body: JSON.stringify({
                         roomCode: roomCode,
-                        samples: capturedSamples
+                        samples: capturedSamples.map(sample => sample.imageBase64)
                     })
                 });
 
                 if (response.ok) {
                     const result = await response.json();
                     if (result.success) {
-                        messageBox.innerHTML = "✅ " + result.message;
+                        setMessage(`✅ ${result.message}`, "success");
+                        setTimeout(() => {
+                            window.location.href = "/face-id";
+                        }, 2000);
                     } else {
-                        messageBox.innerHTML = "❌ Lỗi: " + result.message;
+                        setMessage(`❌ Lỗi: ${result.message}`, "error");
                     }
                 } else {
-                    messageBox.innerHTML = "❌ Lỗi: Không thể gửi dữ liệu lên server";
+                    setMessage("❌ Lỗi: Không thể gửi dữ liệu lên server", "error");
                 }
             } catch (error) {
                 console.error(error);
-                messageBox.innerHTML = "❌ Lỗi kết nối: " + error.message;
+                setMessage(`❌ Lỗi kết nối: ${error.message}`, "error");
             }
         }
 
-        // RESET
-        resetBtn.addEventListener("click", () => {
-
-            capturedSamples = [];
-
-            updateUI();
-
-            messageBox.innerHTML =
-                "Đã làm lại quá trình quét.";
-
-        });
-
-        // UPDATE UI
         function updateUI() {
-
             const count = capturedSamples.length;
+            const roomCode = roomCodeInput.value.trim();
 
-            sampleCountBtn.textContent =
-                `${count} / 5 mẫu`;
+            sampleCountBtn.textContent = `${count} / 5 mẫu`;
+            sampleStatusText.textContent = count === 0
+                ? (roomCode ? "Đã sẵn sàng để thu thập mẫu." : "Chờ nhập mã phòng để bắt đầu.")
+                : `Đã thu thập ${count}/5 mẫu khuôn mặt`;
 
-            sampleStatusText.textContent =
-                `Đã thu thập ${count}/5 mẫu khuôn mặt`;
+            captureBtn.disabled = !isStreaming || !roomCode || count >= 5;
+            resetBtn.disabled = count === 0;
+            rescanBtn.disabled = count === 0;
 
             if (count < 5) {
-
-                scanGuideCurrent.textContent =
-                    guideSteps[count];
-
-                scanGuideSteps.textContent =
-                    `Bước ${count + 1} / 5`;
-
+                scanGuideCurrent.textContent = guideSteps[count];
+                scanGuideSteps.textContent = `Bước ${count + 1} / 5`;
+                progressText.textContent = `Bước ${count + 1} / 5`;
             } else {
-
-                scanGuideCurrent.textContent =
-                    "Hoàn thành đăng ký";
-
-                scanGuideSteps.textContent =
-                    "5 / 5";
-
+                scanGuideCurrent.textContent = "Hoàn thành đăng ký";
+                scanGuideSteps.textContent = "5 / 5";
+                progressText.textContent = "5 / 5";
             }
+
+            statusText.textContent = !isStreaming
+                ? "Chờ kích hoạt camera"
+                : (count === 5 ? "Hoàn tất thu thập" : "Camera đang hoạt động");
         }
 
         updateUI();

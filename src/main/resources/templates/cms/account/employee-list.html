@@ -40,30 +40,27 @@
 
                     </div>
 
-                    <!-- Search + Filter -->
+                    <!-- Search + Room filter -->
                     <div class="toolbar">
 
                         <div class="search-box">
-                            <input type="text" placeholder="Tìm theo tên, email hoặc mã nhân viên...">
+                            <input id="employeeSearch" type="text"
+                                placeholder="Tìm theo tên, email hoặc mã nhân viên...">
                         </div>
 
-                        <div class="filter-box">
+                    </div>
 
-                            <select>
-                                <option>Tất cả phòng ban</option>
-                                <option th:each="dept : ${departments}" th:value="${dept.name()}"
-                                    th:text="${dept.displayName}"></option>
-                            </select>
+                    <div class="room-list" id="roomList">
+                        <button class="room-chip active" type="button" data-room="all">
+                            <span>Tất cả phòng</span>
+                            <strong>0</strong>
+                        </button>
 
-                            <select>
-                                <option>Tất cả trạng thái</option>
-                                <option>Đang làm việc</option>
-                                <option>Nghỉ việc</option>
-                                <option>Tạm khóa</option>
-                            </select>
-
-                        </div>
-
+                        <button class="room-chip" type="button" th:each="dept : ${departments}"
+                            th:attr="data-room=${dept.name()}">
+                            <span th:text="${dept.displayName}"></span>
+                            <strong>0</strong>
+                        </button>
                     </div>
 
                     <!-- TABLE -->
@@ -93,7 +90,8 @@
 
                         <tbody>
 
-                            <tr th:each="user : ${users.content}">
+                            <tr class="employee-row" th:each="user : ${users.content}"
+                                th:attr="data-room=${user.department() != null ? user.department() : ''}, data-name=${user.fullName()}, data-email=${user.email()}, data-id=${user.username()}">
 
                                 <td>
 
@@ -145,6 +143,10 @@
 
                                 </td>
 
+                            </tr>
+
+                            <tr id="noResultRow" class="no-results-row">
+                                <td colspan="7">Không có nhân viên nào phù hợp.</td>
                             </tr>
 
                         </tbody>
@@ -212,12 +214,67 @@
         </div>
     </section>
     <script th:inline="javascript">
-        // Tạo một biến global để cầu nối sang file JS tĩnh
         window.serverRoomCodes = {};
 
         /*[# th:each="dept : ${T(com.attendenceSystem.module.user.entity.enums.Department).values()}"]*/
-        window.serverRoomCodes[[${ dept.roomCode }]] = [[${ dept.joinCode }]];
+       // window.serverRoomCodes[[${ dept.roomCode }]] = [[${ dept.joinCode }]];
         /*[/]*/
+    </script>
+    <script>
+        const roomChips = Array.from(document.querySelectorAll('.room-chip'));
+        const employeeRows = Array.from(document.querySelectorAll('.employee-row'));
+        const searchInput = document.getElementById('employeeSearch');
+        const noResultRow = document.getElementById('noResultRow');
+
+        function normalize(text) {
+            return (text || '').toLowerCase().trim();
+        }
+
+        function updateRoomCounts() {
+            const counts = {};
+
+            employeeRows.forEach(row => {
+                const room = row.dataset.room || 'unknown';
+                counts[room] = (counts[room] || 0) + 1;
+            });
+
+            roomChips.forEach(chip => {
+                const room = chip.dataset.room || 'all';
+                const countEl = chip.querySelector('strong');
+                countEl.textContent = room === 'all' ? employeeRows.length : (counts[room] || 0);
+            });
+        }
+
+        function applyFilters() {
+            const activeRoom = document.querySelector('.room-chip.active')?.dataset.room || 'all';
+            const keyword = normalize(searchInput?.value);
+            let visibleCount = 0;
+
+            employeeRows.forEach(row => {
+                const matchesRoom = activeRoom === 'all' || row.dataset.room === activeRoom;
+                const matchesSearch = !keyword || [row.dataset.name, row.dataset.email, row.dataset.id]
+                    .some(value => normalize(value).includes(keyword));
+                const isVisible = matchesRoom && matchesSearch;
+
+                row.style.display = isVisible ? '' : 'none';
+                if (isVisible) visibleCount += 1;
+            });
+
+            noResultRow.style.display = visibleCount === 0 ? '' : 'none';
+        }
+
+        roomChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                roomChips.forEach(item => item.classList.remove('active'));
+                chip.classList.add('active');
+                applyFilters();
+            });
+        });
+
+        searchInput?.addEventListener('input', applyFilters);
+
+        updateRoomCounts();
+        applyFilters();
     </script>
     <script th:src="@{/js/employee/employee-popup.js}"></script>
     <script th:src="@{/js/employee/js/room-code.js}"></script>

@@ -94,35 +94,56 @@
 }
 
 /* ===================================
-   FILTER
+   ROOM LIST
 =================================== */
 
-.filter-box {
+.room-list {
     display: flex;
-    gap: 14px;
     flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
 }
 
-.filter-box select {
-    min-width: 190px;
-    height: 50px;
-    padding: 0 16px;
-    border-radius: 14px;
+.room-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, .08);
-    background: rgba(255, 255, 255, .05);
-    color: white;
+    background: rgba(255, 255, 255, .04);
+    color: var(--text-light);
     cursor: pointer;
     transition: .25s;
 }
 
-.filter-box select:focus {
-    outline: none;
-    border-color: var(--indigo-06);
+.room-chip:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, .08);
 }
 
-.filter-box option {
-    background: #0f172a;
+.room-chip.active {
+    background: linear-gradient(135deg, var(--indigo-06), var(--purple));
     color: white;
+    border-color: transparent;
+}
+
+.room-chip strong {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .14);
+    font-size: .85rem;
+}
+
+.no-results-row td {
+    text-align: center;
+    color: var(--text-light);
+    padding: 28px 18px;
 }
 
 /* ===================================
@@ -597,13 +618,9 @@ tbody tr:hover {
         min-width: 100%;
     }
 
-    .filter-box {
-        width: 100%;
-        flex-direction: column;
-    }
-
-    .filter-box select {
-        width: 100%;
+    .room-list {
+        
+        padding: 0 16px 16px;
     }
 
 }

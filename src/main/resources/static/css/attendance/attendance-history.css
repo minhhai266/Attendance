@@ -113,15 +113,16 @@
 /* ===================================
    FILTER CARD
 =================================== */
-
-.filter-card {
-    margin-bottom: 20px;
+.filter-card{
+    padding:24px;
+    margin-bottom:24px;
 }
 
-.filter-panel {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+.filter-panel{
+    
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
 }
 
 .filter-panel input,
