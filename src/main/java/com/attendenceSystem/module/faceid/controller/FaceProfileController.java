@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -16,10 +17,13 @@ import com.attendenceSystem.constant.Views;
 import com.attendenceSystem.module.faceid.dto.request.CreateFaceProfileRequest;
 import com.attendenceSystem.module.faceid.dto.response.FaceIdResponse;
 import com.attendenceSystem.module.faceid.mapper.response.FaceIdResponseMapper;
+import com.attendenceSystem.module.faceid.service.FaceIdActionService;
 import com.attendenceSystem.module.faceid.service.FaceProfileService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -28,6 +32,7 @@ public class FaceProfileController {
 
     private final FaceProfileService faceProfileService;
     private final FaceIdResponseMapper faceIdResponseMapper;
+    private final FaceIdActionService faceIdActionService;
 
     @GetMapping
     public String list(@ModelAttribute("query") String query,
@@ -54,4 +59,17 @@ public class FaceProfileController {
         faceProfileService.createFaceProfile(request);
         return Routes.REDIRECT + Routes.FaceId.ROOT;
     }
+
+    @PostMapping(Routes.Action.ACCEPT + "/{id}")
+    public String accept(@PathVariable("id") Long id) {
+        faceIdActionService.acceptFaceId(id);
+        return Routes.REDIRECT + Routes.FaceId.ROOT;
+    }
+
+    @PostMapping(Routes.Action.REJECT + "/{id}")
+    public String reject(@PathVariable("id") Long id) {
+        faceIdActionService.rejectFaceId(id);
+        return Routes.REDIRECT + Routes.FaceId.ROOT;
+    }
+    
 }

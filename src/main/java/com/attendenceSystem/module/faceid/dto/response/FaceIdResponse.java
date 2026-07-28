@@ -9,5 +9,6 @@ public record FaceIdResponse(
         Integer sampleCount,
         String thumbnailUrl,
         String userFullName,
-        String userEmail) {
+        String userEmail,
+        Boolean isAccept) {
 }

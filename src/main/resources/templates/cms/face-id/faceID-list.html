@@ -41,6 +41,7 @@
                                 <th>Face ID</th>
                                 <th>Số mẫu</th>
                                 <th>Phòng</th>
+                                <th>Trạng thái</th>
                                 <th>Chi tiết</th>
                                 <th>Cập nhật</th>
                             </tr>
@@ -58,32 +59,41 @@
                                 </td>
                                 <td th:text="${faceProfile.userEmail}">user@example.com</td>
                                 <td>
+                                    <span th:if="${faceProfile.isAccept == null}" class="status-pending">Chờ duyệt</span>
+                                    <span th:if="${faceProfile.isAccept == true}" class="status-approved">Đã duyệt</span>
+                                    <span th:if="${faceProfile.isAccept == false}" class="status-rejected">Bị từ chối</span>
+                                </td>
+                                <td>
                                     <button class="detail-btn btn-small" type="button" th:data-id="${faceProfile.id}"
                                         th:data-name="${faceProfile.userFullName}"
                                         th:data-face-code="${faceProfile.faceCode}"
                                         th:data-sample-count="${faceProfile.sampleCount}"
                                         th:data-email="${faceProfile.userEmail}"
-                                        th:data-thumbnail-url="${faceProfile.thumbnailUrl}">
+                                        th:data-thumbnail-url="${faceProfile.thumbnailUrl}"
+                                        th:data-is-accept="${faceProfile.isAccept}">
                                         Chi tiết
                                     </button>
                                 </td>
 
                                 <td>
-                                    <div class="action-group">
+                                    <div class="action-group" th:if="${faceProfile.isAccept == null}">
 
-                                        <form method="post">
+                                        <form method="post" th:action="@{/face-id/accept/{id}(id=${faceProfile.id})}">
                                             <button class="btn-primary btn-small">
                                                 Phê duyệt
                                             </button>
                                         </form>
 
-                                        <form method="post">
+                                        <form method="post" th:action="@{/face-id/reject/{id}(id=${faceProfile.id})}">
                                             <button class="btn-secondary btn-small">
                                                 Từ chối
                                             </button>
                                         </form>
 
                                     </div>
+                                    <span th:if="${faceProfile.isAccept != null}" class="status-text">
+                                        Đã xử lý
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>
@@ -169,12 +179,14 @@
             return value !== undefined && value !== null && value !== "" ? `${value}${suffix}` : "--";
         }
 
-        function getFaceStatus(sampleCount) {
+        function getFaceStatus(sampleCount, isAccept) {
+            // Nếu isAccept là boolean, hiển thị trạng thái duyệt
+            if (isAccept === true) return "Đã duyệt";
+            if (isAccept === false) return "Bị từ chối";
+            // Nếu isAccept là null, kiểm tra số mẫu
             const count = Number(sampleCount);
-            if (Number.isNaN(count)) {
-                return "--";
-            }
-            return count >= 5 ? "Đã đăng ký" : "Chưa đủ mẫu";
+            if (Number.isNaN(count)) return "--";
+            return count >= 5 ? "Đã đăng ký, chờ duyệt" : "Chưa đủ mẫu";
         }
 
         document.querySelectorAll('.detail-btn').forEach(button => {
@@ -185,13 +197,16 @@
                 const sampleCount = button.dataset.sampleCount;
                 const email = button.dataset.email;
                 const thumbnailUrl = button.dataset.thumbnailUrl;
+                const isAccept = button.dataset.isAccept;
 
                 detailId.textContent = formatDetailValue(faceId);
                 detailName.textContent = formatDetailValue(name);
                 detailFaceCode.textContent = formatDetailValue(faceCode);
                 detailSampleCount.textContent = formatDetailValue(sampleCount, ' mẫu');
                 detailEmail.textContent = formatDetailValue(email);
-                detailStatus.textContent = getFaceStatus(sampleCount);
+                // isAccept from data attribute is string, convert accordingly
+                const acceptVal = isAccept === 'true' ? true : (isAccept === 'false' ? false : null);
+                detailStatus.textContent = getFaceStatus(sampleCount, acceptVal);
                 facePreviewImage.src = thumbnailUrl ? thumbnailUrl : "https://i.pinimg.com/736x/6a/5e/fc/6a5efc25bf7c7603afac79d7046f999c.jpg";
 
                 openFaceGallery();

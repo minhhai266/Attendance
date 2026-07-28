@@ -127,6 +127,30 @@
     font-weight: 600;
 }
 
+.status-pending {
+    color: var(--warning, #f0ad4e);
+
+    font-weight: 600;
+}
+
+.status-approved {
+    color: var(--success);
+
+    font-weight: 600;
+}
+
+.status-rejected {
+    color: var(--danger);
+
+    font-weight: 600;
+}
+
+.status-text {
+    color: var(--text-light);
+
+    font-size: 0.85rem;
+}
+
 .btn-secondery {
     background-color: var(--danger);
     color: var(--text-white);

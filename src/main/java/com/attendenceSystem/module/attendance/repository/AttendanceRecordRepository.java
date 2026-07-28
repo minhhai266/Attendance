@@ -61,4 +61,9 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
         @Query("SELECT a FROM AttendanceRecord a WHERE a.attendanceDate = :date AND a.checkInTime IS NOT NULL AND a.checkOutTime IS NULL")
         List<AttendanceRecord> findRecordsMissingCheckOut(@Param("date") LocalDate date);
 
+        List<AttendanceRecord> findByUserIdIn(List<Long> userIds);
+
+        List<AttendanceRecord> findByUserIdInAndAttendanceDateBetween(List<Long> userIds, LocalDate startDate,
+                        LocalDate endDate);
+
 }

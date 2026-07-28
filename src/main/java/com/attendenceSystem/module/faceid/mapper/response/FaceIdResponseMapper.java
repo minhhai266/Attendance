@@ -19,6 +19,7 @@ public class FaceIdResponseMapper {
                 .thumbnailUrl(faceProfile.thumbnailUrl())
                 .userFullName(faceProfile.userFullName())
                 .userEmail(faceProfile.userEmail())
+                .isAccept(faceProfile.isAccept())
                 .build();
     }
 }

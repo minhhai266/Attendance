@@ -22,6 +22,7 @@ public class FaceProfileResponseMapper {
                 .sampleCount(faceProfile.getSampleCount())
                 .thumbnailUrl(faceProfile.getThumbnailUrl())
                 .embeddingPath(faceProfile.getEmbeddingPath())
+                .isAccept(faceProfile.getIsAccept())
                 .createdAt(faceProfile.getCreatedAt())
                 .updatedAt(faceProfile.getUpdatedAt())
                 .build();

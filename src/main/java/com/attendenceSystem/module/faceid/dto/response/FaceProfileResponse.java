@@ -15,6 +15,7 @@ public record FaceProfileResponse(
         String userName,
         String userEmail,
         String userFullName,
+        Boolean isAccept,
         LocalDateTime createdAt,
         LocalDateTime updatedAt) {
 }

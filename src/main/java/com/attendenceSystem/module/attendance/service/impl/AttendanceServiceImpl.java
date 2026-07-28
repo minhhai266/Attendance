@@ -65,9 +65,10 @@ public class AttendanceServiceImpl implements AttendanceService {
             final LocalDate startDate,
             final LocalDate endDate,
             final AttendanceStatus status) {
+        // 1. Xác định tổng số nhân sự của phòng ban
         List<User> employees = userContextProvider.getEmployeesByDepartment(departmentId);
-
         long totalEmployees = employees.size();
+
         if (totalEmployees == 0) {
             return ManagerStatsResponse.builder()
                     .totalEmployees(0)
@@ -77,39 +78,45 @@ public class AttendanceServiceImpl implements AttendanceService {
                     .absent(0)
                     .build();
         }
-        DateRange dateRange = getDateRange(startDate, endDate);
 
-        List<AttendanceRecord> records = getFilteredRecords(
-                dateRange.startDate(),
-                dateRange.endDate(),
-                status);
+        // Lấy danh sách ID nhân viên để query cho tối ưu
+        List<Long> employeeIds = employees.stream().map(User::getId).toList();
 
-        long checkedIn = 0;
-        long checkedOut = 0;
-        long lateArrivals = 0;
-        long absent = 0;
-
-        Map<Long, AttendanceRecord> attendanceMap = records.stream()
-                .filter(r -> r.getUser() != null)
-                .collect(Collectors.toMap(
-                        r -> r.getUser().getId(),
-                        Function.identity(),
-                        (a, b) -> a));
-        for (User emp : employees) {
-            AttendanceRecord record = attendanceMap.get(emp.getId());
-            if (record == null) {
-                absent++;
-                continue;
-            }
-            checkedIn++;
-            if (record.getStatus() == AttendanceStatus.LATE) {
-                lateArrivals++;
-            }
-            if (record.getCheckOutTime() != null) {
-                checkedOut++;
-            }
+        // 2. KỊCH BẢN: Lọc dữ liệu (từ ngày - đến ngày, hoặc toàn bộ)
+        List<AttendanceRecord> records;
+        if (startDate != null && endDate != null) {
+            // CÓ FILTER: Lấy trong khoảng thời gian
+            records = attendanceRecordRepository.findByUserIdInAndAttendanceDateBetween(employeeIds, startDate,
+                    endDate);
+        } else {
+            // KHÔNG FILTER: Lấy toàn bộ lịch sử điểm danh của phòng ban này
+            records = attendanceRecordRepository.findByUserIdIn(employeeIds);
         }
-        //
+
+        // KỊCH BẢN: Lọc tiếp theo trạng thái (nếu có truyền vào)
+        if (status != null) {
+            records = records.stream()
+                    .filter(r -> r.getStatus() == status)
+                    .toList();
+        }
+
+        // 3. CHỈ ĐẾM CÁC THỨ TRONG DANH SÁCH (Không dùng Map, không bị nuốt dữ liệu)
+        long checkedIn = records.stream()
+                .filter(r -> r.getCheckInTime() != null)
+                .count();
+
+        long checkedOut = records.stream()
+                .filter(r -> r.getCheckOutTime() != null)
+                .count();
+
+        long lateArrivals = records.stream()
+                .filter(r -> r.getStatus() == AttendanceStatus.LATE)
+                .count();
+
+        long absent = records.stream()
+                .filter(r -> r.getStatus() == AttendanceStatus.ABSENT)
+                .count();
+
         return ManagerStatsResponse.builder()
                 .totalEmployees(totalEmployees)
                 .checkedIn(checkedIn)
@@ -249,11 +256,12 @@ public class AttendanceServiceImpl implements AttendanceService {
         long totalWorkingMinutes = 0;
 
         for (AttendanceRecord record : records) {
-            if(record.getCheckInTime() != null && record.getCheckOutTime() != null){
-                totalWorkingMinutes += attendanceCalculator.workingMinutes(record.getCheckInTime(), record.getCheckOutTime());
+            if (record.getCheckInTime() != null && record.getCheckOutTime() != null) {
+                totalWorkingMinutes += attendanceCalculator.workingMinutes(record.getCheckInTime(),
+                        record.getCheckOutTime());
             }
 
-            if(attendanceCalculator.isEarlyLeave(record.getCheckOutTime())){
+            if (attendanceCalculator.isEarlyLeave(record.getCheckOutTime())) {
                 earlyLeave++;
             }
         }

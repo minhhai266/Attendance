@@ -54,6 +54,9 @@ public class FaceProfile {
     @Column(name = "embedding_path", length = 1000)
     private String embeddingPath;
 
+    @Column(name = "is_accept")
+    private Boolean isAccept;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -81,6 +81,8 @@ public class FaceIdApiController {
 
             faceProfile.setSampleCount(sampleCount);
             faceProfile.setThumbnailUrl(lastImagePath);
+            // Khi employee đăng ký lại face, reset trạng thái duyệt để manager duyệt lại
+            faceProfile.setIsAccept(null);
             faceProfileRepository.save(faceProfile);
 
             return ResponseEntity.ok(FaceCaptureResponse.builder()
@@ -141,6 +143,8 @@ public class FaceIdApiController {
             }
 
             faceProfile.setThumbnailUrl(newImagePath);
+            // Khi employee cập nhật ảnh điểm danh, reset trạng thái duyệt
+            faceProfile.setIsAccept(null);
             faceProfileRepository.save(faceProfile);
 
             return ResponseEntity.ok(FaceCaptureResponse.builder()
