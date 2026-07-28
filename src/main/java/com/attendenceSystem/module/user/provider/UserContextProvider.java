@@ -1,5 +1,6 @@
 package com.attendenceSystem.module.user.provider;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import com.attendenceSystem.module.user.dto.response.UserSimpleResponse;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Role;
+import com.attendenceSystem.module.user.entity.enums.Status;
 import com.attendenceSystem.module.user.repository.UserRepository;
 import com.attendenceSystem.util.SecurityUtil;
 
@@ -50,5 +52,10 @@ public class UserContextProvider {
             return Collections.emptyList();
         }
         return userRepository.findFullNameByDepartmentAndRoleNot(department, Role.ADMIN);
+    }
+
+    public List<User> getUsersWithoutAttendanceForDate(LocalDate date){
+        return userRepository.findUsersWithoutAttendanceForDate(date, Status.ACTIVE);
+
     }
 }

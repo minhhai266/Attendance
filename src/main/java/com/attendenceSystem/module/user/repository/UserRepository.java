@@ -1,5 +1,6 @@
 package com.attendenceSystem.module.user.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +53,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
         List<User> findByDepartmentAndRoleNot(Department department, Role role);
 
         List<User> findByRoleNot(Role role);
+
+        @Query("SELECT u FROM User u WHERE u.status = :status AND NOT EXISTS " +
+                        "(SELECT a FROM AttendanceRecord a WHERE a.user = u AND a.attendanceDate = :date)")
+        List<User> findUsersWithoutAttendanceForDate(
+                        @Param("date") LocalDate date,
+                        @Param("status") Status status);
 
         // ===== Statistics =====
 

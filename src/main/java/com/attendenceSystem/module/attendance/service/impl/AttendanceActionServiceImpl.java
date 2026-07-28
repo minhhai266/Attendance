@@ -59,6 +59,11 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
                 throw new AlreadyCheckedInException("Bạn đã điểm danh hôm nay");
             }
             LocalDateTime checkInTime = LocalDateTime.now();
+
+            if (attendanceCalculator.isPastAllowedCheckInTime(checkInTime)) {
+                throw new InvalidAttendanceStateException("Đã quá thời gian ca làm, bạn tính là vắng măt ngày hôm nay");
+            }
+
             boolean late = attendanceCalculator.isLate(checkInTime);
             AttendanceStatus status = late ? AttendanceStatus.LATE : AttendanceStatus.PRESENT;
             AttendanceRecord attendanceRecord = AttendanceRecord.builder()

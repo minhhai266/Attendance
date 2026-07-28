@@ -11,4 +11,6 @@ public interface AttendanceCalculator {
     long workingMinutes(LocalDateTime checkInTime, LocalDateTime checkOutTime);
 
     double totalWorkingHours(LocalDateTime checkInTime, LocalDateTime checkOutTime);
+
+    boolean isPastAllowedCheckInTime(LocalDateTime checkInTime);
 }

@@ -76,4 +76,12 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
         long minutes = workingMinutes(checkInTime, checkOutTime);
         return minutes / 60.0;
     }
+
+    @Override
+    public boolean isPastAllowedCheckInTime(final LocalDateTime checkInTime) {
+        if(checkInTime == null) {
+            return false;
+        }
+        return checkInTime.toLocalTime().isAfter(endWorkTime);
+    }
 }
