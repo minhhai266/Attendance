@@ -58,33 +58,19 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updatePasswordWithOtp(final UpdatePasswordWithOtpRequest request) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attributes != null) {
-            HttpSession session = attributes.getRequest().getSession(false);
-            Boolean otpVerified = (session != null) ? (Boolean) session.getAttribute("otpVerified") : null;
-            String otpEmail = (session != null) ? (String) session.getAttribute("otpEmail") : null;
-
-            if (otpVerified == null || !otpVerified || otpEmail == null || !otpEmail.equals(request.getDestination())) {
-                throw new IllegalArgumentException("Vui lòng xác thực OTP trước khi đổi mật khẩu");
-            }
-
-            if (!request.getRequest().getPassword().equals(request.getRequest().getConfirmPassword())) {
-                throw new IllegalArgumentException("Mật khẩu xác nhận không khớp");
-            }
-            User user = userRepository.findByUsernameOrEmail(request.getDestination(), request.getDestination())
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Không tìm thấy người dùng với email: " + request.getDestination()));
-
-            updatePassword(user, request.getRequest());
-
-            if (session != null) {
-                session.removeAttribute("otpVerified");
-                session.removeAttribute("otpEmail");
-            }
-        } else {
-            throw new IllegalStateException("Không thể xác thực luồng yêu cầu hệ thống.");
+    public void updatePasswordWithOtp(
+            final UpdatePasswordWithOtpRequest request,
+            String otpEmail,
+            Boolean isVerified) {
+        if (isVerified == null || !isVerified || otpEmail == null || !otpEmail.equals(request.getDestination())) {
+            throw new BadRequestException("Vui lòng xác nhận email trước khi đổi mật khẩu");
         }
+
+        User user = userRepository.findByUsernameOrEmail(request.getDestination(), request.getDestination())
+                .orElseThrow(() -> new BadRequestException(
+                        "Không tìm thấy người dùng với email: " + request.getDestination()));
+
+        updatePassword(user, request.getRequest());
 
     }
 

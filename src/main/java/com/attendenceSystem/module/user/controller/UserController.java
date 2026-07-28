@@ -2,6 +2,7 @@ package com.attendenceSystem.module.user.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -57,20 +58,30 @@ public class UserController {
 
     @PostMapping(Routes.User.UPDATE_PASSWORD)
     public String updatePasswordWithOtp(
-            @RequestParam("destination") String destination,
-            @RequestParam("password") String password,
-            @RequestParam("confirmPassword") String confirmPassword,
-            HttpServletRequest request,
+            @Valid @ModelAttribute UpdatePasswordWithOtpRequest request,
+            BindingResult result,
+            HttpSession session,
             Model model) {
+        if (result.hasErrors()) {
+            String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
+            model.addAttribute("errorMessage", errorMessage);
+            model.addAttribute("email", request.getDestination());
+            return Views.Auth.CHANGE_PASSWORD;
+        }
+
         try {
-            UpdatePasswordWithOtpRequest updateRequest = new UpdatePasswordWithOtpRequest(
-                    destination, new UpdatePasswordRequest(password, confirmPassword));
-            userService.updatePasswordWithOtp(updateRequest);
+            Boolean otpVerified = (Boolean) session.getAttribute("otpVerified");
+            String otpEmail = (String) session.getAttribute("otpEmail");
+
+            userService.updatePasswordWithOtp(request, otpEmail, otpVerified);
+
+            session.removeAttribute("otpVerified");
+            session.removeAttribute("otpEmail");
 
             return Routes.REDIRECT + Routes.Auth.ROOT + Routes.Auth.LOGIN + "?success=true";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("email", destination);
+            model.addAttribute("email", request.getDestination());
             return Views.Auth.CHANGE_PASSWORD;
         }
     }

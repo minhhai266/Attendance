@@ -13,6 +13,7 @@ import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.constant.Views;
 import com.attendenceSystem.module.user.dto.request.LoginRequest;
 import com.attendenceSystem.module.user.dto.request.RegisterRequest;
+import com.attendenceSystem.module.user.dto.request.UpdatePasswordWithOtpRequest;
 import com.attendenceSystem.module.user.dto.response.UserResponse;
 import com.attendenceSystem.module.user.service.AuthService;
 
@@ -56,7 +57,10 @@ public class AuthController {
     }
 
     @GetMapping(Routes.Auth.CHANGE_PASSWORD)
-    public String toChangePasswordPage() {
+    public String toChangePasswordPage(Model model, @RequestParam("email") String email) {
+        UpdatePasswordWithOtpRequest request = new UpdatePasswordWithOtpRequest();
+        request.setDestination(email);
+        model.addAttribute("request", request);
         return Views.Auth.CHANGE_PASSWORD;
     }
 
@@ -136,11 +140,16 @@ public class AuthController {
 
     @PostMapping(Routes.Auth.VERIFY_OTP)
     public String verifyOtp(
-            @RequestParam("email") String email,
+            @RequestParam(value = "email", required = false) String email,
             @RequestParam("otp") String otpCode,
             HttpServletRequest request,
             Model model,
             RedirectAttributes redirectAttributes) {
+        if (email == null || email.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Phiên làm việc không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu mã OTP mới.");
+            return Routes.REDIRECT + Routes.Auth.ROOT + Routes.Auth.FORGOT_PASSWORD;
+        }
         try {
             boolean isValid = authService.verifyOtp(email, otpCode);
             if (isValid) {
@@ -151,7 +160,7 @@ public class AuthController {
 
                 redirectAttributes.addFlashAttribute("email", email);
                 redirectAttributes.addFlashAttribute("otpVerified", true);
-                return Routes.REDIRECT + Routes.Auth.ROOT + Routes.Auth.CHANGE_PASSWORD;
+                return Routes.REDIRECT + Routes.Auth.ROOT + Routes.Auth.CHANGE_PASSWORD + "?email=" + email;
             } else {
                 model.addAttribute("errorMessage", "Mã OTP không chính xác hoặc đã hết hạn.");
                 model.addAttribute("email", email);

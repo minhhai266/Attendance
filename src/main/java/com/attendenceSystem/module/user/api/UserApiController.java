@@ -14,6 +14,7 @@ import com.attendenceSystem.module.user.dto.request.UpdateUserInformationRequest
 import com.attendenceSystem.module.user.dto.response.UserInformationResponse;
 import com.attendenceSystem.module.user.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +25,8 @@ public class UserApiController {
     private final UserService userService;
 
     @PutMapping(Routes.User.INFORMATION + Routes.Action.UPDATE)
-    public ResponseEntity<UserInformationResponse> updateUserInformation(@Valid @RequestBody UpdateUserInformationRequest request) {
+    public ResponseEntity<UserInformationResponse> updateUserInformation(
+            @Valid @RequestBody UpdateUserInformationRequest request) {
         UserInformationResponse response = userService.updateUserInformation(request);
         return ResponseEntity.ok(response);
     }
@@ -36,8 +38,13 @@ public class UserApiController {
     }
 
     @PatchMapping(Routes.User.UPDATE_PASSWORD)
-    public ResponseEntity<Void> updatePasswordWithOtp(@Valid @RequestBody UpdatePasswordWithOtpRequest request) {
-        userService.updatePasswordWithOtp(request);
+    public ResponseEntity<Void> updatePasswordWithOtp(@Valid @RequestBody UpdatePasswordWithOtpRequest request,
+            HttpSession session) {
+        Boolean otpVerified = (Boolean) session.getAttribute("otpVerified");
+        String otpEmail = (String) session.getAttribute("otpEmail");
+        userService.updatePasswordWithOtp(request, otpEmail, otpVerified);
+        session.removeAttribute("otpVerified");
+        session.removeAttribute("otpEmail");
         return ResponseEntity.ok().build();
     }
 }

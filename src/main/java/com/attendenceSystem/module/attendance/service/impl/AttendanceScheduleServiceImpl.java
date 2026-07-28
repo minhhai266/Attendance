@@ -2,7 +2,6 @@ package com.attendenceSystem.module.attendance.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -27,8 +26,12 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
     private final AttendanceRecordRepository attendanceRecordRepository;
     private final TimeZoneProvider timeZoneProvider;
 
+    private static final String AUTO_ABSENT_NOTE = "Hệ thống tự động đánh vắng do không check-in";
 
-    @Scheduled(cron = "0 15 17 * * MON-FRI")
+    @Scheduled(
+        cron = "0 15 17 * * MON-FRI",
+        zone = "Asia/Ho_Chi_Minh"
+    )
     @Transactional
     @Override
     public void autoMarkAbsent() {
@@ -42,14 +45,15 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
             log.info("Không có nhân viên vắng mặt vào ngày hôm nay");
             return;
         }
-        List<AttendanceRecord> absentRecords = absentUsers.stream()
+        List<AttendanceRecord> absentRecords = absentUsers
+                .stream()
                 .map(user -> AttendanceRecord.builder()
                         .user(user)
                         .attendanceDate(today)
                         .status(AttendanceStatus.ABSENT)
-                        .note("Hệ thống tự động đánh vắng do không check-in")
+                        .note(AUTO_ABSENT_NOTE)
                         .build())
-                .collect(Collectors.toList());
+                .toList();
         attendanceRecordRepository.saveAll(absentRecords);
         log.info("Đã đánh vắng tự động cho {} nhân viên.", absentUsers.size());
     }
