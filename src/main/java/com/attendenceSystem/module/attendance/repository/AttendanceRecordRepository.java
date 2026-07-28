@@ -27,6 +27,14 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
 
         Page<AttendanceRecord> findByUser(User user, Pageable pageable);
 
+        List<AttendanceRecord> findAllByUser(User user);
+
+        Page<AttendanceRecord> findByUserAndAttendanceDateBetween(
+                        User user,
+                        LocalDate startDate,
+                        LocalDate endDate,
+                        Pageable pageable);
+
         long countByAttendanceDate(LocalDate attendanceDate);
 
         Page<AttendanceRecord> findAllByOrderByAttendanceDateDesc(Pageable pageable);
@@ -47,5 +55,10 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
         long countByUser(User user);
 
         long countByUserAndCheckInTimeNotNullAndCheckOutTimeNotNull(User user);
+
+        List<AttendanceRecord> findByUserAndAttendanceDateBetween(User user, LocalDate startDate, LocalDate endDate);
+
+        @Query("SELECT a FROM AttendanceRecord a WHERE a.attendanceDate = :date AND a.checkInTime IS NOT NULL AND a.checkOutTime IS NULL")
+        List<AttendanceRecord> findRecordsMissingCheckOut(@Param("date") LocalDate date);
 
 }

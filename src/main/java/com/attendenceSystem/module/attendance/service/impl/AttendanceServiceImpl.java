@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.attendenceSystem.module.attendance.dto.response.AttendanceHistoryStatsResponse;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
@@ -20,6 +21,7 @@ import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponse
 import com.attendenceSystem.module.attendance.model.DateRange;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
+import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
 import com.attendenceSystem.module.attendance.util.TimeZoneProvider;
 import com.attendenceSystem.module.user.entity.User;
 
@@ -33,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceRecordRepository attendanceRecordRepository;
     private final AttendanceResponseMapper attendanceResponseMapper;
-    
+    private final AttendanceCalculator attendanceCalculator;
     private final TimeZoneProvider timeZoneProvider;
     private final UserContextProvider userContextProvider;
 
@@ -148,6 +150,38 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
+    public Page<AttendanceResponse> getAttendanceHistory(
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final AttendanceStatus status,
+            final Pageable pageable) {
+        User user = userContextProvider.getCurrentUserEntity();
+        if (status != null && startDate != null && endDate != null) {
+            return attendanceRecordRepository
+                    .findByUserAndAttendanceDateBetween(user, startDate, endDate, pageable)
+                    .map(attendanceResponseMapper::fromEntity);
+        }
+        return attendanceRecordRepository
+                .findByUser(user, pageable)
+                .map(attendanceResponseMapper::fromEntity);
+    }
+
+    @Override
+    public AttendanceHistoryStatsResponse getAttendanceHistoryStats() {
+        User user = userContextProvider.getCurrentUserEntity();
+        return computeStats(user, null, null, null);
+    }
+
+    @Override
+    public AttendanceHistoryStatsResponse getAttendanceHistoryStats(
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final AttendanceStatus status) {
+        User user = userContextProvider.getCurrentUserEntity();
+        return computeStats(user, startDate, endDate, status);
+    }
+
+    @Override
     public Optional<AttendanceRecord> getTodayAttendanceRecord(final User user) {
         if (user == null) {
             return Optional.empty();
@@ -183,6 +217,54 @@ public class AttendanceServiceImpl implements AttendanceService {
             return attendanceRecordRepository.findByAttendanceDateBetweenAndStatus(startDate, endDate, status);
         }
         return attendanceRecordRepository.findByAttendanceDateBetween(startDate, endDate);
+    }
+
+    private AttendanceHistoryStatsResponse computeStats(
+            final User user,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final AttendanceStatus status) {
+        List<AttendanceRecord> records;
+
+        if (startDate != null && endDate != null) {
+            records = attendanceRecordRepository.findByUserAndAttendanceDateBetween(user, startDate, endDate);
+        } else {
+            records = attendanceRecordRepository.findAllByUser(user);
+        }
+
+        if (status != null) {
+            records = records.stream()
+                    .filter(r -> r.getStatus() == status)
+                    .toList();
+        }
+
+        long totalDays = records.size();
+        long onTime = records.stream()
+                .filter(r -> r.getStatus() == AttendanceStatus.PRESENT)
+                .count();
+        long late = records.stream()
+                .filter(r -> r.getStatus() == AttendanceStatus.LATE)
+                .count();
+        long earlyLeave = 0;
+        long totalWorkingMinutes = 0;
+
+        for (AttendanceRecord record : records) {
+            if(record.getCheckInTime() != null && record.getCheckOutTime() != null){
+                totalWorkingMinutes += attendanceCalculator.workingMinutes(record.getCheckInTime(), record.getCheckOutTime());
+            }
+
+            if(attendanceCalculator.isEarlyLeave(record.getCheckOutTime())){
+                earlyLeave++;
+            }
+        }
+
+        return AttendanceHistoryStatsResponse.builder()
+                .totalDays(totalDays)
+                .onTime(onTime)
+                .late(late)
+                .earlyLeave(earlyLeave)
+                .totalWorkingMinutes(totalWorkingMinutes)
+                .build();
     }
 
 }

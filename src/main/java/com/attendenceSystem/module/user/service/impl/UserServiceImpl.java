@@ -7,8 +7,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.attendenceSystem.exception.custom.BadRequestException;
 import com.attendenceSystem.module.user.dto.request.ChangePasswordRequest;
@@ -24,7 +22,6 @@ import com.attendenceSystem.module.user.repository.UserRepository;
 import com.attendenceSystem.module.user.service.UserService;
 import com.attendenceSystem.security.CustomUserDetails;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Service

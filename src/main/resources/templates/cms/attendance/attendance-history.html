@@ -44,27 +44,27 @@
                 <div class="stats-grid">
 
                     <div class="stats-card">
-                        <span class="stats-value" th:text="${attendanceHistory.totalElements}">22</span>
+                        <span class="stats-value" th:text="${stats.totalDays}">22</span>
                         <span class="stats-label">Ngày làm việc</span>
                     </div>
 
                     <div class="stats-card present">
-                        <span class="stats-value">18</span>
+                        <span class="stats-value" th:text="${stats.onTime}">18</span>
                         <span class="stats-label">Đúng giờ</span>
                     </div>
 
                     <div class="stats-card late">
-                        <span class="stats-value">3</span>
+                        <span class="stats-value" th:text="${stats.late}">3</span>
                         <span class="stats-label">Đi muộn</span>
                     </div>
 
                     <div class="stats-card warning">
-                        <span class="stats-value">1</span>
+                        <span class="stats-value" th:text="${stats.earlyLeave}">1</span>
                         <span class="stats-label">Về sớm</span>
                     </div>
 
                     <div class="stats-card total">
-                        <span class="stats-value">168h</span>
+                        <span class="stats-value" th:text="${stats.totalWorkingMinutes / 60} + 'h ' + ${stats.totalWorkingMinutes % 60} + 'p'">168h</span>
                         <span class="stats-label">Tổng giờ</span>
                     </div>
 
@@ -73,20 +73,22 @@
                 <!-- Bộ lọc -->
                 <div class="card filter-card">
 
-                    <div class="filter-panel">
+                    <form class="filter-panel" th:action="@{/attendance/history}" method="get">
 
-                        <input type="date">
+                        <input type="date" name="startDate" th:value="${selectedStartDate}">
 
-                        <select>
-                            <option>Tất cả trạng thái</option>
-                            <option>Đúng giờ</option>
-                            <option>Đi muộn</option>
-                            <option>Về sớm</option>
+                        <input type="date" name="endDate" th:value="${selectedEndDate}">
+
+                        <select name="status">
+                            <option value="" th:selected="${selectedStatus == null}">Tất cả trạng thái</option>
+                            <option value="PRESENT" th:selected="${selectedStatus?.name() == 'PRESENT'}">Đúng giờ</option>
+                            <option value="LATE" th:selected="${selectedStatus?.name() == 'LATE'}">Đi muộn</option>
+                            <option value="ABSENT" th:selected="${selectedStatus?.name() == 'ABSENT'}">Vắng mặt</option>
                         </select>
 
-                        <button>Lọc</button>
+                        <button type="submit">Lọc</button>
 
-                    </div>
+                    </form>
 
                 </div>
 
@@ -135,6 +137,25 @@
                         </table>
 
                     </div>
+
+                    <!-- Phân trang -->
+                    <div class="pagination" th:if="${attendanceHistory.totalPages > 1}">
+                        <a th:if="${attendanceHistory.hasPrevious()}"
+                           th:href="@{/attendance/history(page=${attendanceHistory.number - 1}, size=${attendanceHistory.size}, startDate=${selectedStartDate}, endDate=${selectedEndDate}, status=${selectedStatus})}"
+                           class="page-link">Trước</a>
+                        <span th:each="i : ${#numbers.sequence(0, attendanceHistory.totalPages - 1)}">
+                            <a th:if="${i == attendanceHistory.number}"
+                               th:href="@{/attendance/history(page=${i}, size=${attendanceHistory.size}, startDate=${selectedStartDate}, endDate=${selectedEndDate}, status=${selectedStatus})}"
+                               class="page-link active" th:text="${i + 1}">1</a>
+                            <a th:unless="${i == attendanceHistory.number}"
+                               th:href="@{/attendance/history(page=${i}, size=${attendanceHistory.size}, startDate=${selectedStartDate}, endDate=${selectedEndDate}, status=${selectedStatus})}"
+                               class="page-link" th:text="${i + 1}">1</a>
+                        </span>
+                        <a th:if="${attendanceHistory.hasNext()}"
+                           th:href="@{/attendance/history(page=${attendanceHistory.number + 1}, size=${attendanceHistory.size}, startDate=${selectedStartDate}, endDate=${selectedEndDate}, status=${selectedStatus})}"
+                           class="page-link">Sau</a>
+                    </div>
+
                 </div>
             </main>
             <div th:replace="~{cms/layout/footer :: footer}"></div>

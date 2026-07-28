@@ -13,7 +13,6 @@ import com.attendenceSystem.module.report.dto.response.ReportDetailResponse;
 import com.attendenceSystem.module.report.dto.response.ReportResponse;
 import com.attendenceSystem.module.report.service.ReportService;
 import com.attendenceSystem.module.user.dto.response.UserSimpleResponse;
-import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.provider.UserContextProvider;
 
 import lombok.RequiredArgsConstructor;

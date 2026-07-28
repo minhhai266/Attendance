@@ -27,11 +27,9 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
     private final TimeZoneProvider timeZoneProvider;
 
     private static final String AUTO_ABSENT_NOTE = "Hệ thống tự động đánh vắng do không check-in";
+    private static final String FORGOT_CHECKOUT_NOTE = "Quên check-out";
 
-    @Scheduled(
-        cron = "0 15 17 * * MON-FRI",
-        zone = "Asia/Ho_Chi_Minh"
-    )
+    @Scheduled(cron = "0 15 17 * * MON-FRI", zone = "Asia/Ho_Chi_Minh")
     @Transactional
     @Override
     public void autoMarkAbsent() {
@@ -56,6 +54,31 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
                 .toList();
         attendanceRecordRepository.saveAll(absentRecords);
         log.info("Đã đánh vắng tự động cho {} nhân viên.", absentUsers.size());
+    }
+
+    @Scheduled(cron = "0 50 23 * * MON-FRI",
+            zone = "Asia/Ho_Chi_Minh")
+    @Transactional
+    @Override
+    public void autoHandleMissingCheckOut() {
+        LocalDate today = LocalDate.now(timeZoneProvider.getZoneId());
+
+        log.info("Bắt đầu quét các bản ghi quên check-out cho ngày: {}", today);
+
+        List<AttendanceRecord> missingCheckOutRecords = attendanceRecordRepository.findRecordsMissingCheckOut(today);
+
+        if(missingCheckOutRecords.isEmpty()){
+            log.info("Tất cả nhân viên đều đã check-out hôm nay.");
+            return;
+        }
+
+        for(AttendanceRecord record : missingCheckOutRecords){
+            String currentNote = record.getNote() != null ? record.getNote() + "; " : "";
+            record.setNote(currentNote + FORGOT_CHECKOUT_NOTE);
+        }
+
+        attendanceRecordRepository.saveAll(missingCheckOutRecords);
+        log.info("Đã xử lý {} trường hợp quên check-out.", missingCheckOutRecords.size());
     }
 
 }

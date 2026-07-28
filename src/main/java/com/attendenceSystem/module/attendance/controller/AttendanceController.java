@@ -1,7 +1,11 @@
 package com.attendenceSystem.module.attendance.controller;
 
+import java.time.LocalDate;
+
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,12 +15,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.attendenceSystem.module.attendance.dto.response.AttendanceHistoryStatsResponse;
+import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
+import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.constant.Views;
 import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
-import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.exception.AlreadyCheckedInException;
 import com.attendenceSystem.module.attendance.exception.AlreadyCheckedOutException;
 import com.attendenceSystem.module.attendance.exception.InvalidAttendanceStateException;
@@ -59,9 +67,33 @@ public class AttendanceController {
     }
 
     @GetMapping(Routes.Attendance.HISTORY)
-    public String attendanceHistory(@PageableDefault(size = 10) Pageable pageable, Model model) {
+    public String attendanceHistory(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) AttendanceStatus status,
+            @PageableDefault(size = 10) Pageable pageable,
+            Model model) {
 
-        model.addAttribute("attendanceHistory", attendanceService.getAttendanceHistory(pageable));
+        boolean hasFilter = startDate != null || endDate != null || status != null;
+
+        Page<AttendanceResponse> attendanceHistory;
+        AttendanceHistoryStatsResponse stats;
+
+        if (hasFilter) {
+            attendanceHistory = attendanceService.getAttendanceHistory(startDate, endDate, status, pageable);
+            stats = attendanceService.getAttendanceHistoryStats(startDate, endDate, status);
+        } else {
+            attendanceHistory = attendanceService.getAttendanceHistory(pageable);
+            stats = attendanceService.getAttendanceHistoryStats();
+        }
+
+        model.addAttribute("attendanceHistory", attendanceHistory);
+        model.addAttribute("stats", stats);
+        model.addAttribute("selectedStartDate", startDate);
+        model.addAttribute("selectedEndDate", endDate);
+        model.addAttribute("selectedStatus", status);
+        model.addAttribute("hasFilter", hasFilter);
+
         return Views.Attendance.HISTORY;
     }
 
