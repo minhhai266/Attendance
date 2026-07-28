@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
             if (!request.getRequest().getPassword().equals(request.getRequest().getConfirmPassword())) {
                 throw new IllegalArgumentException("Mật khẩu xác nhận không khớp");
             }
-            User user = userRepository.findUserByUsernameOrEmail(request.getDestination(), request.getDestination())
+            User user = userRepository.findByUsernameOrEmail(request.getDestination(), request.getDestination())
                     .orElseThrow(() -> new IllegalArgumentException(
                             "Không tìm thấy người dùng với email: " + request.getDestination()));
 

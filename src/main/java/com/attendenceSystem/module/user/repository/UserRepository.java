@@ -21,48 +21,56 @@ import com.attendenceSystem.module.user.repository.projection.RoleCountProjectio
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findById(Long id);
+        // ===== Find =====
 
-    Optional<User> findUserByUsername(String username);
+        Optional<User> findById(Long id);
 
-    Optional<User> findUserByEmail(String email);
+        Optional<User> findByEmail(String email);
 
-    boolean existsByUsername(String username);
+        Optional<User> findByUsernameOrEmail(String username, String email);
 
-    boolean existsByEmail(String email);
+        Optional<User> findByUsername(String username);
 
-    Optional<User> findUserByUsernameOrEmail(String username, String email);
+        // ===== Exists =====
 
-    boolean existsByUsernameOrEmail(String username, String email);
+        boolean existsByUsername(String username);
 
-    Page<User> findAllByOrderByIdAsc(Pageable pageable);
+        boolean existsByEmail(String email);
 
-    long countByStatus(Status status);
+        boolean existsByUsernameOrEmail(String username, String email);
 
-    long countByMustChangePasswordTrue();
+        boolean existsByPhone(String phone);
 
-    long countByRole(Role role);
+        // ===== List =====
 
-    long countByRoleNot(Role role);
+        Page<User> findAllByOrderByIdAsc(Pageable pageable);
 
-    Optional<User> findByUsername(String username);
+        Page<User> findByRole(Role role, Pageable pageable);
 
-    boolean existsByPhone(String phone);
+        List<User> findBySpecializationAndRoleNot(Specialization specialization, Role role);
 
-    List<User> findBySpecializationAndRoleNot(Specialization specialization, Role role);
+        List<User> findByDepartmentAndRoleNot(Department department, Role role);
 
-    List<User> findByDepartmentAndRoleNot(Department department, Role role);
+        List<User> findByRoleNot(Role role);
 
-    Page<User> findByRole(Role role, Pageable pageable);
+        // ===== Statistics =====
 
-    List<User> findByRoleNot(Role role);
+        long countByStatus(Status status);
 
-    @Query("SELECT new com.attendenceSystem.module.user.dto.response.UserSimpleResponse(u.id, u.fullName) " +
-            "FROM User u WHERE u.department = :department AND u.role != :role")
-    List<UserSimpleResponse> findFullNameByDepartmentAndRoleNot(
-            @Param("department") Department department,
-            @Param("role") Role role);
+        long countByMustChangePasswordTrue();
 
-    @Query("SELECT u.role AS role, COUNT(u) AS count FROM User u GROUP BY u.role")
-    List<RoleCountProjection> countUsersGroupByRole();
+        long countByRole(Role role);
+
+        long countByRoleNot(Role role);
+
+        @Query("SELECT u.role AS role, COUNT(u) AS count FROM User u GROUP BY u.role")
+        List<RoleCountProjection> countUsersGroupByRole();
+
+        // ===== DTO =====
+
+        @Query("SELECT new com.attendenceSystem.module.user.dto.response.UserSimpleResponse(u.id, u.fullName) " +
+                        "FROM User u WHERE u.department = :department AND u.role != :role")
+        List<UserSimpleResponse> findFullNameByDepartmentAndRoleNot(
+                        @Param("department") Department department,
+                        @Param("role") Role role);
 }

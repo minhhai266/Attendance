@@ -128,7 +128,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private Optional<User> findUser(final String keyword) {
-        return userRepository.findUserByUsernameOrEmail(keyword, keyword);
+        return userRepository.findByUsernameOrEmail(keyword, keyword);
     }
 
     private boolean existsByKeyword(final String keyword) {
