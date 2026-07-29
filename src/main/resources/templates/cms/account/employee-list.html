@@ -193,7 +193,7 @@
                     <div class="room-code-box">
                         <span>Mã tham gia</span>
 
-                        <h1 id="roomCode">DE211-X7A9</h1>
+                            <h1 id="roomCode">--------</h1>
 
                         <button id="copyBtn">
                             Sao chép mã
@@ -217,7 +217,7 @@
         window.serverRoomCodes = {};
 
         /*[# th:each="dept : ${T(com.attendenceSystem.module.user.entity.enums.Department).values()}"]*/
-       // window.serverRoomCodes[[${ dept.roomCode }]] = [[${ dept.joinCode }]];
+        window.serverRoomCodes[ /*[[${ dept.roomCode }]]*/ 'dummy_room' ] = /*[[${ dept.joinCode }]]*/ 'dummy_code';
         /*[/]*/
     </script>
     <script>
@@ -277,7 +277,7 @@
         applyFilters();
     </script>
     <script th:src="@{/js/employee/employee-popup.js}"></script>
-    <script th:src="@{/js/employee/js/room-code.js}"></script>
+    <script th:src="@{/js/employee/room-code.js}"></script>
     <script th:src="@{/js/employee/copy-code.js}"></script>
 </body>
 

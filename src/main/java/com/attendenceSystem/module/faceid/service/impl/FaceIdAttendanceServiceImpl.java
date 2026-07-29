@@ -2,6 +2,9 @@ package com.attendenceSystem.module.faceid.service.impl;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
+import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
+import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
+import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
 import com.attendenceSystem.module.attendance.service.AttendanceActionService;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
 import com.attendenceSystem.module.faceid.dto.FaceIdAction;
@@ -21,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,6 +38,8 @@ public class FaceIdAttendanceServiceImpl implements FaceIdAttendanceService {
     private final AttendanceActionService attendanceActionService;
     private final UserRepository userRepository;
     private final FaceIdLogService faceIdLogService;
+    private final LeaveRequestRepository leaveRequestRepository;
+    private final AttendanceRecordRepository attendanceRecordRepository;
 
     @Value("${face-id.confidence-threshold:0.90}")
     private double confidenceThreshold;
@@ -95,6 +102,20 @@ public class FaceIdAttendanceServiceImpl implements FaceIdAttendanceService {
                 // Already checked out
                 action = FaceIdAction.IGNORED;
                 message = "Already checked out today";
+            }
+
+            // Nếu user đang trong ngày nghỉ phép đã duyệt, ghi chú vào attendance record
+            if (action == FaceIdAction.CHECKIN || action == FaceIdAction.CHECKOUT) {
+                LocalDate today = LocalDate.now();
+                List<Long> onLeaveUserIds = leaveRequestRepository.findUserIdsOnLeaveForDate(today, LeaveStatus.APPROVED);
+                if (onLeaveUserIds.contains(user.getId())) {
+                    Optional<AttendanceRecord> updatedRecord = attendanceRecordRepository.findByUserAndAttendanceDate(user, today);
+                    updatedRecord.ifPresent(record -> {
+                        String currentNote = record.getNote() != null ? record.getNote() + "; " : "";
+                        record.setNote(currentNote + "Đi làm trong ngày nghỉ phép");
+                        attendanceRecordRepository.save(record);
+                    });
+                }
             }
 
             log.info("Face ID attendance processed: student={}, action={}", request.getStudentCode(), action);

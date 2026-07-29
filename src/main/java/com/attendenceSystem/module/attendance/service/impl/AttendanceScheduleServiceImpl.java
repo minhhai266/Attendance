@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
+import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
+import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
 import com.attendenceSystem.module.attendance.service.AttendanceScheduleService;
 import com.attendenceSystem.module.attendance.util.TimeZoneProvider;
 import com.attendenceSystem.module.user.entity.User;
@@ -24,9 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 public class AttendanceScheduleServiceImpl implements AttendanceScheduleService {
     private final UserContextProvider userContextProvider;
     private final AttendanceRecordRepository attendanceRecordRepository;
+    private final LeaveRequestRepository leaveRequestRepository;
     private final TimeZoneProvider timeZoneProvider;
 
     private static final String AUTO_ABSENT_NOTE = "Hệ thống tự động đánh vắng do không check-in";
+    private static final String ON_LEAVE_NOTE = "Nghỉ phép đã được phê duyệt";
     private static final String FORGOT_CHECKOUT_NOTE = "Quên check-out";
 
     @Scheduled(cron = "0 15 17 * * MON-FRI", zone = "Asia/Ho_Chi_Minh")
@@ -43,17 +47,31 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
             log.info("Không có nhân viên vắng mặt vào ngày hôm nay");
             return;
         }
+
+        // Lấy danh sách user đã được duyệt nghỉ phép hôm nay (1 query duy nhất)
+        List<Long> onLeaveUserIds = leaveRequestRepository.findUserIdsOnLeaveForDate(today, LeaveStatus.APPROVED);
+
         List<AttendanceRecord> absentRecords = absentUsers
                 .stream()
-                .map(user -> AttendanceRecord.builder()
-                        .user(user)
-                        .attendanceDate(today)
-                        .status(AttendanceStatus.ABSENT)
-                        .note(AUTO_ABSENT_NOTE)
-                        .build())
+                .map(user -> {
+                    if (onLeaveUserIds.contains(user.getId())) {
+                        return AttendanceRecord.builder()
+                                .user(user)
+                                .attendanceDate(today)
+                                .status(AttendanceStatus.LEAVE)
+                                .note(ON_LEAVE_NOTE)
+                                .build();
+                    }
+                    return AttendanceRecord.builder()
+                            .user(user)
+                            .attendanceDate(today)
+                            .status(AttendanceStatus.ABSENT)
+                            .note(AUTO_ABSENT_NOTE)
+                            .build();
+                })
                 .toList();
         attendanceRecordRepository.saveAll(absentRecords);
-        log.info("Đã đánh vắng tự động cho {} nhân viên.", absentUsers.size());
+        log.info("Đã đánh vắng tự động cho {} nhân viên ({} nghỉ phép).", absentUsers.size(), onLeaveUserIds.size());
     }
 
     @Scheduled(cron = "0 50 23 * * MON-FRI",
@@ -72,7 +90,14 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
             return;
         }
 
+        // Lấy danh sách user đã được duyệt nghỉ phép hôm nay (1 query duy nhất)
+        List<Long> onLeaveUserIds = leaveRequestRepository.findUserIdsOnLeaveForDate(today, LeaveStatus.APPROVED);
+
         for(AttendanceRecord record : missingCheckOutRecords){
+            // Bỏ qua những user đang trong ngày nghỉ phép đã được duyệt
+            if (onLeaveUserIds.contains(record.getUser().getId())) {
+                continue;
+            }
             String currentNote = record.getNote() != null ? record.getNote() + "; " : "";
             record.setNote(currentNote + FORGOT_CHECKOUT_NOTE);
         }
