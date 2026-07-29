@@ -2,10 +2,7 @@ package com.attendenceSystem.module.attendance.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +21,6 @@ import com.attendenceSystem.module.attendance.service.AttendanceService;
 import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
 import com.attendenceSystem.module.attendance.util.TimeZoneProvider;
 import com.attendenceSystem.module.user.entity.User;
-
 import com.attendenceSystem.module.user.provider.UserContextProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -163,13 +159,8 @@ public class AttendanceServiceImpl implements AttendanceService {
             final AttendanceStatus status,
             final Pageable pageable) {
         User user = userContextProvider.getCurrentUserEntity();
-        if (status != null && startDate != null && endDate != null) {
-            return attendanceRecordRepository
-                    .findByUserAndAttendanceDateBetween(user, startDate, endDate, pageable)
-                    .map(attendanceResponseMapper::fromEntity);
-        }
         return attendanceRecordRepository
-                .findByUser(user, pageable)
+                .findFilteredAttendanceHistory(user, startDate, endDate, status, pageable)
                 .map(attendanceResponseMapper::fromEntity);
     }
 

@@ -66,4 +66,15 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
         List<AttendanceRecord> findByUserIdInAndAttendanceDateBetween(List<Long> userIds, LocalDate startDate,
                         LocalDate endDate);
 
+        @Query("SELECT a FROM AttendanceRecord a WHERE a.user = :user " +
+                        "AND (:startDate IS NULL OR a.attendanceDate >= :startDate) " +
+                        "AND (:endDate IS NULL OR a.attendanceDate <= :endDate) " +
+                        "AND (:status IS NULL OR a.status = :status)")
+        Page<AttendanceRecord> findFilteredAttendanceHistory(
+                        @Param("user") User user,
+                        @Param("startDate") LocalDate startDate,
+                        @Param("endDate") LocalDate endDate,
+                        @Param("status") AttendanceStatus status,
+                        Pageable pageable);
+
 }
