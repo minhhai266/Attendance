@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
 import com.attendenceSystem.module.attendance.dto.response.LeaveDetailResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
+import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 
 public interface LeaveService {
     void acceptLeave(Long id);
@@ -16,6 +17,8 @@ public interface LeaveService {
     Page<LeaveRequestResponse> getLeaveRequests(Pageable pageable);
 
     Page<LeaveRequestResponse> getAllLeaveRequests(Pageable pageable);
+
+    Page<LeaveRequestResponse> getAllLeaveRequests(String keyword, LeaveStatus status, String week, Pageable pageable);
 
     LeaveDetailResponse getLeaveDetail(Long id);
 }

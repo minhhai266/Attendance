@@ -2,6 +2,7 @@ package com.attendenceSystem.module.attendance.service.impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import com.attendenceSystem.module.attendance.mapper.request.CreateLeaveRequestM
 import com.attendenceSystem.module.attendance.mapper.response.LeaveDetailResponseMapper;
 import com.attendenceSystem.module.attendance.mapper.response.LeaveRequestResponseMapper;
 import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
+import com.attendenceSystem.module.attendance.repository.LeaveRequestSpecification;
 import com.attendenceSystem.module.attendance.service.LeaveService;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Role;
@@ -74,6 +76,15 @@ public class LeaveServiceImpl implements LeaveService {
     @Override
     public Page<LeaveRequestResponse> getAllLeaveRequests(final Pageable pageable) {
         return leaveRequestRepository.findAll(pageable).map(leaveRequestResponseMapper::fromEntity);
+    }
+
+    @Override
+    public Page<LeaveRequestResponse> getAllLeaveRequests(final String keyword, final LeaveStatus status, final String week, final Pageable pageable) {
+        Specification<LeaveRequest> spec = Specification
+                .where(LeaveRequestSpecification.hasKeyword(keyword))
+                .and(LeaveRequestSpecification.hasStatus(status))
+                .and(LeaveRequestSpecification.hasWeek(week));
+        return leaveRequestRepository.findAll(spec, pageable).map(leaveRequestResponseMapper::fromEntity);
     }
 
     @Override

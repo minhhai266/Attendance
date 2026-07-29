@@ -25,6 +25,8 @@ import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.constant.Views;
 import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
+import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
+import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 import com.attendenceSystem.module.attendance.exception.AlreadyCheckedInException;
 import com.attendenceSystem.module.attendance.exception.AlreadyCheckedOutException;
 import com.attendenceSystem.module.attendance.exception.InvalidAttendanceStateException;
@@ -98,8 +100,28 @@ public class AttendanceController {
     }
 
     @GetMapping(Routes.Attendance.LEAVE)
-    public String leaveRequestList(@PageableDefault(size = 10) Pageable pageable, Model model) {
-        model.addAttribute("leaveRequests", leaveService.getAllLeaveRequests(pageable));
+    public String leaveRequestList(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) LeaveStatus status,
+            @RequestParam(required = false) String week,
+            @PageableDefault(size = 10) Pageable pageable,
+            Model model) {
+
+        boolean hasFilter = (keyword != null && !keyword.isBlank()) || status != null || (week != null && !week.isBlank());
+
+        Page<LeaveRequestResponse> leaveRequests;
+        if (hasFilter) {
+            leaveRequests = leaveService.getAllLeaveRequests(keyword, status, week, pageable);
+        } else {
+            leaveRequests = leaveService.getAllLeaveRequests(pageable);
+        }
+
+        model.addAttribute("leaveRequests", leaveRequests);
+        model.addAttribute("selectedKeyword", keyword);
+        model.addAttribute("selectedStatus", status);
+        model.addAttribute("selectedWeek", week);
+        model.addAttribute("hasFilter", hasFilter);
+
         return Views.Attendance.LEAVE_LIST;
     }
 

@@ -37,31 +37,31 @@
 
                     <div class="card-body">
 
-                        <form class="filter-form">
+                        <form class="filter-form" th:action="@{/attendance/leave}" method="get">
 
                             <div class="filter-grid">
 
                                 <!-- Tên -->
                                 <div class="form-group">
                                     <label>Tên nhân viên</label>
-                                    <input type="text" name="keyword" placeholder="Nhập tên..." />
+                                    <input type="text" name="keyword" placeholder="Nhập tên..." th:value="${selectedKeyword}" />
                                 </div>
 
                                 <!-- Trạng thái -->
                                 <div class="form-group">
                                     <label>Trạng thái</label>
                                     <select name="status">
-                                        <option value="">Tất cả</option>
-                                        <option value="PENDING">Chờ duyệt</option>
-                                        <option value="APPROVED">Đã duyệt</option>
-                                        <option value="REJECTED">Từ chối</option>
+                                        <option value="" th:selected="${selectedStatus == null}">Tất cả</option>
+                                        <option value="PENDING" th:selected="${selectedStatus?.name() == 'PENDING'}">Chờ duyệt</option>
+                                        <option value="APPROVED" th:selected="${selectedStatus?.name() == 'APPROVED'}">Đã duyệt</option>
+                                        <option value="REJECTED" th:selected="${selectedStatus?.name() == 'REJECTED'}">Từ chối</option>
                                     </select>
                                 </div>
 
                                 <!-- Tuần -->
                                 <div class="form-group">
                                     <label>Tuần</label>
-                                    <input type="week" name="week">
+                                    <input type="week" name="week" th:value="${selectedWeek}">
                                 </div>
 
                             </div>
@@ -163,17 +163,25 @@
                 </section>
 
                 <!-- PAGINATION -->
-                <div class="pagination">
-
-                    <a class="btn btn-pagination">← Trước</a>
+                <div class="pagination" th:if="${leaveRequests.totalPages > 1}">
+                    <a th:if="${leaveRequests.hasPrevious()}"
+                       th:href="@{/attendance/leave(page=${leaveRequests.number - 1}, size=${leaveRequests.size}, keyword=${selectedKeyword}, status=${selectedStatus}, week=${selectedWeek})}"
+                       class="btn btn-pagination">← Trước</a>
 
                     <span class="page-info">
-                        <a></a>
-                        <span></span>
+                        <a th:each="i : ${#numbers.sequence(0, leaveRequests.totalPages - 1)}"
+                           th:if="${i == leaveRequests.number}"
+                           th:href="@{/attendance/leave(page=${i}, size=${leaveRequests.size}, keyword=${selectedKeyword}, status=${selectedStatus}, week=${selectedWeek})}"
+                           class="page-link active" th:text="${i + 1}">1</a>
+                        <a th:each="i : ${#numbers.sequence(0, leaveRequests.totalPages - 1)}"
+                           th:unless="${i == leaveRequests.number}"
+                           th:href="@{/attendance/leave(page=${i}, size=${leaveRequests.size}, keyword=${selectedKeyword}, status=${selectedStatus}, week=${selectedWeek})}"
+                           class="page-link" th:text="${i + 1}">1</a>
                     </span>
 
-                    <a class="btn btn-pagination">Sau →</a>
-
+                    <a th:if="${leaveRequests.hasNext()}"
+                       th:href="@{/attendance/leave(page=${leaveRequests.number + 1}, size=${leaveRequests.size}, keyword=${selectedKeyword}, status=${selectedStatus}, week=${selectedWeek})}"
+                       class="btn btn-pagination">Sau →</a>
                 </div>
 
                 <div id="absentDetailModal" class="absent-modal">
