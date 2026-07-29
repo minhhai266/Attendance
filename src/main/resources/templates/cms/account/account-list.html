@@ -84,6 +84,28 @@
 
                         </tbody>
                     </table>
+
+                    <!-- PAGINATION -->
+                    <div class="pagination" th:if="${users.totalPages > 1}">
+                        <a th:if="${users.hasPrevious()}"
+                           th:href="@{/admin/accounts(page=${users.number - 1})}"
+                           class="btn btn-pagination">← Trước</a>
+
+                        <span class="page-info">
+                            <a th:each="i : ${#numbers.sequence(0, users.totalPages - 1)}"
+                               th:if="${i == users.number}"
+                               th:href="@{/admin/accounts(page=${i})}"
+                               class="page-link active" th:text="${i + 1}">1</a>
+                            <a th:each="i : ${#numbers.sequence(0, users.totalPages - 1)}"
+                               th:unless="${i == users.number}"
+                               th:href="@{/admin/accounts(page=${i})}"
+                               class="page-link" th:text="${i + 1}">1</a>
+                        </span>
+
+                        <a th:if="${users.hasNext()}"
+                           th:href="@{/admin/accounts(page=${users.number + 1})}"
+                           class="btn btn-pagination">Sau →</a>
+                    </div>
                 </section>
             </main>
             <!-- FOOTER -->

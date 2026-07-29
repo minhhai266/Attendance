@@ -55,7 +55,6 @@
                             <span>Tất cả phòng</span>
                             <strong>0</strong>
                         </button>
-
                         <button class="room-chip" type="button" th:each="dept : ${departments}"
                             th:attr="data-room=${dept.name()}">
                             <span th:text="${dept.displayName}"></span>
@@ -193,7 +192,7 @@
                     <div class="room-code-box">
                         <span>Mã tham gia</span>
 
-                            <h1 id="roomCode">--------</h1>
+                        <h1 id="roomCode">--------</h1>
 
                         <button id="copyBtn">
                             Sao chép mã
@@ -217,7 +216,7 @@
         window.serverRoomCodes = {};
 
         /*[# th:each="dept : ${T(com.attendenceSystem.module.user.entity.enums.Department).values()}"]*/
-        window.serverRoomCodes[ /*[[${ dept.roomCode }]]*/ 'dummy_room' ] = /*[[${ dept.joinCode }]]*/ 'dummy_code';
+        window.serverRoomCodes[ /*[[${ dept.roomCode }]]*/ 'dummy_room'] = /*[[${ dept.joinCode }]]*/ 'dummy_code';
         /*[/]*/
     </script>
     <script>

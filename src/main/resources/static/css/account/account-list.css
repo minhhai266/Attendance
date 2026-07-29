@@ -382,3 +382,75 @@ tbody tr:hover {
         width: 100%;
     }
 }
+
+/* ===================================
+   PAGINATION (đồng bộ với các trang khác)
+=================================== */
+
+.pagination {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-pagination {
+    min-width: 120px;
+    height: 44px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(to right, var(--indigo-06), var(--purple));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: .25s;
+}
+
+.btn-pagination:hover {
+    transform: translateY(-2px);
+}
+
+.page-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-light);
+    font-size: .95rem;
+}
+
+.page-link {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: .95rem;
+    color: var(--text-light);
+    transition: .25s;
+}
+
+.page-link:hover {
+    background: var(--shadow-box);
+    color: white;
+}
+
+.page-link.active {
+    background: linear-gradient(to right, var(--indigo-06), var(--purple));
+    color: white;
+}
+
+@media(max-width:768px) {
+    .pagination {
+        flex-direction: column;
+    }
+}
