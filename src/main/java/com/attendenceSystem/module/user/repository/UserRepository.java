@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.attendenceSystem.module.user.dto.response.UserSimpleResponse;
+import com.attendenceSystem.module.user.dto.response.UserWithSpecializationResponse;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Specialization;
@@ -80,4 +81,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
         List<UserSimpleResponse> findFullNameByDepartmentAndRoleNot(
                         @Param("department") Department department,
                         @Param("role") Role role);
+
+        @Query("SELECT new com.attendenceSystem.module.user.dto.response.UserWithSpecializationResponse(u.id, u.fullName, u.specialization) " +
+                        "FROM User u WHERE u.role != :role ORDER BY u.fullName ASC")
+        List<UserWithSpecializationResponse> findAllUsersWithSpecializationByRoleNot(@Param("role") Role role);
 }

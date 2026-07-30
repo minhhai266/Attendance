@@ -257,3 +257,197 @@ input[type="file"]{
 
     text-align:center;
 }
+
+/* ===================================
+   SHARED HEADER (label + filter icon)
+=================================== */
+
+.shared-header{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:8px;
+}
+
+.shared-header label{
+    margin-bottom:0;
+}
+
+/* ===================================
+   FILTER ICON BUTTON
+=================================== */
+
+.filter-icon-btn{
+    background:var(--bg-table-015);
+
+    border:1px solid var(--border);
+
+    border-radius:10px;
+
+    color:var(--text-light);
+
+    cursor:pointer;
+
+    padding:6px 10px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    transition:.25s;
+
+    font-size:.9rem;
+}
+
+.filter-icon-btn:hover{
+    background:var(--bg-table);
+
+    color:var(--text-white);
+
+    border-color:var(--indigo-06);
+}
+
+/* ===================================
+   FILTER PANEL (popup)
+=================================== */
+
+.filter-panel{
+    background:var(--bg-card);
+
+    border:1px solid var(--border);
+
+    border-radius:14px;
+
+    padding:14px;
+
+    margin-top:6px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+    box-shadow:0 8px 24px rgba(0,0,0,0.3);
+
+    z-index:100;
+
+    position:relative;
+}
+
+.filter-section{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+}
+
+.filter-label{
+    color:var(--text-light);
+
+    font-size:.85rem;
+
+    font-weight:600;
+}
+
+.filter-checkbox-group{
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+}
+
+.filter-checkbox-label{
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    color:var(--text-white);
+
+    font-size:.85rem;
+
+    cursor:pointer;
+
+    padding:4px 8px;
+
+    border-radius:8px;
+
+    transition:.25s;
+}
+
+.filter-checkbox-label:hover{
+    background:var(--bg-table);
+}
+
+.filter-checkbox-label input[type="checkbox"]{
+    width:16px;
+
+    height:16px;
+
+    cursor:pointer;
+
+    accent-color:var(--indigo-06);
+}
+
+.filter-text-input{
+    padding:10px 12px;
+
+    border-radius:10px;
+
+    border:1px solid var(--border);
+
+    background:var(--bg-table-06);
+
+    color:var(--text-white);
+
+    outline:none;
+
+    transition:.25s;
+
+    font-size:.85rem;
+}
+
+.filter-text-input:focus{
+    border-color:var(--indigo-06);
+
+    box-shadow:0 0 0 4px var(--indigo-15);
+}
+
+.filter-text-input::placeholder{
+    color:var(--text-gray);
+}
+
+/* ===================================
+   SELECT ALL CHECKBOX
+=================================== */
+
+.checkbox-all-label{
+    border-bottom:none;
+
+    padding-bottom:4px;
+}
+
+.checkbox-all-label span strong{
+    color:var(--text-white);
+
+    font-weight:700;
+}
+
+.checkbox-divider{
+    border:none;
+
+    border-top:1px solid var(--border);
+
+    margin:0 0 2px 0;
+
+    width:100%;
+}

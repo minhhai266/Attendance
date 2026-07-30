@@ -12,9 +12,14 @@ import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.constant.Views;
 import com.attendenceSystem.module.report.dto.request.CreateReportRequest;
 import com.attendenceSystem.module.report.service.ReportService;
+import com.attendenceSystem.module.user.dto.response.UserWithSpecializationResponse;
 import com.attendenceSystem.module.user.entity.enums.Department;
+import com.attendenceSystem.module.user.entity.enums.Role;
+import com.attendenceSystem.module.user.entity.enums.Specialization;
+import com.attendenceSystem.module.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import java.util.List;
 import org.springframework.ui.Model;
 
 @Controller
@@ -23,6 +28,7 @@ import org.springframework.ui.Model;
 public class ReportController {
 
     private final ReportService reportService;
+    private final UserRepository userRepository;
 
     @GetMapping
     public String reportList() {
@@ -31,7 +37,9 @@ public class ReportController {
 
     @GetMapping(Routes.Action.CREATE)
     public String reportCreate(Model model) {
-        model.addAttribute("departments", Department.values());
+        List<UserWithSpecializationResponse> users = userRepository.findAllUsersWithSpecializationByRoleNot(Role.ADMIN);
+        model.addAttribute("users", users);
+        model.addAttribute("specializations", Specialization.values());
         return Views.Document.CREATE;
     }
 
@@ -39,7 +47,6 @@ public class ReportController {
     public String submitReport(
             @RequestParam("title") String title,
             @RequestParam("content") String content,
-            @RequestParam("departmentId") String departmentId,
             @RequestParam(value = "sharedUserIds", required = false) Long[] sharedUserIds,
             @RequestParam(value = "files", required = false) MultipartFile[] files,
             @RequestParam(value = "link", required = false) String link,
@@ -59,7 +66,9 @@ public class ReportController {
             return Routes.REDIRECT + Routes.Report.ROOT + "?success=true";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("departments", Department.values());
+            List<UserWithSpecializationResponse> users = userRepository.findAllUsersWithSpecializationByRoleNot(Role.ADMIN);
+            model.addAttribute("users", users);
+            model.addAttribute("specializations", Specialization.values());
             return Views.Document.CREATE;
         }
     }

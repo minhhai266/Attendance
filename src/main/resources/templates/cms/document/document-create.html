@@ -25,7 +25,7 @@
             <!-- HEADER -->
             <div class="container-header">
                 <h1>Nộp báo cáo công việc</h1>
-                <p>Gửi báo cáo và chia sẻ cho phòng ban</p>
+                <p>Gửi báo cáo và chia sẻ cho nhân viên</p>
             </div>
 
             <main class="main-container">
@@ -54,25 +54,58 @@
                                     required></textarea>
                             </div>
 
-                            <!-- Phòng ban -->
+                            <!-- Người được chia sẻ -->
                             <div class="form-group">
-                                <label>Phòng ban</label>
+                                <div class="shared-header">
+                                    <label>Người được chia sẻ</label>
+                                    <button type="button" id="filterToggleBtn" class="filter-icon-btn" title="Bộ lọc">
+                                        <i class="fa-solid fa-filter"></i>
+                                    </button>
+                                </div>
 
-                                <select name="departmentId" id="departmentSelect" required>
-                                    <option value="" disabled selected>Chọn phòng ban</option>
-
-                                    <option th:each="d : ${departments}" th:value="${d.roomCode}"
-                                        th:text="${d.displayName}">
-                                    </option>
-                                </select>
-                            </div>
-
-                            <!-- Người được xem -->
-                            <div class="form-group">
-                                <label>Người được chia sẻ</label>
+                                <!-- Filter Panel -->
+                                <div id="filterPanel" class="filter-panel" style="display:none;">
+                                    <div class="filter-section">
+                                        <span class="filter-label">Chuyên ngành</span>
+                                        <div id="specializationFilters" class="filter-checkbox-group">
+                                            <th:block th:each="spec : ${specializations}">
+                                                <label class="filter-checkbox-label" th:if="${spec.name() != 'UNASSIGNED'}">
+                                                    <input type="checkbox" class="spec-filter-cb"
+                                                        th:data-spec="${spec.name()}"
+                                                        checked>
+                                                    <span th:text="${spec.displayName}"></span>
+                                                </label>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                    <div class="filter-section">
+                                        <span class="filter-label">Tên nhân viên</span>
+                                        <input type="text" id="nameFilterInput" class="filter-text-input"
+                                            placeholder="Nhập tên để lọc...">
+                                    </div>
+                                </div>
 
                                 <div id="userCheckboxes" class="checkbox-container">
-                                    <p class="placeholder-text">Chọn phòng ban trước</p>
+                                    <!-- Checkbox Tất cả -->
+                                    <label class="checkbox-label checkbox-all-label">
+                                        <input type="checkbox" id="selectAllCheckbox">
+                                        <span><strong>Tất cả</strong></span>
+                                    </label>
+                                    <hr class="checkbox-divider">
+
+                                    <!-- Danh sách nhân viên -->
+                                    <th:block th:each="user : ${users}">
+                                        <label class="checkbox-label employee-checkbox"
+                                            th:attr="data-specialization=${user.specialization().name()}, data-name=${user.fullName()}">
+                                            <input type="checkbox" name="sharedUserIds"
+                                                th:value="${user.id}">
+                                            <span th:text="${user.fullName()}"></span>
+                                        </label>
+                                    </th:block>
+
+                                    <p class="placeholder-text" th:if="${#lists.isEmpty(users)}">
+                                        Không có nhân viên nào
+                                    </p>
                                 </div>
                             </div>
 
@@ -116,48 +149,144 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
-
-    <!-- JS load user theo phòng -->
+    <!-- JS: Toggle all + Filter logic -->
     <script>
-        document.getElementById("departmentSelect").addEventListener("change", function () {
+        document.addEventListener('DOMContentLoaded', function() {
 
-            const departmentId = this.value;
-            const container = document.getElementById("userCheckboxes");
+            // ===== 1. Select All checkbox =====
+            const selectAllCb = document.getElementById('selectAllCheckbox');
+            const employeeCbs = document.querySelectorAll('.employee-checkbox input[type="checkbox"]');
 
-            if (!departmentId) {
-                container.innerHTML = "";
-                return;
-            }
-            fetch(`/api/report/departments/${departmentId}/users`)
-                .then(res => res.json())
-                .then(data => {
-                    container.innerHTML = "";
-
-                    if (!data || data.length === 0) {
-                        container.innerHTML = "<p class='placeholder-text'>Không có người dùng trong phòng ban này</p>";
-                        return;
-                    }
-
-                    data.forEach(user => {
-                        const label = document.createElement("label");
-                        label.className = "checkbox-label";
-
-                        const checkbox = document.createElement("input");
-                        checkbox.type = "checkbox";
-                        checkbox.name = "sharedUserIds";
-                        checkbox.value = user.id;
-
-                        const span = document.createElement("span");
-                        span.textContent = user.fullName;
-
-                        label.appendChild(checkbox);
-                        label.appendChild(span);
-                        container.appendChild(label);
+            if (selectAllCb) {
+                selectAllCb.addEventListener('change', function() {
+                    const isChecked = this.checked;
+                    // Only toggle VISIBLE employee checkboxes
+                    document.querySelectorAll('.employee-checkbox').forEach(function(label) {
+                        if (label.style.display !== 'none') {
+                            const cb = label.querySelector('input[type="checkbox"]');
+                            if (cb) cb.checked = isChecked;
+                        }
                     });
-
                 });
 
+                // If all individual checkboxes are checked, check "Select All"
+                function updateSelectAllState() {
+                    const visibleLabels = document.querySelectorAll('.employee-checkbox');
+                    let allVisibleChecked = true;
+                    let anyVisible = false;
+                    visibleLabels.forEach(function(label) {
+                        if (label.style.display !== 'none') {
+                            anyVisible = true;
+                            const cb = label.querySelector('input[type="checkbox"]');
+                            if (cb && !cb.checked) allVisibleChecked = false;
+                        }
+                    });
+                    if (selectAllCb) {
+                        selectAllCb.checked = anyVisible && allVisibleChecked;
+                    }
+                }
+
+                employeeCbs.forEach(function(cb) {
+                    cb.addEventListener('change', updateSelectAllState);
+                });
+            }
+
+            // ===== 2. Filter Panel Toggle =====
+            const filterToggleBtn = document.getElementById('filterToggleBtn');
+            const filterPanel = document.getElementById('filterPanel');
+
+            if (filterToggleBtn && filterPanel) {
+                filterToggleBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isVisible = filterPanel.style.display === 'block';
+                    filterPanel.style.display = isVisible ? 'none' : 'block';
+                });
+
+                // Close panel when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!filterPanel.contains(e.target) && e.target !== filterToggleBtn && !filterToggleBtn.contains(e.target)) {
+                        filterPanel.style.display = 'none';
+                    }
+                });
+            }
+
+            // ===== 3. Filter Logic =====
+            const specCheckboxes = document.querySelectorAll('.spec-filter-cb');
+            const nameInput = document.getElementById('nameFilterInput');
+            const employeeLabels = document.querySelectorAll('.employee-checkbox');
+
+            function applyFilters() {
+                // Get selected specializations
+                const selectedSpecs = [];
+                specCheckboxes.forEach(function(cb) {
+                    if (cb.checked) {
+                        selectedSpecs.push(cb.getAttribute('data-spec'));
+                    }
+                });
+
+                // Get name filter text
+                const nameText = nameInput ? nameInput.value.trim().toLowerCase() : '';
+
+                employeeLabels.forEach(function(label) {
+                    const spec = label.getAttribute('data-specialization');
+                    const name = (label.getAttribute('data-name') || '').toLowerCase();
+
+                    // Check specialization match
+                    const specMatch = selectedSpecs.length === 0 || selectedSpecs.includes(spec);
+
+                    // Check name match
+                    const nameMatch = nameText === '' || name.includes(nameText);
+
+                    // AND logic: show only if both match
+                    if (specMatch && nameMatch) {
+                        label.style.display = '';
+                    } else {
+                        label.style.display = 'none';
+                        // Uncheck hidden employees
+                        const cb = label.querySelector('input[type="checkbox"]');
+                        if (cb) cb.checked = false;
+                    }
+                });
+
+                // Update "Select All" state after filtering
+                if (selectAllCb) {
+                    const visibleLabels = document.querySelectorAll('.employee-checkbox');
+                    let allVisibleChecked = true;
+                    let anyVisible = false;
+                    visibleLabels.forEach(function(label) {
+                        if (label.style.display !== 'none') {
+                            anyVisible = true;
+                            const cb = label.querySelector('input[type="checkbox"]');
+                            if (cb && !cb.checked) allVisibleChecked = false;
+                        }
+                    });
+                    selectAllCb.checked = anyVisible && allVisibleChecked;
+                }
+            }
+
+            // Bind filter events
+            specCheckboxes.forEach(function(cb) {
+                cb.addEventListener('change', applyFilters);
+            });
+            if (nameInput) {
+                nameInput.addEventListener('input', applyFilters);
+            }
+
+            // ===== 4. Reset form: clear filter panel state =====
+            const resetBtn = document.querySelector('button[type="reset"]');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function() {
+                    // Reset filter panel
+                    if (filterPanel) filterPanel.style.display = 'none';
+                    specCheckboxes.forEach(function(cb) { cb.checked = true; });
+                    if (nameInput) nameInput.value = '';
+                    // Show all employees
+                    employeeLabels.forEach(function(label) { label.style.display = ''; });
+                    // Uncheck all
+                    employeeCbs.forEach(function(cb) { cb.checked = false; });
+                    if (selectAllCb) selectAllCb.checked = false;
+                });
+            }
         });
     </script>
 
