@@ -96,6 +96,26 @@ public class AccountServiceImpl implements AccountService {
         userRepository.save(user);
     }
 
+    @Transactional
+    @Override
+    public void changeRole(final Long id, final Role newRole) {
+        User user = findById(id);
+        validateAdminAction(user);
+
+        // Không cho đổi thành ADMIN
+        if (newRole == Role.ADMIN) {
+            throw new IllegalStateException("Không thể đổi quyền thành ADMIN");
+        }
+
+        // Không cho đổi role của admin
+        if (user.getRole() == Role.ADMIN) {
+            throw new IllegalStateException("Không thể đổi quyền của admin");
+        }
+
+        user.setRole(newRole);
+        userRepository.save(user);
+    }
+
     private User findById(final Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với id: " + id));

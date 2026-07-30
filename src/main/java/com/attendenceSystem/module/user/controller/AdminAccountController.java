@@ -9,10 +9,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.constant.Views;
+import java.util.Arrays;
+import java.util.List;
+
 import com.attendenceSystem.module.user.dto.response.UserResponse;
+import com.attendenceSystem.module.user.entity.enums.Role;
 import com.attendenceSystem.module.user.service.AccountService;
 import com.attendenceSystem.util.SecurityUtil;
 
@@ -30,6 +35,10 @@ public class AdminAccountController {
         model.addAttribute("users", accountService.getUsers(pageable));
         model.addAttribute("currentUsername", SecurityUtil.getCurrentUserName());
         model.addAttribute("currentRole", SecurityUtil.getCurrentUserRole());
+        List<Role> availableRoles = Arrays.stream(Role.values())
+                .filter(role -> role != Role.ADMIN)
+                .toList();
+        model.addAttribute("availableRoles", availableRoles);
         return Views.User.LIST;
     }
 
@@ -49,6 +58,12 @@ public class AdminAccountController {
     @PostMapping(Routes.Account.ROOT + Routes.Action.ACTIVATE + "/{id}")
     public String activateUser(@PathVariable("id") Long id) {
         accountService.activateUser(id);
+        return Routes.REDIRECT + Routes.Role.ADMIN + Routes.Account.ROOT;
+    }
+
+    @PostMapping(Routes.Account.ROOT + Routes.Action.CHANGE_ROLE + "/{id}")
+    public String changeRole(@PathVariable("id") Long id, @RequestParam("newRole") Role newRole) {
+        accountService.changeRole(id, newRole);
         return Routes.REDIRECT + Routes.Role.ADMIN + Routes.Account.ROOT;
     }
 }

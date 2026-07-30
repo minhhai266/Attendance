@@ -226,12 +226,53 @@ tbody tr:hover {
 }
 
 /* ===================================
-   ACTION BUTTONS
+    ROLE CHANGE DROPDOWN
+=================================== */
+
+.role-change {
+    display: flex;
+    align-items: center;
+}
+
+.role-change-form {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.role-select {
+    height: 38px;
+    padding: 0 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-form);
+    color: var(--text-white);
+    font-size: .85rem;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: .3s;
+    min-width: 110px;
+}
+
+.role-select:focus {
+    border-color: var(--indigo-06);
+    box-shadow: 0 0 0 4px var(--shadow-box);
+}
+
+.role-select option {
+    background: var(--bg-card);
+    color: var(--text-white);
+}
+
+/* ===================================
+    ACTION BUTTONS
 =================================== */
 
 .actions {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .icon-btn {

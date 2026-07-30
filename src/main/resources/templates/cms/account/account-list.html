@@ -65,7 +65,18 @@
                                     <div class="actions"
                                         th:with="canManage=${users.username() != currentUsername and users.role() != 'ADMIN'}">
 
-                                        <button class="icon-btn btn-role" th:if="${canManage}">Đổi quyền</button>
+                                        <div class="role-change" th:if="${canManage}">
+                                            <form th:action="@{/admin/accounts/change-role/{id}(id=${users.id()})}" method="post" class="role-change-form">
+                                                <select name="newRole" class="role-select">
+                                                    <option th:each="role : ${availableRoles}"
+                                                            th:value="${role.name()}"
+                                                            th:text="${role.name()}"
+                                                            th:selected="${role.name() == users.role()}">
+                                                    </option>
+                                                </select>
+                                                <button type="button" class="icon-btn btn-role" onclick="confirmRoleChange(this)">Đổi quyền</button>
+                                            </form>
+                                        </div>
                                         <div th:if="${canManage and users.status() == 'ACTIVE'}">
                                             <form th:action="@{/admin/accounts/deactivate/{id}(id=${users.id()})}" method="post">
                                                 <button class="icon-btn lock">🔒</button>
@@ -114,6 +125,23 @@
 
     </div>
 
+
+    <!-- CONFIRMATION MODAL FOR ROLE CHANGE -->
+    <div id="roleConfirmModal" class="detail-modal">
+        <div class="detail-content" style="max-width: 480px;">
+            <div class="detail-header">
+                <h2>Xác nhận đổi quyền</h2>
+                <button class="close-btn" onclick="closeRoleConfirm()">✕</button>
+            </div>
+            <div class="detail-body" style="grid-template-columns: 1fr;">
+                <p id="roleConfirmMessage" style="color: #e2e8f0; font-size: 1rem; line-height: 1.6;"></p>
+            </div>
+            <div class="detail-header" style="border-top: 1px solid var(--border); border-bottom: none; justify-content: flex-end; gap: 12px;">
+                <button class="icon-btn" style="background: var(--bg-form);" onclick="closeRoleConfirm()">Hủy</button>
+                <button class="icon-btn btn-role" id="roleConfirmSubmit" style="min-width: 100px;">Xác nhận</button>
+            </div>
+        </div>
+    </div>
 
     <div id="accountModal" class="detail-modal">
 
@@ -168,6 +196,42 @@
         </div>
 
     </div>
+
+<script>
+    let pendingForm = null;
+
+    function confirmRoleChange(button) {
+        const form = button.closest('.role-change-form');
+        const select = form.querySelector('.role-select');
+        const selectedRole = select.options[select.selectedIndex].text;
+        const row = form.closest('tr');
+        const userName = row.querySelector('strong').textContent;
+
+        pendingForm = form;
+
+        document.getElementById('roleConfirmMessage').textContent =
+            'Bạn có chắc chắn muốn đổi quyền của "' + userName + '" thành ' + selectedRole + '?';
+
+        document.getElementById('roleConfirmModal').style.display = 'flex';
+        document.getElementById('roleConfirmSubmit').onclick = function() {
+            if (pendingForm) {
+                pendingForm.submit();
+            }
+        };
+    }
+
+    function closeRoleConfirm() {
+        document.getElementById('roleConfirmModal').style.display = 'none';
+        pendingForm = null;
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('roleConfirmModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeRoleConfirm();
+        }
+    });
+</script>
 
 </body>
 

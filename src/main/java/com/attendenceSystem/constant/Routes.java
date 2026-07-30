@@ -16,6 +16,7 @@ public final class Routes {
         public static final String ACTIVATE = "/activate";
         public static final String ACCEPT = "/accept";
         public static final String REJECT = "/reject";
+        public static final String CHANGE_ROLE = "/change-role";
     }
 
     public static final class Role {
