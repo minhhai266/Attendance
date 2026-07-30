@@ -1,0 +1,301 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Xem nghỉ phép</title>
+    <link rel="stylesheet" href="/css/absent/my-absent-list.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="bg-image"></div>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <div th:replace="~{cms/sidebar/sidebar-role :: sidebar}"></div>
+
+        <!-- CONTENT -->
+        <div class="container-layout">
+
+            <!-- HEADER -->
+            <div class="container-header">
+                <h1>Xem nghỉ phép</h1>
+                <p>Danh sách đơn xin nghỉ phép của bạn</p>
+            </div>
+
+            <main class="main-container">
+
+                <!-- FILTER CARD -->
+                <section class="dashboard-card">
+
+                    <div class="card-header">
+                        <h2>Bộ lọc tìm kiếm</h2>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form class="filter-form" th:action="@{/attendance/leave/list}" method="get">
+
+                            <div class="filter-grid">
+
+                                <!-- Trạng thái -->
+                                <div class="form-group">
+                                    <label>Trạng thái</label>
+                                    <select name="status">
+                                        <option value="" th:selected="${selectedStatus == null}">Tất cả</option>
+                                        <option value="PENDING" th:selected="${selectedStatus?.name() == 'PENDING'}">Chờ duyệt</option>
+                                        <option value="APPROVED" th:selected="${selectedStatus?.name() == 'APPROVED'}">Đã duyệt</option>
+                                        <option value="REJECTED" th:selected="${selectedStatus?.name() == 'REJECTED'}">Từ chối</option>
+                                    </select>
+                                </div>
+
+                                <!-- Tuần -->
+                                <div class="form-group">
+                                    <label>Tuần</label>
+                                    <input type="week" name="week" th:value="${selectedWeek}">
+                                </div>
+
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    Tìm kiếm
+                                </button>
+
+                                <button type="reset" class="btn-secondary">
+                                    Reset
+                                </button>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </section>
+
+                <!-- TABLE CARD -->
+                <section class="dashboard-card">
+
+                    <div class="card-header">
+                        <h2>Danh sách đơn nghỉ phép</h2>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="table-wrapper">
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Từ ngày</th>
+                                        <th>Đến ngày</th>
+                                        <th>Lý do</th>
+                                        <th>Trạng thái</th>
+                                        <th>Chi tiết</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <!-- Không có dữ liệu -->
+                                    <tr th:if="${leaveRequests == null or leaveRequests.content.isEmpty()}">
+                                        <td colspan="5" class="text-center">
+                                            Chưa có đơn nghỉ phép nào.
+                                        </td>
+                                    </tr>
+                                    <tr th:each="leave : ${leaveRequests.content}">
+                                        <td th:text="${#temporals.format(leave.startDate(), 'dd/MM/yyyy')}">Từ ngày</td>
+                                        <td th:text="${#temporals.format(leave.endDate(), 'dd/MM/yyyy')}">Đến ngày</td>
+                                        <td th:text="${leave.reason()}">Lý do</td>
+                                        <td>
+                                            <span th:classappend="${leave.status()} ? 'status-' + ${leave.status().name().toLowerCase()}" 
+                                                  class="status"
+                                                  th:text="${leave.status()}">
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button th:data-id="${leave.id}"
+                                                class="btn btn-small btn-primary btn-view-detail" type="button">
+                                                <i class="fa-solid fa-eye"></i>
+                                                Xem chi tiết
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- PAGINATION -->
+                <div class="pagination" th:if="${leaveRequests.totalPages > 1}">
+                    <a th:if="${leaveRequests.hasPrevious()}"
+                       th:href="@{/attendance/leave/list(page=${leaveRequests.number - 1}, size=${leaveRequests.size}, status=${selectedStatus}, week=${selectedWeek})}"
+                       class="btn btn-pagination">← Trước</a>
+
+                    <span class="page-info">
+                        <a th:each="i : ${#numbers.sequence(0, leaveRequests.totalPages - 1)}"
+                           th:if="${i == leaveRequests.number}"
+                           th:href="@{/attendance/leave/list(page=${i}, size=${leaveRequests.size}, status=${selectedStatus}, week=${selectedWeek})}"
+                           class="page-link active" th:text="${i + 1}">1</a>
+                        <a th:each="i : ${#numbers.sequence(0, leaveRequests.totalPages - 1)}"
+                           th:unless="${i == leaveRequests.number}"
+                           th:href="@{/attendance/leave/list(page=${i}, size=${leaveRequests.size}, status=${selectedStatus}, week=${selectedWeek})}"
+                           class="page-link" th:text="${i + 1}">1</a>
+                    </span>
+
+                    <a th:if="${leaveRequests.hasNext()}"
+                       th:href="@{/attendance/leave/list(page=${leaveRequests.number + 1}, size=${leaveRequests.size}, status=${selectedStatus}, week=${selectedWeek})}"
+                       class="btn btn-pagination">Sau →</a>
+                </div>
+
+                <div id="absentDetailModal" class="absent-modal">
+
+                    <div class="absent-modal-content">
+
+                        <div class="absent-modal-header">
+                            <h2>Chi tiết đơn nghỉ phép</h2>
+
+                            <button class="close-btn" onclick="closeAbsentDetail()">
+                                ✕
+                            </button>
+                        </div>
+
+                        <div class="absent-modal-body">
+
+                            <div class="detail-grid">
+
+                                <div class="detail-item">
+                                    <label>Mã đơn</label>
+                                    <span id="detailId">#LV001</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <label>Tên đăng nhập</label>
+                                    <span id="detailUsername">--</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <label>Người gửi</label>
+                                    <span id="detailFullName">--</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <label>Từ ngày</label>
+                                    <span id="detailStartDate">--</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <label>Đến ngày</label>
+                                    <span id="detailEndDate">--</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <label>Số ngày nghỉ</label>
+                                    <span id="detailDays">--</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <label>Trạng thái</label>
+                                    <span id="detailStatus" class="status pending">
+                                        --
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div class="detail-reason">
+                                <label>Lý do nghỉ phép</label>
+
+                                <div id="detailReason" class="reason-box">
+                                    --
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </main>
+            <!-- FOOTER -->
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
+        </div>
+    </div>
+
+    <!-- DETAIL CARD -->
+
+    <script>
+        function openAbsentDetail() {
+            document
+                .getElementById("absentDetailModal")
+                .classList.add("show");
+        }
+
+        function closeAbsentDetail() {
+            document
+                .getElementById("absentDetailModal")
+                .classList.remove("show");
+        }
+
+        window.onclick = function (event) {
+
+            const modal =
+                document.getElementById("absentDetailModal");
+
+            if (event.target === modal) {
+                closeAbsentDetail();
+            }
+        };
+
+        document.querySelectorAll('.btn-view-detail').forEach(button => {
+            button.addEventListener('click', async function () {
+                const leaveId = this.getAttribute('data-id');
+                try {
+                    const response = await fetch('/api/attendance/leave/detail/' + leaveId);
+                    if (!response.ok) {
+                        throw new Error('Không thể tải chi tiết đơn nghỉ phép');
+                    }
+                    const data = await response.json();
+
+                    document.getElementById('detailId').textContent = '#' + data.id;
+                    document.getElementById('detailUsername').textContent = data.username || '--';
+                    document.getElementById('detailFullName').textContent = data.fullName || '--';
+                    document.getElementById('detailStartDate').textContent = data.startDate || '--';
+                    document.getElementById('detailEndDate').textContent = data.endDate || '--';
+
+                    if (data.startDate && data.endDate) {
+                        const start = new Date(data.startDate);
+                        const end = new Date(data.endDate);
+                        const days = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1);
+                        document.getElementById('detailDays').textContent = days + ' ngày';
+                    } else {
+                        document.getElementById('detailDays').textContent = '--';
+                    }
+
+                    const statusEl = document.getElementById('detailStatus');
+                    statusEl.textContent = data.status || '--';
+                    statusEl.className = 'status ' + (data.status ? data.status.toLowerCase() : '');
+
+                    document.getElementById('detailReason').textContent = data.reason || '--';
+
+                    openAbsentDetail();
+                } catch (error) {
+                    console.error(error);
+                    alert(error.message || 'Có lỗi xảy ra, vui lòng thử lại');
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

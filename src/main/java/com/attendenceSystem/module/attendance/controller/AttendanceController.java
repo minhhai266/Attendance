@@ -125,6 +125,30 @@ public class AttendanceController {
         return Views.Attendance.LEAVE_LIST;
     }
 
+    @GetMapping(Routes.Attendance.MY_LEAVE)
+    public String myLeaveRequestList(
+            @RequestParam(required = false) LeaveStatus status,
+            @RequestParam(required = false) String week,
+            @PageableDefault(size = 10) Pageable pageable,
+            Model model) {
+
+        boolean hasFilter = status != null || (week != null && !week.isBlank());
+
+        Page<LeaveRequestResponse> leaveRequests;
+        if (hasFilter) {
+            leaveRequests = leaveService.getLeaveRequests(status, week, pageable);
+        } else {
+            leaveRequests = leaveService.getLeaveRequests(pageable);
+        }
+
+        model.addAttribute("leaveRequests", leaveRequests);
+        model.addAttribute("selectedStatus", status);
+        model.addAttribute("selectedWeek", week);
+        model.addAttribute("hasFilter", hasFilter);
+
+        return Views.Attendance.MY_LEAVE_LIST;
+    }
+
     @GetMapping(Routes.Attendance.LEAVE + Routes.Action.CREATE)
     public String toLeaveRequestPage(Model model) {
         model.addAttribute("createLeaveRequest", new CreateLeaveRequest());

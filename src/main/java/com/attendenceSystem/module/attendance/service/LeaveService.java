@@ -16,6 +16,8 @@ public interface LeaveService {
 
     Page<LeaveRequestResponse> getLeaveRequests(Pageable pageable);
 
+    Page<LeaveRequestResponse> getLeaveRequests(LeaveStatus status, String week, Pageable pageable);
+
     Page<LeaveRequestResponse> getAllLeaveRequests(Pageable pageable);
 
     Page<LeaveRequestResponse> getAllLeaveRequests(String keyword, LeaveStatus status, String week, Pageable pageable);

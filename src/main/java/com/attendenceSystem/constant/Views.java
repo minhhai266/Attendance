@@ -37,6 +37,7 @@ public final class Views {
         public static final String HISTORY = "cms/attendance/attendance-history";
         public static final String LEAVE_CREATE = "cms/absent/absent-create";
         public static final String LEAVE_LIST = "cms/absent/absent-list";
+        public static final String MY_LEAVE_LIST = "cms/absent/my-absent-list";
         public static final String LEAVE_HISTORY = "cms/absent/absent-history";
     }
 

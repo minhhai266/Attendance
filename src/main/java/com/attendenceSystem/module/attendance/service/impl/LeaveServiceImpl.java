@@ -74,6 +74,20 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
+    public Page<LeaveRequestResponse> getLeaveRequests(final LeaveStatus status, final String week, final Pageable pageable) {
+        User user = userContextProvider.getCurrentUserEntity();
+        Specification<LeaveRequest> spec = Specification
+                .where(hasUser(user))
+                .and(LeaveRequestSpecification.hasStatus(status))
+                .and(LeaveRequestSpecification.hasWeek(week));
+        return leaveRequestRepository.findAll(spec, pageable).map(leaveRequestResponseMapper::fromEntity);
+    }
+
+    private Specification<LeaveRequest> hasUser(User user) {
+        return (root, query, cb) -> cb.equal(root.get("user"), user);
+    }
+
+    @Override
     public Page<LeaveRequestResponse> getAllLeaveRequests(final Pageable pageable) {
         return leaveRequestRepository.findAll(pageable).map(leaveRequestResponseMapper::fromEntity);
     }
