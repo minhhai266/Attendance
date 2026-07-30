@@ -6,5 +6,9 @@ import lombok.Builder;
 public record LatestFaceResponse(
         String faceCode,
         String imagePath,
-        Long sampleId) {
+        Long sampleId,
+        String username,
+        String fullName,
+        String email,
+        Boolean isAccept) {
 }

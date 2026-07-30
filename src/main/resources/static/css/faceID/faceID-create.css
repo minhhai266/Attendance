@@ -81,39 +81,6 @@ video {
     font-weight: 700;
 }
 
-.room-code-field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 12px;
-}
-
-.room-code-field label {
-    color: var(--text-light);
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
-.room-code-field input {
-    padding: 12px 14px;
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    background: var(--bg-form);
-    color: var(--text-white);
-    outline: none;
-    transition: 0.25s;
-}
-
-.room-code-field input:focus {
-    border-color: var(--indigo-06);
-    box-shadow: 0 0 0 4px var(--indigo-15);
-}
-
-.room-code-field small {
-    color: var(--text-gray);
-    font-size: 0.8rem;
-}
-
 .face-sample-summary {
     display: flex;
     align-items: center;
@@ -362,6 +329,135 @@ video {
 
 #captureFaceBtn:hover {
     box-shadow: 0 10px 25px rgba(99, 102, 241, 0.25);
+}
+
+/* ===================================
+   FACE DETAIL MODAL
+=================================== */
+
+.face-detail-action {
+    margin-top: 12px;
+}
+
+.detail-btn-secondary {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--bg-table-06);
+    color: var(--text-light);
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+    text-align: center;
+}
+
+.detail-btn-secondary:hover {
+    background: var(--indigo-15);
+    border-color: var(--indigo-06);
+    color: white;
+}
+
+.face-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.face-modal.show {
+    display: flex;
+}
+
+.face-modal-content {
+    width: 700px;
+    max-width: 90%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(0, 0, 0, .4);
+}
+
+.face-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-white);
+}
+
+.face-modal-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.close-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-white);
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.face-gallery {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 24px;
+    align-items: start;
+    min-height: 350px;
+}
+
+.face-gallery-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.face-gallery-image img {
+    max-width: 400px;
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    object-fit: cover;
+}
+
+.face-detail-panel {
+    display: grid;
+    gap: 14px;
+}
+
+.face-detail-panel .detail-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+}
+
+.face-detail-panel .detail-item span {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 6px;
+}
+
+.face-detail-panel .detail-item p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-white);
+}
+
+.face-detail-panel .detail-item p#detailStatus {
+    color: var(--success);
 }
 
 @media (max-width: 1100px) {

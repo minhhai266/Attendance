@@ -105,13 +105,17 @@ public class FaceIdApiController {
     @GetMapping("/latest")
     public ResponseEntity<LatestFaceResponse> getLatestFace() {
         try {
-            User user = getCurrentUser();
-            FaceProfile faceProfile = faceProfileRepository.findByUser(user)
+            User currentUser = getCurrentUser();
+            FaceProfile faceProfile = faceProfileRepository.findByUser(currentUser)
                     .orElseThrow(() -> new IllegalArgumentException("Chưa đăng ký face"));
 
             return ResponseEntity.ok(LatestFaceResponse.builder()
                     .faceCode(faceProfile.getFaceCode())
                     .imagePath(faceProfile.getThumbnailUrl())
+                    .username(currentUser.getUsername())
+                    .fullName(currentUser.getFullName())
+                    .email(currentUser.getEmail())
+                    .isAccept(faceProfile.getIsAccept())
                     .build());
 
         } catch (IllegalArgumentException e) {

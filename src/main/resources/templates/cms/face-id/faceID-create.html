@@ -45,19 +45,19 @@
                                     <span class="meta-badge">Bắt buộc</span>
                                 </div>
 
-                                <div class="room-code-field">
-                                    <label for="roomCode">Mã phòng</label>
-                                    <input type="text" id="roomCode" placeholder="VD: P101">
-                                    <small>Nhập mã phòng trước khi bật camera và bắt đầu quét.</small>
-                                </div>
-
                                 <div class="face-sample-summary">
                                     <button id="faceSampleCount" class="face-sample-count-btn" type="button">
                                         0 / 5 mẫu
                                     </button>
                                     <span id="faceSampleStatusText">
-                                        Chờ nhập mã phòng để bắt đầu.
+                                        Chưa có mẫu nào.
                                     </span>
+                                </div>
+
+                                <div class="face-detail-action">
+                                    <button id="viewFaceDetailBtn" type="button" class="detail-btn-secondary">
+                                        👤 Xem chi tiết khuôn mặt đã đăng ký
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -155,6 +155,39 @@
 
     </div>
 
+    <!-- Modal xem chi tiết khuôn mặt đã đăng ký -->
+    <div id="faceDetailModal" class="face-modal">
+        <div class="face-modal-content">
+            <div class="face-modal-header">
+                <h2>Chi tiết khuôn mặt đã đăng ký</h2>
+                <button class="close-btn" onclick="closeFaceDetailModal()">✕</button>
+            </div>
+            <div class="face-gallery">
+                <div class="face-gallery-image">
+                    <img id="detailFaceImage" src="" alt="Face ID">
+                </div>
+                <div class="face-detail-panel">
+                    <div class="detail-item">
+                        <span>Mã sinh viên</span>
+                        <p id="detailUsername">--</p>
+                    </div>
+                    <div class="detail-item">
+                        <span>Họ tên</span>
+                        <p id="detailFullName">--</p>
+                    </div>
+                    <div class="detail-item">
+                        <span>Email</span>
+                        <p id="detailEmail">--</p>
+                    </div>
+                    <div class="detail-item">
+                        <span>Trạng thái</span>
+                        <p id="detailStatus">--</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const video = document.getElementById("video");
         const canvas = document.getElementById("captureCanvas");
@@ -162,7 +195,7 @@
         const captureBtn = document.getElementById("captureFaceBtn");
         const resetBtn = document.getElementById("resetFaceScanBtn");
         const rescanBtn = document.getElementById("rescanBtn");
-        const roomCodeInput = document.getElementById("roomCode");
+        const viewDetailBtn = document.getElementById("viewFaceDetailBtn");
 
         const sampleCountBtn = document.getElementById("faceSampleCount");
         const sampleStatusText = document.getElementById("faceSampleStatusText");
@@ -296,15 +329,8 @@
         });
 
         captureBtn.addEventListener("click", () => {
-            const roomCode = roomCodeInput.value.trim();
-
             if (!isStreaming) {
                 setMessage("❌ Vui lòng bật camera trước.", "error");
-                return;
-            }
-
-            if (!roomCode) {
-                setMessage("❌ Vui lòng nhập mã phòng trước khi chụp.", "error");
                 return;
             }
 
@@ -338,16 +364,7 @@
             updateDetectionStatus("Đang chờ mẫu mới", "#3498db");
         });
 
-        roomCodeInput.addEventListener("input", updateUI);
-
         async function submitSamples() {
-            const roomCode = roomCodeInput.value.trim();
-
-            if (!roomCode) {
-                setMessage("❌ Vui lòng nhập mã phòng", "error");
-                return;
-            }
-
             try {
                 const response = await fetch('/api/face-id/register', {
                     method: 'POST',
@@ -355,7 +372,6 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        roomCode: roomCode,
                         samples: capturedSamples.map(sample => sample.imageBase64)
                     })
                 });
@@ -364,9 +380,7 @@
                     const result = await response.json();
                     if (result.success) {
                         setMessage(`✅ ${result.message}`, "success");
-                        setTimeout(() => {
-                            window.location.href = "/face-id";
-                        }, 2000);
+                        // Không chuyển trang, chỉ hiển thị thành công
                     } else {
                         setMessage(`❌ Lỗi: ${result.message}`, "error");
                     }
@@ -381,14 +395,13 @@
 
         function updateUI() {
             const count = capturedSamples.length;
-            const roomCode = roomCodeInput.value.trim();
 
             sampleCountBtn.textContent = `${count} / 5 mẫu`;
             sampleStatusText.textContent = count === 0
-                ? (roomCode ? "Đã sẵn sàng để thu thập mẫu." : "Chờ nhập mã phòng để bắt đầu.")
+                ? "Chưa có mẫu nào."
                 : `Đã thu thập ${count}/5 mẫu khuôn mặt`;
 
-            captureBtn.disabled = !isStreaming || !roomCode || count >= 5;
+            captureBtn.disabled = !isStreaming || count >= 5;
             resetBtn.disabled = count === 0;
             rescanBtn.disabled = count === 0;
 
@@ -406,6 +419,55 @@
                 ? "Chờ kích hoạt camera"
                 : (count === 5 ? "Hoàn tất thu thập" : "Camera đang hoạt động");
         }
+
+        // Xem chi tiết khuôn mặt đã đăng ký
+        viewDetailBtn.addEventListener("click", async () => {
+            try {
+                const response = await fetch('/api/face-id/latest');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById("detailUsername").textContent = data.username || "--";
+                    document.getElementById("detailFullName").textContent = data.fullName || "--";
+                    document.getElementById("detailEmail").textContent = data.email || "--";
+
+                    // Xác định trạng thái dựa trên isAccept
+                    const statusEl = document.getElementById("detailStatus");
+                    if (data.isAccept === true) {
+                        statusEl.textContent = "Đã duyệt";
+                        statusEl.style.color = "#2ecc71";
+                    } else if (data.isAccept === false) {
+                        statusEl.textContent = "Bị từ chối";
+                        statusEl.style.color = "#e74c3c";
+                    } else {
+                        statusEl.textContent = "Chờ duyệt";
+                        statusEl.style.color = "#f0ad4e";
+                    }
+
+                    document.getElementById("detailFaceImage").src = data.imagePath || "https://i.pinimg.com/736x/6a/5e/fc/6a5efc25bf7c7603afac79d7046f999c.jpg";
+                    openFaceDetailModal();
+                } else {
+                    setMessage("❌ Bạn chưa đăng ký khuôn mặt nào.", "error");
+                }
+            } catch (error) {
+                console.error(error);
+                setMessage("❌ Lỗi kết nối khi lấy thông tin.", "error");
+            }
+        });
+
+        function openFaceDetailModal() {
+            document.getElementById("faceDetailModal").classList.add("show");
+        }
+
+        function closeFaceDetailModal() {
+            document.getElementById("faceDetailModal").classList.remove("show");
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById("faceDetailModal");
+            if (event.target === modal) {
+                closeFaceDetailModal();
+            }
+        };
 
         updateUI();
     </script>

@@ -57,7 +57,7 @@ public class FaceProfileController {
             return Views.FaceId.CREATE;
         }
         faceProfileService.createFaceProfile(request);
-        return Routes.REDIRECT + Routes.FaceId.ROOT;
+        return Routes.REDIRECT + Routes.FaceId.ROOT + Routes.Action.CREATE;
     }
 
     @PostMapping(Routes.Action.ACCEPT + "/{id}")

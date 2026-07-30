@@ -15,5 +15,4 @@ import lombok.Setter;
 @Builder
 public class FaceCaptureRequest {
     private List<String> samples;
-    private String roomCode;
 }
