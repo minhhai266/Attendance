@@ -35,13 +35,13 @@
                                     <th>Ngày nộp</th>
                                     <th>File đính kèm</th>
                                     <th>Link tài liệu</th>
-                                    
+                                    <th>Hành động</th>
                                 </tr>
                             </thead>
 
                             <tbody id="reportTableBody">
                                 <tr>
-                                    <td colspan="5" style="text-align:center">Đang tải...</td>
+                                    <td colspan="6" style="text-align:center">Đang tải...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -68,6 +68,9 @@
 
         </div>
     </div>
+
+    <!-- Modal chi tiết báo cáo -->
+    <div th:replace="~{cms/document/document-detail :: reportModal}"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -129,18 +132,94 @@
                             '<td>' + report.title + '</td>' +
                             '<td>' + formattedDate + '</td>' +
                             '<td>' + filesHtml + '</td>' +
-                            '<td>' + linkHtml + '</td>';
+                            '<td>' + linkHtml + '</td>' +
+                            '<td><button class="btn btn-detail" data-id="' + report.id + '">Chi tiết</button></td>';
 
                         tableBody.appendChild(row);
                     });
+
+                    // Gắn sự kiện click cho các nút Chi tiết
+                    document.querySelectorAll('.btn-detail').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const reportId = this.getAttribute('data-id');
+                            openReportDetail(reportId);
+                        });
+                    });
                 } else {
-                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center">Không có báo cáo nào</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center">Không có báo cáo nào</td></tr>';
                 }
             })
             .catch(error => {
                 console.error('Error loading reports:', error);
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center">Lỗi khi tải danh sách báo cáo</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center">Lỗi khi tải danh sách báo cáo</td></tr>';
             });
+
+            // Modal functions
+            const modal = document.getElementById('reportModal');
+            const closeBtn = modal.querySelector('.close-btn');
+
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+            };
+
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
+
+            async function openReportDetail(reportId) {
+                try {
+                    const response = await fetch('/api/report/' + reportId);
+                    if (!response.ok) {
+                        throw new Error('Không thể tải chi tiết báo cáo');
+                    }
+                    const data = await response.json();
+
+                    document.getElementById('modalTitle').textContent = data.title || '--';
+                    document.getElementById('modalEmployee').textContent = data.employeeName || '--';
+
+                    const date = data.createdAt ? new Date(data.createdAt) : null;
+                    document.getElementById('modalDate').textContent = date ? date.toLocaleDateString('vi-VN') : '--';
+
+                    document.getElementById('modalContent').textContent = data.content || '--';
+
+                    // Hiển thị người được chia sẻ
+                    const sharedUsersDiv = document.getElementById('modalSharedUsers');
+                    if (data.sharedUserNames && data.sharedUserNames.length > 0) {
+                        sharedUsersDiv.innerHTML = data.sharedUserNames.map(name => 
+                            '<span class="shared-user-tag">' + name + '</span>'
+                        ).join(' ');
+                    } else {
+                        sharedUsersDiv.innerHTML = '<span>Không có</span>';
+                    }
+
+                    // Hiển thị tập đính kèm
+                    const filesDiv = document.getElementById('modalFiles');
+                    if (data.attachmentFiles) {
+                        const filePaths = data.attachmentFiles.split(',');
+                        filesDiv.innerHTML = filePaths.map(path => {
+                            const filename = path.split('/').pop();
+                            return '<a href="' + path + '" class="file-link" download>📎 ' + filename + '</a>';
+                        }).join('<br>');
+                    } else {
+                        filesDiv.innerHTML = '<span>Không có</span>';
+                    }
+
+                    // Hiển thị liên kết
+                    const linkDiv = document.getElementById('modalLink');
+                    if (data.attachmentUrl) {
+                        linkDiv.innerHTML = '<a href="' + data.attachmentUrl + '" target="_blank" class="file-link">🔗 Mở link</a>';
+                    } else {
+                        linkDiv.innerHTML = '<span>Không có</span>';
+                    }
+
+                    modal.style.display = 'flex';
+                } catch (error) {
+                    console.error('Error loading report detail:', error);
+                    alert('Lỗi khi tải chi tiết báo cáo');
+                }
+            }
         });
     </script>
 </body>

@@ -1,6 +1,7 @@
 package com.attendenceSystem.module.report.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.attendenceSystem.module.report.entity.enums.ReportStatus;
 
@@ -14,5 +15,6 @@ public record ReportDetailResponse(
         ReportStatus status,
         String rejectReason,
         LocalDateTime createdAt,
-        LocalDateTime reviewedAt) {
+        LocalDateTime reviewedAt,
+        List<String> sharedUserNames) {
 }

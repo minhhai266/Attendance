@@ -1,4 +1,4 @@
-<div id="reportModal" class="modal">
+<div id="reportModal" class="modal" th:fragment="reportModal">
 
     <div class="modal-content">
 
@@ -7,7 +7,7 @@
         <h2 id="modalTitle"></h2>
 
         <p>
-            <strong>Nhân viên:</strong>
+            <strong>Người chia sẻ:</strong>
             <span id="modalEmployee"></span>
         </p>
 
@@ -21,13 +21,18 @@
             <p id="modalContent"></p>
         </div>
 
+        <div class="report-shared-users">
+            <strong>Người được chia sẻ:</strong>
+            <div id="modalSharedUsers"></div>
+        </div>
+
         <div class="report-attachments">
-            <strong>File đính kèm:</strong>
+            <strong>Tập đính kèm:</strong>
             <div id="modalFiles"></div>
         </div>
 
         <div class="report-link">
-            <strong>Link tài liệu:</strong>
+            <strong>Liên kết:</strong>
             <div id="modalLink"></div>
         </div>
 

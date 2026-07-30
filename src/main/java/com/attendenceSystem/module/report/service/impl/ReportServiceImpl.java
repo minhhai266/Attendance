@@ -107,7 +107,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public ReportDetailResponse getReportById(final Long id) {
-        Report report = reportRepository.findById(id)
+        Report report = reportRepository.findByIdWithShares(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy báo cáo với id: " + id));
         return ReportDetailResponseMapper.fromEntity(report);
     }
