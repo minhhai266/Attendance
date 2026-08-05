@@ -31,7 +31,7 @@ from app.routers.deps import ADMIN_ROLE, LAB_MANAGER_ROLE, STUDENT_ROLE, user_fr
 from app.services.attendance_service import mark_missing_checkouts
 from app.services.face_service import face_service
 from app.services.liveness_service import liveness_service
-
+from app.routers import internal_face
 
 async def missing_checkout_scheduler():
     while True:
@@ -114,7 +114,7 @@ if trusted_hosts:
 app.middleware("http")(security_headers_middleware)
 app.middleware("http")(csrf_protect_middleware)
 
-app.mount("/static", StaticFiles(directory="web/static"), name="static")
+#    app.mount("/static", StaticFiles(directory="web/static"), name="static")
 
 app.include_router(auth.router)
 app.include_router(students.router)
@@ -128,7 +128,7 @@ app.include_router(settings_router.router)
 app.include_router(realtime.router)
 app.include_router(users.router)
 app.include_router(student_portal.router)
-
+app.include_router(internal_face.router)
 
 def no_cache_file(path: str):
     return FileResponse(
@@ -141,21 +141,21 @@ def no_cache_file(path: str):
     )
 
 
-@app.get("/login")
-def login_page():
-    return no_cache_file("web/templates/login.html")
+# @app.get("/login")
+# def login_page():
+#     return no_cache_file("web/templates/login.html")
 
 
-@app.get("/")
-def root(request: Request):
-    user = user_from_request(request)
-    if not user:
-        return RedirectResponse("/login")
-    if user.get("role") == STUDENT_ROLE:
-        return no_cache_file("web/templates/student_dashboard.html")
-    if user.get("role") in {LAB_MANAGER_ROLE, ADMIN_ROLE}:
-        return no_cache_file("web/templates/dashboard.html")
-    return RedirectResponse("/login")
+# @app.get("/")
+# def root(request: Request):
+#     user = user_from_request(request)
+#     if not user:
+#         return RedirectResponse("/login")
+#     if user.get("role") == STUDENT_ROLE:
+#         return no_cache_file("web/templates/student_dashboard.html")
+#     if user.get("role") in {LAB_MANAGER_ROLE, ADMIN_ROLE}:
+#         return no_cache_file("web/templates/dashboard.html")
+#     return RedirectResponse("/login")
 
 
 @app.get("/admin/users")

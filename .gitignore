@@ -29,6 +29,21 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+# Ignore runtime and generated artifacts
+venv/
+face-ai/venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.log
+spring-boot.log
+cookie.txt
+response.txt
+target/
+uploads/
+
 # Ignore .env files
 .env
 

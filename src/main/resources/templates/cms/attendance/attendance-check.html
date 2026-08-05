@@ -1,154 +1,96 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Attendance</title>
+    <title>Điểm danh bằng Face ID</title>
     <link href="/css/attendance/attendance-check.css" rel="stylesheet">
 </head>
 
 <body>
-
-    <!-- =======================================================================
-                                    HEADER
-    ==========================================================================-->
     <header class="header">
         <div class="header-left">
             <div class="header-logo">
                 <a href="/home">MyApp</a>
             </div>
-
             <div class="header-info">
-                <h1 class="header-title">Quản lý điểm danh</h1>
+                <h1 class="header-title">Điểm danh bằng Face ID</h1>
                 <div class="header-time" id="currentDate">--</div>
             </div>
         </div>
-
         <div class="header-right">
-            <div class="header-clock" id="clock">
-                00:00:00
-            </div>
-            <button class="header-btn theme-toggle" id="themeToggle">
-                🌙
-            </button>
+            <div class="header-clock" id="clock">00:00:00</div>
+            <button class="header-btn theme-toggle" id="themeToggle" type="button">🌙</button>
         </div>
     </header>
 
-    <!-- =======================================================================
-                                    BODY
-    ==========================================================================-->
     <div class="container">
-        <!-- Stats -->
-        <div class="stats-row">
-            <div class="stat-card stat-total">
-                <p>Tổng nhân viên</p>
-                <span class="stat-number" id="statTotal">0</span>
-            </div>
-            <div class="stat-card stat-present">
-                <p>Đã điểm danh</p>
-                <span class="stat-number" id="statPresent">0</span>
-            </div>
-            <div class="stat-card stat-checked-out">
-                <p>Đã checkout</p>
-                <span class="stat-number" id="statCheckedOut">0</span>
-            </div>
-            <div class="stat-card stat-late">
-                <p>Đi muộn</p>
-                <span class="stat-number" id="statLate">0</span>
-            </div>
-            <div class="stat-card stat-absent">
-                <p>Vắng mặt</p>
-                <span class="stat-number" id="statAbsent">0</span>
-            </div>
-        </div>
+        <aside class="history">
+            <h2 class="history-title">Nhật ký điểm danh</h2>
+            <ul class="history-list">
+                <li class="history-card">
+                    <span class="history-date">Hôm nay</span>
+                    <span class="history-status status-in">Check-in</span>
+                </li>
+                <li class="history-card">
+                    <span class="history-date">Hôm qua</span>
+                    <span class="history-status status-out">Checkout</span>
+                </li>
+                <li class="history-card">
+                    <span class="history-date">Tuần này</span>
+                    <span class="history-status status-in">Đã có dữ liệu</span>
+                </li>
+            </ul>
+        </aside>
 
-        <!-- Filters -->
-        <div class="filters-bar">
-            <form id="filterForm" class="filters-form">
-                <div class="filter-item">
-                    <label for="dateFilter">Ngày</label>
-                    <input type="date" id="dateFilter" name="date" />
+        <main class="container-attend-main">
+            <section class="scanner-card">
+                <div class="scan-frame">
+                    <video id="camera" autoplay playsinline muted></video>
+                    <div class="scan-line"></div>
                 </div>
-                <div class="filter-item">
-                    <label for="departmentFilter">Phòng ban</label>
-                    <select id="departmentFilter" name="departmentId">
-                        <option value="">Tất cả</option>
-                        <option value="IT">IT</option>
-                        <option value="HR">HR</option>
-                        <option value="MARKETING">MARKETING</option>
-                        <option value="FINANCE">FINANCE</option>
-                    </select>
-                </div>
-                <div class="filter-actions">
-                    <button type="submit" class="btn btn-primary">Lọc</button>
-                    <button type="button" class="btn btn-secondary" id="btnRefresh">Làm mới</button>
-                </div>
-            </form>
-        </div>
+                <div class="result-card" id="attendanceMessage" style="display:none;"></div>
+            </section>
 
-        <!-- List -->
-        <div class="list-section">
-            <h3 class="section-title">Danh sách điểm danh</h3>
-            <div class="table-wrapper">
-                <table class="attendance-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nhân viên</th>
-                            <th>Phòng ban</th>
-                            <th>Check-in</th>
-                            <th>Check-out</th>
-                            <th>Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody id="attendanceList">
-                        <tr>
-                            <td colspan="6" class="text-center">Đang tải dữ liệu...</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <section class="guide-card">
+                <h2 class="guide-title">Hướng dẫn quét Face ID</h2>
+                <ol class="guide-list">
+                    <li>Đảm bảo ánh sáng đủ và không đeo khẩu trang, kính râm.</li>
+                    <li>Nhìn thẳng vào camera trong khoảng 2–3 giây.</li>
+                    <li>Nhấn nút “Quét điểm danh” để xác thực khuôn mặt đã đăng ký.</li>
+                    <li>Hệ thống sẽ tự động chấm công check-in hoặc check-out theo trạng thái hiện tại.</li>
+                </ol>
+            </section>
+        </main>
+
+        <aside class="container-attend-right">
+            <div class="attendance-info">
+                <div class="attendance-title">Thông tin cá nhân</div>
+                <div class="attendance-sum" id="profileName">Đang tải...</div>
+                <div class="attendance-date" id="profileUsername">--</div>
+                <div class="attendance-date" id="profileEmail">--</div>
             </div>
-        </div>
+
+            <div class="stat-card success-card">
+                <p>Trạng thái Face ID</p>
+                <span class="stat-number attendance-present" id="faceStatus">Đang kiểm tra</span>
+            </div>
+
+            <div class="stat-card warning-card">
+                <p>Ngày hiện tại</p>
+                <span class="stat-number attendance-late" id="todayLabel">--</span>
+            </div>
+
+            <div class="attendance-info">
+                <button id="btnCaptureAttendance" class="header-btn" type="button" style="width:auto;height:auto;padding:14px 20px;border-radius:12px;font-weight:700;">📸 Quét điểm danh</button>
+                <button id="btnToggleCamera" class="header-btn" type="button" style="width:auto;height:auto;padding:14px 20px;border-radius:12px;font-weight:700;">📹 Mở camera</button>
+            </div>
+        </aside>
     </div>
 
-    <script src="/js/attendance-manager.js"></script>
-    <script>
-        const dateInput = document.getElementById("dateFilter");
-        const today = new Date().toISOString().slice(0, 10);
-        if (dateInput) {
-            dateInput.value = today;
-        }
-        const currentDateEl = document.getElementById("currentDate");
-        if (currentDateEl) {
-            currentDateEl.textContent = new Date().toLocaleDateString("vi-VN", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric"
-            });
-        }
-        const btnRefresh = document.getElementById("btnRefresh");
-        if (btnRefresh) {
-            btnRefresh.addEventListener("click", () => {
-                if (dateInput) dateInput.value = today;
-                document.getElementById("departmentFilter").value = "";
-                loadStats();
-                loadList();
-            });
-        }
-        const themeToggle = document.getElementById("themeToggle");
-        themeToggle.addEventListener("click", () => {
-            document.body.classList.toggle("dark");
-            themeToggle.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
-        });
-        function updateClock() {
-            const now = new Date();
-            const clockEl = document.getElementById("clock");
-            if (clockEl) clockEl.textContent = now.toLocaleTimeString("vi-VN");
-        }
-        updateClock();
-        setInterval(updateClock, 1000);
-    </script>
+    <script src="/js/api/method.js"></script>
+    <script src="/js/attendance/attendance-check.js"></script>
 </body>
 
 </html>

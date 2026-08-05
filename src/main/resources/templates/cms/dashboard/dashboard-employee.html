@@ -148,13 +148,19 @@
 
                                     <tbody>
                                         <tr th:each="record : ${dashboard.attendanceHistory.content}">
-                                            <td th:text="${#temporals.format(record.attendanceDate, 'dd/MM/yyyy')}"></td>
-                                            <td th:text="${record.checkInTime != null ? #temporals.format(record.checkInTime, 'HH:mm') : '--'}"></td>
-                                            <td th:text="${record.checkOutTime != null ? #temporals.format(record.checkOutTime, 'HH:mm') : '--'}"></td>
+                                            <td th:text="${#temporals.format(record.attendanceDate, 'dd/MM/yyyy')}">
+                                            </td>
+                                            <td
+                                                th:text="${record.checkInTime != null ? #temporals.format(record.checkInTime, 'HH:mm') : '--'}">
+                                            </td>
+                                            <td
+                                                th:text="${record.checkOutTime != null ? #temporals.format(record.checkOutTime, 'HH:mm') : '--'}">
+                                            </td>
                                             <td>
-                                                <span th:classappend="${record.late} ? 'status-warning' : (${record.earlyLeave} ? 'status-danger' : 'status-success')"
-                                                      class="status-badge"
-                                                      th:text="${record.late} ? 'Đi muộn' : (${record.earlyLeave} ? 'Về sớm' : 'Đúng giờ')">
+                                                <span
+                                                    th:classappend="${record.late} ? 'status-warning' : (${record.earlyLeave} ? 'status-danger' : 'status-success')"
+                                                    class="status-badge"
+                                                    th:text="${record.late} ? 'Đi muộn' : (${record.earlyLeave} ? 'Về sớm' : 'Đúng giờ')">
                                                 </span>
                                             </td>
                                         </tr>
@@ -209,7 +215,7 @@
                                 </span>
                             </div>
 
-                            <button class="btn-update-profile">
+                            <button onclick="window.location.href='/user/profile'" class="btn-update-profile">
                                 Cập nhật thông tin
                             </button>
 

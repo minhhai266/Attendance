@@ -44,10 +44,10 @@ class Settings(BaseSettings):
     liveness_edge_margin: int = 5
     missing_checkout_cutoff_time: str = "23:59"
     missing_checkout_scan_interval_seconds: int = 60
+    internal_api_key: str = ""
     work_start_time: str = "08:00"
     work_end_time: str = "17:00"
     late_grace_minutes: int = 5
     early_leave_grace_minutes: int = 10
-
 
 settings = Settings()

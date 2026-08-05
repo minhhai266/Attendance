@@ -9,7 +9,13 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.module.faceid.dto.request.FaceCaptureRequest;
@@ -21,6 +27,7 @@ import com.attendenceSystem.module.faceid.entity.FaceProfile;
 import com.attendenceSystem.module.faceid.entity.FaceSample;
 import com.attendenceSystem.module.faceid.repository.FaceProfileRepository;
 import com.attendenceSystem.module.faceid.repository.FaceSampleRepository;
+import com.attendenceSystem.module.faceid.service.FaceAiClient;
 import com.attendenceSystem.module.faceid.service.FaceIdAttendanceService;
 import com.attendenceSystem.module.storage.exception.FileStorageException;
 import com.attendenceSystem.module.storage.provider.StorageProvider;
@@ -36,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class FaceIdApiController {
-
+    private final FaceAiClient faceAiClient;
     private final FaceProfileRepository faceProfileRepository;
     private final FaceSampleRepository faceSampleRepository;
     private final UserRepository userRepository;
@@ -44,6 +51,7 @@ public class FaceIdApiController {
     private final FaceIdAttendanceService faceIdAttendanceService;
 
     @PostMapping("/register")
+
     @Transactional
     public ResponseEntity<FaceCaptureResponse> registerFace(@RequestBody FaceCaptureRequest request) {
         try {
@@ -57,51 +65,86 @@ public class FaceIdApiController {
                                     .sampleCount(0)
                                     .build()));
 
-            // Xóa ảnh cũ
             cleanUpOldSamples(faceProfile);
             faceSampleRepository.deleteByFaceProfile(faceProfile);
 
-            // Lưu ảnh mẫu mới
             int sampleCount = 0;
             String lastImagePath = null;
 
             if (request.getSamples() != null && !request.getSamples().isEmpty()) {
+
+                // Gọi AI để lấy embedding cho toàn bộ 5 ảnh cùng lúc
+                FaceAiClient.EmbedBatchResponse aiResult = faceAiClient.embedBatch(request.getSamples());
+
                 for (int i = 0; i < request.getSamples().size(); i++) {
+                    FaceAiClient.EmbedResult embedResult = aiResult.results.get(i);
+
+                    // Bỏ qua ảnh không nhận diện được khuôn mặt (VD: mờ, không có mặt, nhiều mặt)
+                    if (!embedResult.success) {
+                        log.warn("Mẫu {} lỗi: {}", i + 1, embedResult.message);
+                        continue;
+                    }
+                
+
                     String imagePath = saveBase64Image(request.getSamples().get(i), user.getId(), i + 1);
 
                     faceSampleRepository.save(FaceSample.builder()
                             .faceProfile(faceProfile)
                             .imagePath(imagePath)
                             .sampleOrder(i + 1)
+                            .embedding(embedResult.embedding)   // <-- LƯU EMBEDDING THẬT
                             .build());
+
                     sampleCount++;
                     lastImagePath = imagePath;
                 }
             }
 
-            faceProfile.setSampleCount(sampleCount);
-            faceProfile.setThumbnailUrl(lastImagePath);
-            // Khi employee đăng ký lại face, reset trạng thái duyệt để manager duyệt lại
-            faceProfile.setIsAccept(null);
-            faceProfileRepository.save(faceProfile);
-
-            return ResponseEntity.ok(FaceCaptureResponse.builder()
-                    .faceCode(faceProfile.getFaceCode())
-                    .thumbnailUrl(lastImagePath)
-                    .message("Đăng ký thành công " + sampleCount + " mẫu khuôn mặt")
-                    .success(true)
+        if (sampleCount == 0) {
+            return ResponseEntity.badRequest().body(FaceCaptureResponse.builder()
+                    .message("Không nhận diện được khuôn mặt hợp lệ nào trong các mẫu đã chụp")
+                    .success(false)
                     .build());
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(FaceCaptureResponse.builder().message(e.getMessage()).success(false).build());
-        } catch (Exception e) {
-            log.error("Lỗi khi đăng ký face", e);
-            return ResponseEntity.internalServerError()
-                    .body(FaceCaptureResponse.builder().message("Lỗi máy chủ").success(false).build());
         }
-    }
 
+        faceProfile.setSampleCount(sampleCount);
+        faceProfile.setThumbnailUrl(lastImagePath);
+        faceProfile.setIsAccept(null);
+        faceProfileRepository.save(faceProfile);
+
+        return ResponseEntity.ok(FaceCaptureResponse.builder()
+                .faceCode(faceProfile.getFaceCode())
+                .thumbnailUrl(lastImagePath)
+                .message("Đăng ký thành công " + sampleCount + " mẫu khuôn mặt")
+                .success(true)
+                .build());
+
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.badRequest()
+                .body(FaceCaptureResponse.builder().message(e.getMessage()).success(false).build());
+    } catch (Exception e) {
+        log.error("Lỗi khi đăng ký face", e);
+        return ResponseEntity.internalServerError()
+                .body(FaceCaptureResponse.builder().message("Lỗi máy chủ").success(false).build());
+    }
+}
+    public static class PoseCheckRequest {
+    public String image_base64;
+}
+
+@PostMapping("/pose-check")
+public ResponseEntity<FaceAiClient.PoseResult> poseCheck(@RequestBody PoseCheckRequest request) {
+    try {
+        FaceAiClient.PoseResult result = faceAiClient.checkPose(request.image_base64);
+        return ResponseEntity.ok(result);
+    } catch (Exception e) {
+        log.error("Lỗi kiểm tra tư thế", e);
+        FaceAiClient.PoseResult error = new FaceAiClient.PoseResult();
+        error.ok = false;
+        error.message = "Không kết nối được AI";
+        return ResponseEntity.ok(error);
+    }
+}
     @GetMapping("/latest")
     public ResponseEntity<LatestFaceResponse> getLatestFace() {
         try {

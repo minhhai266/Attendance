@@ -18,14 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.attendenceSystem.module.attendance.dto.response.AttendanceHistoryStatsResponse;
-import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
-import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
-
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.constant.Views;
 import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
+import com.attendenceSystem.module.attendance.dto.response.AttendanceHistoryStatsResponse;
+import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
+import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 import com.attendenceSystem.module.attendance.exception.AlreadyCheckedInException;
 import com.attendenceSystem.module.attendance.exception.AlreadyCheckedOutException;
@@ -52,6 +51,11 @@ public class AttendanceController {
     public String toAttendanceListPage(@PageableDefault(size = 10) Pageable pageable, Model model) {
         model.addAttribute("attendanceHistory", attendanceService.getAttendanceHistory(pageable));
         return Views.Attendance.LIST;
+    }
+
+    @GetMapping(Routes.Attendance.CHECK)
+    public String toAttendanceCheckPage() {
+        return Views.Attendance.CHECK;
     }
 
     @PostMapping(Routes.Attendance.CHECK_IN)

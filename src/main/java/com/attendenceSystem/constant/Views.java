@@ -34,6 +34,7 @@ public final class Views {
 
     public static final class Attendance {
         public static final String LIST = "cms/attendance/attendance";
+        public static final String CHECK = "cms/attendance/attendance-check";
         public static final String HISTORY = "cms/attendance/attendance-history";
         public static final String LEAVE_CREATE = "cms/absent/absent-create";
         public static final String LEAVE_LIST = "cms/absent/absent-list";

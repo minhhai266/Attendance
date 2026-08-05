@@ -43,6 +43,9 @@ public class FaceSample {
     @Column(name = "sample_order")
     private Integer sampleOrder;
 
+    @Column(name = "embedding", columnDefinition = "TEXT")
+    private String embedding;
+    
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -62,7 +62,7 @@
 
                             <div class="info-item">
                                 <label>Chuyên ngành</label>
-                                <p th:text="${#authentication.principal.department}">Không có   </p>
+                                <p th:text="${#authentication.principal.department}">Không có </p>
                             </div>
 
                         </div>
@@ -115,7 +115,59 @@
                     </div>
 
                 </section>
+                <section class="edit-card" id="editInformation">
 
+                    <form th:action="@{/user/information/update}" method="post"
+                        th:object="${updateUserInformationRequest}" class="edit-form">
+
+                        <div class="edit-body">
+                            <div class="edit-header">
+                                <h2>Thông tin cá nhân</h2>
+                            </div>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Họ và tên</label>
+                                    <input type="text" name="fullName" th:value="${#authentication.principal.fullName}">
+                                    <div class="error-message" th:if="${#fields.hasErrors('fullName')}"
+                                        th:errors="*{fullName}"></div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Email</label>
+                                    <input type="text" name="email" th:value="${#authentication.principal.email}">
+                                    <div class="error-message" th:if="${#fields.hasErrors('email')}"
+                                        th:errors="*{email}"></div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Số điện thoại</label>
+                                    <input type="text" name="phone" th:value="${#authentication.principal.phone}">
+                                    <div class="error-message" th:if="${#fields.hasErrors('phone')}"
+                                        th:errors="*{phone}"></div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Chuyên ngành</label>
+                                    <select name="specialization">
+                                        <option
+                                            th:each="spec : ${T(com.attendenceSystem.module.user.entity.enums.Specialization).values()}"
+                                            th:value="${spec.name()}" th:text="${spec.displayName}"
+                                            th:selected="${#authentication.principal.department == spec.name()}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="btn-run">
+                                    <button type="submit" class="btn btn-primary">
+                                        Cập nhật
+                                    </button>
+
+                                    <button type="button" id="btnClose" class="btn btn-close">
+                                        Đóng
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </section>
             </main>
 
             <div th:replace="~{cms/layout/footer :: footer}"></div>
@@ -123,55 +175,7 @@
         </div>
     </div>
 
-    <section class="edit-card" id="editInformation">
 
-        <form th:action="@{/user/information/update}" method="post" th:object="${updateUserInformationRequest}" class="edit-form">
-
-            <div class="edit-body">
-                <div class="edit-header">
-                    <h2>Thông tin cá nhân</h2>
-                </div>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label >Họ và tên</label>
-                        <input type="text" name="fullName" th:value="${#authentication.principal.fullName}">
-                        <div class="error-message" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
-                    </div>
-                    <div class="info-item">
-                        <label >Email</label>
-                        <input type="text" name="email" th:value="${#authentication.principal.email}">
-                        <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-                    </div>
-                    <div class="info-item">
-                        <label >Số điện thoại</label>
-                        <input type="text" name="phone" th:value="${#authentication.principal.phone}">
-                        <div class="error-message" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
-                    </div>
-                    <div class="info-item">
-                        <label >Chuyên ngành</label>
-                        <select name="specialization">
-                            <option th:each="spec : ${T(com.attendenceSystem.module.user.entity.enums.Specialization).values()}"
-                                    th:value="${spec.name()}"
-                                    th:text="${spec.displayName}"
-                                    th:selected="${#authentication.principal.department == spec.name()}">
-                            </option>
-                        </select>
-                    </div>
-                    <div class="btn-run">
-                        <button type="submit" class="btn btn-primary">
-                            Cập nhật
-                        </button>
-
-                        <button type="button" id="btnClose" class="btn btn-close">
-                            Đóng
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-        </form>
-
-    </section>
     <!-- FOOTER -->
     <script>
         const btn = document.getElementById("editInformation");

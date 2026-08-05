@@ -300,8 +300,17 @@ body.dark .scanner-card {
 
     position: relative;
 
+    overflow: hidden;
+
     box-shadow:
         0 0 30px rgba(59,130,246,.25);
+}
+
+#camera {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #0f172a;
 }
 
 .scan-frame::before {
@@ -380,6 +389,17 @@ body.dark .scanner-card {
 
     color:
         var(--primary);
+}
+
+.error-result {
+    background:
+        rgba(239,68,68,.15);
+
+    border:
+        1px solid rgba(239,68,68,.35);
+
+    color:
+        var(--danger);
 }
 
 /* ==================================================

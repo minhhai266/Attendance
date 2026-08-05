@@ -83,7 +83,8 @@
                                 </div>
 
                                 <p class="face-mode-hint">
-                                    Hệ thống yêu cầu 5 góc khuôn mặt để tăng độ chính xác nhận diện. Hãy giữ khoảng cách vừa đủ và quay mặt chậm.
+                                    Hệ thống yêu cầu 5 góc khuôn mặt để tăng độ chính xác nhận diện. Hãy giữ khoảng cách
+                                    vừa đủ và quay mặt chậm.
                                 </p>
 
                                 <div class="guide-box">
@@ -116,16 +117,33 @@
                                     <h3>Hướng dẫn quét</h3>
                                 </div>
 
-                                <ul class="scan-tips">
-                                    <li>✓ Bước 1: Nhìn thẳng.</li>
-                                    <li>✓ Bước 2: Quay mặt sang trái.</li>
-                                    <li>✓ Bước 3: Quay mặt sang phải.</li>
-                                    <li>✓ Bước 4: Ngẩng mặt lên.</li>
-                                    <li>✓ Bước 5: Cúi mặt xuống.</li>
+                                <ul class="scan-tips" id="scanStepsList">
+                                    <li data-step="front" class="scan-step is-active">
+                                        <span class="scan-step-icon">1</span>
+                                        <span class="scan-step-label">Nhìn thẳng.</span>
+                                    </li>
+                                    <li data-step="left" class="scan-step is-locked">
+                                        <span class="scan-step-icon">2</span>
+                                        <span class="scan-step-label">Quay mặt sang trái.</span>
+                                    </li>
+                                    <li data-step="right" class="scan-step is-locked">
+                                        <span class="scan-step-icon">3</span>
+                                        <span class="scan-step-label">Quay mặt sang phải.</span>
+                                    </li>
+                                    <li data-step="up" class="scan-step is-locked">
+                                        <span class="scan-step-icon">4</span>
+                                        <span class="scan-step-label">Ngẩng mặt lên.</span>
+                                    </li>
+                                    <li data-step="down" class="scan-step is-locked">
+                                        <span class="scan-step-icon">5</span>
+                                        <span class="scan-step-label">Cúi mặt xuống.</span>
+                                    </li>
                                 </ul>
 
                                 <p class="muted">
-                                    Đảm bảo khuôn mặt đủ sáng, không bị che bởi khẩu trang hoặc kính râm. Tránh quay quá nhanh để camera đủ thời gian nhận diện.
+                                    Đảm bảo khuôn mặt đủ sáng, không bị che bởi khẩu trang hoặc kính râm. Tránh quay quá
+                                    nhanh để camera đủ thời gian nhận diện. Các bước phải thực hiện <strong>lần lượt theo
+                                    đúng thứ tự 1 → 5</strong>, hoàn thành bước trước mới được chuyển sang bước kế tiếp.
                                 </p>
 
                                 <div class="status-box">
@@ -188,6 +206,22 @@
         </div>
     </div>
 
+    <style>
+        /* Fallback styling for the sequential step list, in case the external
+           CSS file doesn't yet define these classes. Safe to remove if your
+           faceID-create.css already covers .scan-step states. */
+        #scanStepsList { display: flex; flex-direction: column; gap: 8px; padding: 0; margin: 0; list-style: none; }
+        .scan-step { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; transition: all .2s ease; opacity: .5; }
+        .scan-step-icon { display:flex; align-items:center; justify-content:center; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; font-weight: 700; background: #444a5a; color: #cfd3dc; flex-shrink: 0; }
+        .scan-step.is-locked { opacity: .45; }
+        .scan-step.is-active { opacity: 1; background: rgba(52,152,219,0.12); }
+        .scan-step.is-active .scan-step-icon { background: #3498db; color: #fff; }
+        .scan-step.is-done { opacity: 1; }
+        .scan-step.is-done .scan-step-icon { background: #27ae60; color: #fff; }
+        .scan-step.is-done .scan-step-icon::before { content: "✓"; }
+        .scan-step.is-done .scan-step-label { text-decoration: line-through; color: #8f97a8; }
+    </style>
+
     <script>
         const video = document.getElementById("video");
         const canvas = document.getElementById("captureCanvas");
@@ -207,81 +241,146 @@
         const detectionConfidence = document.getElementById("detectionConfidence");
         const statusText = document.getElementById("statusText");
         const progressText = document.getElementById("progressText");
+        const scanStepsListItems = document.querySelectorAll("#scanStepsList .scan-step");
 
         let stream = null;
         let capturedSamples = [];
-        let autoCaptureTimer = null;
-        let isAutoCapturing = false;
         let isStreaming = false;
+        let pollTimer = null;
+        let stableCount = 0;
+        const STABLE_NEEDED = 3;       // cần đúng tư thế liên tiếp 3 lần mới chụp (~1.2s)
+        const POLL_INTERVAL_MS = 400;
 
-        const guideSteps = [
-            "Nhìn thẳng vào camera",
-            "Quay mặt sang trái",
-            "Quay mặt sang phải",
-            "Ngẩng mặt lên",
-            "Cúi mặt xuống"
-        ];
+        // Thứ tự bước phải khớp với "pose" trả về từ AI: front, left, right, up, down
+        // Thứ tự này BẮT BUỘC phải làm tuần tự: xong bước i mới được sang bước i+1.
+        const requiredSteps = ["front", "left", "right", "up", "down"];
+        const guideTextMap = {
+            front: "Nhìn thẳng vào camera",
+            left: "Quay mặt sang trái",
+            right: "Quay mặt sang phải",
+            up: "Ngẩng mặt lên",
+            down: "Cúi mặt xuống",
+        };
 
         function setMessage(text, type = "info") {
             messageBox.innerHTML = text;
             messageBox.className = `message ${type}`;
         }
 
-        function updateDetectionStatus(message, color) {
-            detectedFace.textContent = message;
-            detectedFace.style.color = color;
-            detectionConfidence.textContent = "";
+        function currentStepIndex() {
+            return capturedSamples.length;
         }
 
-        function startAutoCapture() {
-            if (isAutoCapturing || !isStreaming) return;
-
-            isAutoCapturing = true;
-            autoCaptureTimer = setInterval(() => {
-                if (!stream || capturedSamples.length >= 5) {
-                    return;
-                }
-                captureFrame();
-            }, 1000);
+        function currentStepKey() {
+            return requiredSteps[currentStepIndex()];
         }
 
-        function stopAutoCapture() {
-            isAutoCapturing = false;
-            if (autoCaptureTimer) {
-                clearInterval(autoCaptureTimer);
-                autoCaptureTimer = null;
+        function updateGuideText() {
+            const idx = currentStepIndex();
+            if (idx >= requiredSteps.length) {
+                scanGuideCurrent.textContent = "Hoàn thành đăng ký";
+                scanGuideSteps.textContent = "5 / 5";
+                progressText.textContent = "5 / 5";
+                return;
             }
+            scanGuideCurrent.textContent = guideTextMap[requiredSteps[idx]];
+            scanGuideSteps.textContent = `Bước ${idx + 1} / 5`;
+            progressText.textContent = `Bước ${idx + 1} / 5`;
         }
 
-        function captureFrame() {
+        // Cập nhật danh sách bước bên phải: bước đã xong -> done,
+        // bước hiện tại -> active, các bước sau -> locked (chưa được làm tới).
+        function updateStepsList() {
+            const idx = currentStepIndex(); // số mẫu đã chụp = số bước đã hoàn thành
+            scanStepsListItems.forEach((li, i) => {
+                li.classList.remove("is-done", "is-active", "is-locked");
+                if (i < idx) {
+                    li.classList.add("is-done");
+                } else if (i === idx) {
+                    li.classList.add("is-active");
+                } else {
+                    li.classList.add("is-locked");
+                }
+            });
+        }
+
+        function grabFrameBase64() {
+            const ctx = canvas.getContext("2d");
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            return canvas.toDataURL("image/jpeg", 0.85);
+        }
+
+        async function pollPose() {
+            if (!isStreaming || capturedSamples.length >= 5) return;
+
+            const imageBase64 = grabFrameBase64();
+
             try {
-                if (!stream || capturedSamples.length >= 5) {
+                const res = await fetch('/api/face-id/pose-check', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image_base64: imageBase64 }),
+                });
+                const data = await res.json();
+
+                if (!data.ok) {
+                    stableCount = 0;
+                    detectedFace.textContent = data.message || "Chưa phát hiện gương mặt";
+                    detectedFace.style.color = "#e74c3c";
+                    detectionConfidence.textContent = "";
                     return;
                 }
 
-                const ctx = canvas.getContext("2d");
-                canvas.width = video.videoWidth || 640;
-                canvas.height = video.videoHeight || 480;
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                // Chỉ chấp nhận đúng bước hiện tại theo thứ tự (không cho phép nhảy cóc/bỏ qua bước).
+                const expected = currentStepKey();
+                if (data.pose === expected) {
+                    stableCount++;
+                    detectedFace.textContent = `✅ Đúng tư thế (${stableCount}/${STABLE_NEEDED})`;
+                    detectedFace.style.color = "#27ae60";
+                    detectionConfidence.textContent = data.message || "";
 
-                const imageBase64 = canvas.toDataURL("image/jpeg", 0.9);
-                capturedSamples.push({
-                    imageBase64: imageBase64,
-                    timestamp: new Date().toISOString()
-                });
+                    if (stableCount >= STABLE_NEEDED) {
+                        stableCount = 0;
+                        capturedSamples.push(imageBase64);
+                        updateUI();
+                        setMessage(`✅ Đã thu thập mẫu ${capturedSamples.length}/5 (${guideTextMap[expected]})`, "success");
 
-                updateUI();
-                setMessage(`✅ Đã thu thập mẫu ${capturedSamples.length}/5`, "success");
-                updateDetectionStatus("📷 Mẫu đã được ghi nhận", "#27ae60");
-
-                if (capturedSamples.length === 5) {
-                    stopAutoCapture();
-                    setMessage("✅ Đã thu thập đủ 5 mẫu, đang gửi...", "success");
-                    submitSamples();
+                        if (capturedSamples.length === 5) {
+                            setMessage("✅ Đã thu thập đủ 5 mẫu, đang gửi...", "success");
+                            await submitSamples();
+                        }
+                    }
+                } else if (data.pose && requiredSteps.includes(data.pose)) {
+                    // Người dùng đang làm sai thứ tự (ví dụ nhảy sang bước sau khi chưa xong bước hiện tại).
+                    stableCount = 0;
+                    detectedFace.textContent = `⚠️ Vui lòng thực hiện đúng thứ tự: ${guideTextMap[expected]} trước đã`;
+                    detectedFace.style.color = "#e67e22";
+                    detectionConfidence.textContent = "";
+                } else {
+                    stableCount = 0;
+                    detectedFace.textContent = data.message || `Đang ở tư thế: ${data.pose || '?'}`;
+                    detectedFace.style.color = "#3498db";
+                    detectionConfidence.textContent = "";
                 }
             } catch (error) {
-                console.error("Auto-capture error:", error);
+                console.error("Pose check error:", error);
             }
+        }
+
+        function startPolling() {
+            stopPolling();
+            pollTimer = setInterval(pollPose, POLL_INTERVAL_MS);
+        }
+
+        function stopPolling() {
+            if (pollTimer) {
+                clearInterval(pollTimer);
+                pollTimer = null;
+            }
+            stableCount = 0;
         }
 
         toggleBtn.addEventListener("click", async () => {
@@ -291,7 +390,7 @@
                 video.srcObject = null;
                 toggleBtn.textContent = "Bật camera";
                 isStreaming = false;
-                stopAutoCapture();
+                stopPolling();
                 detectionResult.style.display = "none";
                 setMessage("Camera đã được tắt.", "info");
                 updateUI();
@@ -305,82 +404,52 @@
 
             try {
                 stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: "user",
-                        width: { ideal: 640 },
-                        height: { ideal: 480 }
-                    },
+                    video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } },
                     audio: false
                 });
 
                 video.srcObject = stream;
-                await video.play().catch(() => {});
+                await video.play().catch(() => { });
                 toggleBtn.textContent = "Tắt camera";
                 isStreaming = true;
                 detectionResult.style.display = "block";
-                setMessage("📹 Camera đã sẵn sàng. Đang thu thập mẫu tự động...", "info");
-                updateDetectionStatus("Đang chờ mẫu khuôn mặt", "#3498db");
-                startAutoCapture();
+                setMessage("📹 Camera đã sẵn sàng. Làm theo hướng dẫn từng bước.", "info");
                 updateUI();
+                startPolling();
             } catch (error) {
                 console.error(error);
                 setMessage("❌ Không thể mở camera. Vui lòng kiểm tra quyền truy cập.", "error");
             }
         });
 
-        captureBtn.addEventListener("click", () => {
-            if (!isStreaming) {
-                setMessage("❌ Vui lòng bật camera trước.", "error");
-                return;
-            }
-
-            if (capturedSamples.length >= 5) {
-                setMessage("✅ Đã đủ 5 mẫu. Đang xử lý đăng ký.", "success");
-                return;
-            }
-
-            captureFrame();
-        });
-
         resetBtn.addEventListener("click", () => {
             capturedSamples = [];
-            stopAutoCapture();
-            if (isStreaming) {
-                startAutoCapture();
-            }
+            stableCount = 0;
             updateUI();
             setMessage("Đã làm lại quá trình quét.", "info");
-            updateDetectionStatus("Đang chờ mẫu mới", "#3498db");
         });
 
         rescanBtn.addEventListener("click", () => {
             capturedSamples = [];
-            stopAutoCapture();
-            if (isStreaming) {
-                startAutoCapture();
-            }
+            stableCount = 0;
             updateUI();
             setMessage("Đã bắt đầu quét lại từ đầu.", "info");
-            updateDetectionStatus("Đang chờ mẫu mới", "#3498db");
         });
 
         async function submitSamples() {
+            stopPolling();
             try {
                 const response = await fetch('/api/face-id/register', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        samples: capturedSamples.map(sample => sample.imageBase64)
-                    })
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ samples: capturedSamples }),
                 });
 
                 if (response.ok) {
                     const result = await response.json();
                     if (result.success) {
                         setMessage(`✅ ${result.message}`, "success");
-                        // Không chuyển trang, chỉ hiển thị thành công
                     } else {
                         setMessage(`❌ Lỗi: ${result.message}`, "error");
                     }
@@ -395,79 +464,15 @@
 
         function updateUI() {
             const count = capturedSamples.length;
-
             sampleCountBtn.textContent = `${count} / 5 mẫu`;
-            sampleStatusText.textContent = count === 0
-                ? "Chưa có mẫu nào."
-                : `Đã thu thập ${count}/5 mẫu khuôn mặt`;
-
-            captureBtn.disabled = !isStreaming || count >= 5;
+            sampleStatusText.textContent = count === 0 ? "Chưa có mẫu nào." : `Đã thu thập ${count}/5 mẫu khuôn mặt`;
+            captureBtn.disabled = true; // không cần nút chụp thủ công nữa, AI tự chụp
             resetBtn.disabled = count === 0;
             rescanBtn.disabled = count === 0;
-
-            if (count < 5) {
-                scanGuideCurrent.textContent = guideSteps[count];
-                scanGuideSteps.textContent = `Bước ${count + 1} / 5`;
-                progressText.textContent = `Bước ${count + 1} / 5`;
-            } else {
-                scanGuideCurrent.textContent = "Hoàn thành đăng ký";
-                scanGuideSteps.textContent = "5 / 5";
-                progressText.textContent = "5 / 5";
-            }
-
-            statusText.textContent = !isStreaming
-                ? "Chờ kích hoạt camera"
-                : (count === 5 ? "Hoàn tất thu thập" : "Camera đang hoạt động");
+            updateGuideText();
+            updateStepsList();
+            statusText.textContent = !isStreaming ? "Chờ kích hoạt camera" : (count === 5 ? "Hoàn tất thu thập" : "Đang quét, làm theo hướng dẫn");
         }
-
-        // Xem chi tiết khuôn mặt đã đăng ký
-        viewDetailBtn.addEventListener("click", async () => {
-            try {
-                const response = await fetch('/api/face-id/latest');
-                if (response.ok) {
-                    const data = await response.json();
-                    document.getElementById("detailUsername").textContent = data.username || "--";
-                    document.getElementById("detailFullName").textContent = data.fullName || "--";
-                    document.getElementById("detailEmail").textContent = data.email || "--";
-
-                    // Xác định trạng thái dựa trên isAccept
-                    const statusEl = document.getElementById("detailStatus");
-                    if (data.isAccept === true) {
-                        statusEl.textContent = "Đã duyệt";
-                        statusEl.style.color = "#2ecc71";
-                    } else if (data.isAccept === false) {
-                        statusEl.textContent = "Bị từ chối";
-                        statusEl.style.color = "#e74c3c";
-                    } else {
-                        statusEl.textContent = "Chờ duyệt";
-                        statusEl.style.color = "#f0ad4e";
-                    }
-
-                    document.getElementById("detailFaceImage").src = data.imagePath || "https://i.pinimg.com/736x/6a/5e/fc/6a5efc25bf7c7603afac79d7046f999c.jpg";
-                    openFaceDetailModal();
-                } else {
-                    setMessage("❌ Bạn chưa đăng ký khuôn mặt nào.", "error");
-                }
-            } catch (error) {
-                console.error(error);
-                setMessage("❌ Lỗi kết nối khi lấy thông tin.", "error");
-            }
-        });
-
-        function openFaceDetailModal() {
-            document.getElementById("faceDetailModal").classList.add("show");
-        }
-
-        function closeFaceDetailModal() {
-            document.getElementById("faceDetailModal").classList.remove("show");
-        }
-
-        window.onclick = function (event) {
-            const modal = document.getElementById("faceDetailModal");
-            if (event.target === modal) {
-                closeFaceDetailModal();
-            }
-        };
 
         updateUI();
     </script>

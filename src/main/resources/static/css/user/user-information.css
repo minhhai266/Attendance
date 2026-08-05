@@ -1,13 +1,21 @@
 @import url("../base.css");
 
 /* =========================
+   LAYOUT
+========================= */
+
+.container-layout {
+    position: relative;
+}
+
+/* =========================
    CARD BASE
 ========================= */
 
 .container-card,
 .dashboard-card {
     background: var(--bg-card);
-    border: 0.65px solid var(--indigo-15);
+    border: 1px solid var(--indigo-15);
     border-radius: 14px;
 
     backdrop-filter: blur(10px);
@@ -20,37 +28,27 @@
    CARD HEADER
 ========================= */
 
-.card-header {
-    padding: 16px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--bg-table-06);
-    background: var(--indigo-08);
-}
-
-.card-header h2 {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-white);
-    padding-right: 730px;
-}
+.card-header,
 .edit-header {
     padding: 16px 20px;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     border-bottom: 1px solid var(--bg-table-06);
+
     background: var(--indigo-08);
-    margin-bottom: 30px;
-    border-radius: 15px;
 }
 
+.card-header h2,
 .edit-header h2 {
+    margin: 0;
+
     font-size: 16px;
     font-weight: 700;
+
     color: var(--text-white);
-    padding-right: 730px;
 }
 
 /* =========================
@@ -60,76 +58,81 @@
 .card-body {
     padding: 18px 20px;
 }
-#editInformation {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
 
-    width: 100%;
-    height: 100%;
-
-    background: var(--bg-dark);
-
-    justify-content: center;
-    align-items: center;
-
-    z-index: 9999;
-}
 /* =========================
    INFO GRID
 ========================= */
 
+.info-grid {
+    display: grid;
 
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 18px;
+}
 
 .info-item {
     padding: 12px 14px;
 
     border-radius: 12px;
+
     border: 1px solid var(--bg-table-06);
 
     background: var(--bg-card);
 }
 
 .info-item label {
-    font-size: 12px;
-    color: var(--text-gray);
     display: block;
+
     margin-bottom: 6px;
+
+    font-size: 12px;
+
+    color: var(--text-gray);
 }
 
 .info-item p {
     font-size: 14px;
-    color: var(--text-white);
+
     font-weight: 600;
+
+    color: var(--text-white);
 }
 
 /* =========================
-   FORM (change password)
+   CHANGE PASSWORD FORM
 ========================= */
 
 .form-group {
     display: flex;
+
     flex-direction: column;
+
     margin-bottom: 14px;
 }
 
 .form-group label {
-    font-size: 12px;
-    color: var(--text-gray);
     margin-bottom: 6px;
+
+    font-size: 12px;
+
+    color: var(--text-gray);
 }
 
 .form-group input {
     padding: 10px 12px;
 
     border-radius: 10px;
+
     border: 1px solid var(--bg-table-06);
 
     background: var(--bg-dark);
+
     color: var(--text-white);
 
     outline: none;
+
+    transition: .25s;
 }
 
 .form-group input:focus {
@@ -142,239 +145,230 @@
 
 .form-actions {
     display: flex;
+
     gap: 10px;
+
     margin-top: 16px;
 }
 
-.btn-primary {
+.btn {
+    min-width: 120px;
+
     padding: 10px 14px;
 
     border: none;
+
     border-radius: 10px;
 
     cursor: pointer;
+
+    font-size: 14px;
     font-weight: 600;
 
-    color: var(--text-white);
-    background: linear-gradient(90deg, var(--indigo-06), var(--purple));
+    transition: .25s;
+}
 
-    transition: 0.2s;
+.btn-primary {
+    color: var(--text-white);
+
+    background: linear-gradient(
+        135deg,
+        var(--indigo-06),
+        var(--purple)
+    );
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    opacity: 0.9;
+
+    box-shadow: 0 10px 20px var(--indigo-15);
 }
 
-.btn-secondary {
-    padding: 10px 14px;
-
-    border-radius: 10px;
-    border: 1px solid var(--bg-table-015);
-
-    background: transparent;
+.btn-secondary,
+.btn-close {
     color: var(--text-white);
 
-    cursor: pointer;
-    transition: 0.2s;
+    background: transparent;
+
+    border: 1px solid var(--bg-table-015);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover,
+.btn-close:hover {
     background: var(--bg-table-06);
 }
 
-
 /* =========================
-   POPUP
+   POPUP OVERLAY
+   (CHỈ PHỦ CONTENT)
 ========================= */
 
-#editInformation {
+.main-container {
+    position: relative;
+}
+
+.edit-card {
     display: none;
-    position: fixed;
+
+    position: absolute;
+
     inset: 0;
 
-    background: var(--bg-dark);
+    background: rgba(0, 0, 0, 0.55);
+
     backdrop-filter: blur(6px);
 
     justify-content: center;
     align-items: center;
 
-    z-index: 9999;
+    z-index: 999;
 }
 
-/* hiện popup */
-#editInformation.show {
+.edit-card.show {
     display: flex;
 }
 
 /* =========================
-   CARD
+   POPUP FORM
 ========================= */
 
-.edit-card {
-    width: 1550px;
-    max-width: 100%;
+.edit-form {
+    width: 800px;
+
+    max-width: 90%;
+}
+
+.edit-body {
+    padding: 20px;
+
+    border-radius: 24px;
 
     background: var(--bg-card);
+
     border: 1px solid var(--border);
-    border-radius: 18px;
 
-    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
 
-    box-shadow: 0 20px 60px var(--bg-dark);
     animation: popup .25s ease;
-
-    backdrop-filter: blur(10px);
-
-    margin-bottom: 20px;
 }
 
-@keyframes popup{
-    from{
-        opacity:0;
-        transform:translateY(-20px) scale(.95);
+@keyframes popup {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(.95);
     }
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
 /* =========================
-   HEADER
+   EDIT FORM INPUTS
 ========================= */
 
-.card-header{
-    padding:18px 24px;
+.edit-body .info-item {
+    display: flex;
 
-    background: var(--bg-card);
-    border-bottom:1px solid var(--border);
+    flex-direction: column;
+
+    padding: 0;
+
+    background: transparent;
+
+    border: none;
 }
 
-.card-header h2{
-    margin:0;
-    font-size:18px;
-    color:var(--text-white);
+.edit-body .info-item label {
+    margin-bottom: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    color: var(--text-gray);
+}
+
+.edit-body .info-item input,
+.edit-body .info-item select {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border-radius: 12px;
+
+    border: 1px solid var(--border);
+
+    background: var(--bg-dark);
+
+    color: var(--text-white);
+
+    outline: none;
+
+    transition: .25s;
+}
+
+.edit-body .info-item input:focus,
+.edit-body .info-item select:focus {
+    border-color: var(--indigo-06);
+
+    box-shadow: 0 0 0 3px var(--indigo-15);
+}
+
+.edit-body .info-item select option {
+    background: var(--bg-dark);
+
+    color: var(--text-white);
 }
 
 /* =========================
-   BODY
+   ERROR MESSAGE
 ========================= */
 
-.edit-body{
-   
-    padding: 18px 20px;
+.error-message {
+    margin-top: 6px;
 
-    background-color: var(--bg-card);
-    border-radius: 30px;
-    border-color:1px var(--border)  ;
-}
+    font-size: 12px;
 
-.info-grid{
-    
-    
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:18px;
+    color: #ff6b6b;
 }
 
 /* =========================
-   INPUT
+   POPUP BUTTON AREA
 ========================= */
 
-.info-item{
-    display:flex;
-    flex-direction:column;
+.btn-run {
+    grid-column: 1 / -1;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    margin-top: 10px;
 }
 
-.info-item label{
-    margin-bottom:8px;
-
-    font-size:13px;
-    font-weight:600;
-
-    color:var(--text-gray);
-}
-
-.info-item input{
-    width:100%;
-    padding:12px 14px;
-
-    border-radius:12px;
-    border:1px solid var(--border);
-
-    background:var(--bg-card);
-
-    color:var(--text-white);
-    font-size:14px;
-
-    outline:none;
-    transition:.25s;
-}
-
-.info-item input::placeholder{
-    color:var(--text-gray);
-}
-
-.info-item input:focus{
-    border-color:var(--indigo-06);
-    box-shadow:0 0 0 3px var(--indigo-15);
-}
-
-/* =========================
-   BUTTONS
-========================= */
-
-.btn-run{
-    grid-column:1 / -1;
-
-    display:flex;
-    justify-content:flex-end;
-    gap:12px;
-
-    margin-top:10px;
-}
-
-.btn{
-    min-width:120px;
-    padding:12px 18px;
-
-    border:none;
-    border-radius:10px;
-
-    font-size:14px;
-    font-weight:600;
-
-    cursor:pointer;
-    transition:.25s;
-}
-
-.btn-primary{
-    color:var(--text-white);
-    background:linear-gradient(135deg,var(--indigo-06),var(--purple));
-}
-
-.btn-primary:hover{
-    transform:translateY(-2px);
-    box-shadow:0 10px 20px var(--indigo-15);
-}
-
-.btn-close{
-    color:var(--text-white);
-
-    background:transparent;
-    border:1px solid var(--bg-table-015);
-}
-
-.btn-close:hover{
-    background:var(--bg-table-06);
-}
 /* =========================
    RESPONSIVE
 ========================= */
 
 @media (max-width: 768px) {
+
     .info-grid {
         grid-template-columns: 1fr;
+    }
+
+    .form-actions,
+    .btn-run {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .edit-form {
+        width: 95%;
     }
 }
