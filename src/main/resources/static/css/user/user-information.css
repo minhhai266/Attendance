@@ -183,7 +183,10 @@
 
     box-shadow: 0 10px 20px var(--indigo-15);
 }
-
+.btn-primarys {
+    border-radius: 5px;
+    padding: 4px;
+}
 .btn-secondary,
 .btn-close {
     color: var(--text-white);

@@ -1,29 +1,20 @@
 /* ==================================================
    ATTENDANCE CHECK
-   Light / Dark Mode
+   Minimal Face ID UI
 ================================================== */
 
 :root {
-    --primary: #3b82f6;
+    --primary: #2563eb;
     --primary-light: #60a5fa;
-
     --success: #10b981;
-    --warning: #f59e0b;
     --danger: #ef4444;
-
-    --bg: #f3f6fb;
-    --bg-card: #ffffff;
-    --bg-soft: #f8fafc;
-
-    --text: #0f172a;
-    --text-light: #64748b;
-
-    --border: rgba(15, 23, 42, 0.08);
-
-    --shadow:
-        0 10px 30px rgba(15, 23, 42, 0.08);
-
-    --radius: 24px;
+    --bg: #020617;
+    --bg-card: rgba(15, 23, 42, 0.95);
+    --bg-soft: rgba(30, 41, 59, 0.8);
+    --text: #f8fafc;
+    --text-light: #cbd5e1;
+    --border: rgba(148, 163, 184, 0.2);
+    --radius: 22px;
 }
 
 /* ==================================================
@@ -31,17 +22,12 @@
 ================================================== */
 
 body.dark {
-    --bg: #030712;
-    --bg-card: rgba(15, 23, 42, .92);
-    --bg-soft: rgba(30, 41, 59, .5);
-
+    --bg: #020617;
+    --bg-card: rgba(15, 23, 42, 0.98);
+    --bg-soft: rgba(30, 41, 59, 0.85);
     --text: #f8fafc;
-    --text-light: #94a3b8;
-
-    --border: rgba(96, 165, 250, .2);
-
-    --shadow:
-        0 0 30px rgba(59, 130, 246, .08);
+    --text-light: #cbd5e1;
+    --border: rgba(148, 163, 184, 0.25);
 }
 
 /* ==================================================
@@ -56,15 +42,10 @@ body.dark {
 
 body {
     min-height: 100vh;
-
     background: var(--bg);
     color: var(--text);
-
-    font-family:
-        "Segoe UI",
-        sans-serif;
-
-    transition: .3s ease;
+    font-family: "Segoe UI", sans-serif;
+    overflow: hidden;
 }
 
 /* ==================================================
@@ -72,20 +53,14 @@ body {
 ================================================== */
 
 .header {
-    height: 80px;
-
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    padding: 0 40px;
-
-    background: var(--bg-card);
-
+    padding: 0 20px;
+    background: rgba(2, 6, 23, 0.78);
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
-
-    box-shadow: var(--shadow);
-
     position: sticky;
     top: 0;
     z-index: 100;
@@ -94,7 +69,7 @@ body {
 .header-left {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 16px;
 }
 
 .header-logo a {
@@ -152,11 +127,8 @@ body {
 ================================================== */
 
 .container {
-    padding: 24px;
-
-    display: grid;
-    grid-template-columns: 300px 1fr 320px;
-    gap: 24px;
+    padding: 0;
+    height: calc(100vh - 64px);
 }
 
 /* ==================================================
@@ -252,9 +224,8 @@ body {
 ================================================== */
 
 .container-attend-main {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+    width: 100%;
+    height: 100%;
 }
 
 /* ==================================================
@@ -263,27 +234,13 @@ body {
 
 .scanner-card {
     position: relative;
-
-    height: 560px;
-
+    width: 100%;
+    height: 100%;
     overflow: hidden;
-
     display: flex;
     justify-content: center;
     align-items: center;
-
-    background:
-        linear-gradient(
-            transparent 39px,
-            rgba(59,130,246,.06) 40px
-        ),
-        linear-gradient(
-            90deg,
-            transparent 39px,
-            rgba(59,130,246,.06) 40px
-        );
-
-    background-size: 40px 40px;
+    background: radial-gradient(circle at top, rgba(37, 99, 235, 0.25), transparent 45%), #020617;
 }
 
 body.dark .scanner-card {
@@ -291,19 +248,13 @@ body.dark .scanner-card {
 }
 
 .scan-frame {
-    width: 320px;
-    height: 420px;
-
-    border: 6px solid var(--primary);
-
-    border-radius: 20px;
-
+    width: min(92vw, 760px);
+    height: min(78vh, 760px);
+    border: 3px solid rgba(255, 255, 255, 0.25);
+    border-radius: 28px;
     position: relative;
-
     overflow: hidden;
-
-    box-shadow:
-        0 0 30px rgba(59,130,246,.25);
+    box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.15), 0 20px 60px rgba(2, 6, 23, 0.45);
 }
 
 #camera {
@@ -326,6 +277,44 @@ body.dark .scanner-card {
     font-size: 100px;
 
     opacity: .5;
+}
+
+.scanner-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.scanner-pill {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.2);
+    color: #dbeafe;
+    font-weight: 700;
+    backdrop-filter: blur(8px);
+}
+
+.scanner-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.action-btn {
+    padding: 12px 18px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.75);
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    border-color: transparent;
 }
 
 .scan-line {
@@ -366,18 +355,15 @@ body.dark .scanner-card {
 
 .result-card {
     position: absolute;
-
-    bottom: 40px;
+    bottom: 30px;
     left: 50%;
-
     transform: translateX(-50%);
-
-    padding: 18px 40px;
-
+    padding: 14px 20px;
     border-radius: 999px;
-
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
+    background: rgba(2, 6, 23, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.25);
 }
 
 .success-result {
@@ -542,48 +528,22 @@ body.dark .stat-card {
    RESPONSIVE
 ================================================== */
 
-@media (max-width: 1200px) {
-    .container {
-        grid-template-columns: 1fr;
-    }
-
-    .container-attend-right {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .attendance-info {
-        grid-column: span 2;
-    }
-}
-
 @media (max-width: 768px) {
-
     .header {
-        padding: 20px;
-        height: auto;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .container {
-        padding: 16px;
-    }
-
-    .scanner-card {
-        height: 450px;
+        padding: 0 12px;
     }
 
     .scan-frame {
-        width: 240px;
-        height: 340px;
+        width: 96vw;
+        height: 70vh;
     }
 
-    .container-attend-right {
-        grid-template-columns: 1fr;
+    .scanner-actions {
+        flex-direction: column;
+        width: 100%;
     }
 
-    .attendance-info {
-        grid-column: span 1;
+    .action-btn {
+        width: 100%;
     }
 }
