@@ -1,6 +1,7 @@
 package com.attendenceSystem.module.attendance.service.impl;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,7 +14,6 @@ import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
 import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
 import com.attendenceSystem.module.attendance.service.AttendanceScheduleService;
-import com.attendenceSystem.module.attendance.util.TimeZoneProvider;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.provider.UserContextProvider;
 
@@ -27,17 +27,17 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
     private final UserContextProvider userContextProvider;
     private final AttendanceRecordRepository attendanceRecordRepository;
     private final LeaveRequestRepository leaveRequestRepository;
-    private final TimeZoneProvider timeZoneProvider;
+    private final ZoneId applicationZoneId;
 
     private static final String AUTO_ABSENT_NOTE = "Hệ thống tự động đánh vắng do không check-in";
     private static final String ON_LEAVE_NOTE = "Nghỉ phép đã được phê duyệt";
     private static final String FORGOT_CHECKOUT_NOTE = "Quên check-out";
 
-    @Scheduled(cron = "0 15 17 * * MON-FRI", zone = "Asia/Ho_Chi_Minh")
+    @Scheduled(cron = "0 15 17 * * MON-FRI", zone = "${app.timezone:Asia/Ho_Chi_Minh}")
     @Transactional
     @Override
     public void autoMarkAbsent() {
-        LocalDate today = LocalDate.now(timeZoneProvider.getZoneId());
+        LocalDate today = LocalDate.now(applicationZoneId);
 
         log.info("Bắt đầu chạy tiến trình quét vắng mặt tự động cho ngày: {}", today);
 
@@ -48,7 +48,6 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
             return;
         }
 
-        // Lấy danh sách user đã được duyệt nghỉ phép hôm nay (1 query duy nhất)
         List<Long> onLeaveUserIds = leaveRequestRepository.findUserIdsOnLeaveForDate(today, LeaveStatus.APPROVED);
 
         List<AttendanceRecord> absentRecords = absentUsers
@@ -75,11 +74,11 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
     }
 
     @Scheduled(cron = "0 50 23 * * MON-FRI",
-            zone = "Asia/Ho_Chi_Minh")
+            zone = "${app.timezone:Asia/Ho_Chi_Minh}")
     @Transactional
     @Override
     public void autoHandleMissingCheckOut() {
-        LocalDate today = LocalDate.now(timeZoneProvider.getZoneId());
+        LocalDate today = LocalDate.now(applicationZoneId);
 
         log.info("Bắt đầu quét các bản ghi quên check-out cho ngày: {}", today);
 
@@ -90,11 +89,9 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
             return;
         }
 
-        // Lấy danh sách user đã được duyệt nghỉ phép hôm nay (1 query duy nhất)
         List<Long> onLeaveUserIds = leaveRequestRepository.findUserIdsOnLeaveForDate(today, LeaveStatus.APPROVED);
 
         for(AttendanceRecord record : missingCheckOutRecords){
-            // Bỏ qua những user đang trong ngày nghỉ phép đã được duyệt
             if (onLeaveUserIds.contains(record.getUser().getId())) {
                 continue;
             }

@@ -2,6 +2,7 @@ package com.attendenceSystem.module.attendance.service.impl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,7 +21,6 @@ import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponse
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
 import com.attendenceSystem.module.attendance.service.AttendanceActionService;
 import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
-import com.attendenceSystem.module.attendance.util.TimeZoneProvider;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.provider.UserContextProvider;
 
@@ -34,7 +34,7 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
     private final AttendanceRecordRepository attendanceRecordRepository;
     private final AttendanceResponseMapper attendanceResponseMapper;
 
-    private final TimeZoneProvider timeZoneProvider;
+    private final ZoneId applicationZoneId;
 
     @Transactional
     @Override
@@ -58,7 +58,7 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
             if (existing.isPresent()) {
                 throw new AlreadyCheckedInException("Bạn đã điểm danh hôm nay");
             }
-            LocalDateTime checkInTime = LocalDateTime.now();
+            LocalDateTime checkInTime = LocalDateTime.now(applicationZoneId);
 
             if (attendanceCalculator.isPastAllowedCheckInTime(checkInTime)) {
                 throw new InvalidAttendanceStateException("Đã quá thời gian ca làm, bạn tính là vắng măt ngày hôm nay");
@@ -96,7 +96,7 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
         if (attendance.getStatus() != AttendanceStatus.PRESENT && attendance.getStatus() != AttendanceStatus.LATE) {
             throw new InvalidAttendanceStateException("Trạng thái điểm danh không hợp lệ");
         }
-        LocalDateTime checkOutTime = LocalDateTime.now();
+        LocalDateTime checkOutTime = LocalDateTime.now(applicationZoneId);
         if (checkOutTime.isBefore(attendance.getCheckInTime())) {
             throw new InvalidAttendanceStateException("Thời gian checkout phải sau thời gian check-in");
         }
@@ -110,6 +110,6 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
     }
 
     private LocalDate todayDate() {
-        return LocalDate.now(timeZoneProvider.getZoneId());
+        return LocalDate.now(applicationZoneId);
     }
 }

@@ -1,6 +1,7 @@
 package com.attendenceSystem.module.attendance.service.impl;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,6 @@ import com.attendenceSystem.module.attendance.model.DateRange;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
 import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
-import com.attendenceSystem.module.attendance.util.TimeZoneProvider;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.provider.UserContextProvider;
 
@@ -32,7 +32,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceRecordRepository attendanceRecordRepository;
     private final AttendanceResponseMapper attendanceResponseMapper;
     private final AttendanceCalculator attendanceCalculator;
-    private final TimeZoneProvider timeZoneProvider;
+    private final ZoneId applicationZoneId;
     private final UserContextProvider userContextProvider;
 
     @Override
@@ -61,7 +61,6 @@ public class AttendanceServiceImpl implements AttendanceService {
             final LocalDate startDate,
             final LocalDate endDate,
             final AttendanceStatus status) {
-        // 1. Xác định tổng số nhân sự của phòng ban
         List<User> employees = userContextProvider.getEmployeesByDepartment(departmentId);
         long totalEmployees = employees.size();
 
@@ -75,28 +74,21 @@ public class AttendanceServiceImpl implements AttendanceService {
                     .build();
         }
 
-        // Lấy danh sách ID nhân viên để query cho tối ưu
         List<Long> employeeIds = employees.stream().map(User::getId).toList();
 
-        // 2. KỊCH BẢN: Lọc dữ liệu (từ ngày - đến ngày, hoặc toàn bộ)
         List<AttendanceRecord> records;
         if (startDate != null && endDate != null) {
-            // CÓ FILTER: Lấy trong khoảng thời gian
             records = attendanceRecordRepository.findByUserIdInAndAttendanceDateBetween(employeeIds, startDate,
                     endDate);
         } else {
-            // KHÔNG FILTER: Lấy toàn bộ lịch sử điểm danh của phòng ban này
             records = attendanceRecordRepository.findByUserIdIn(employeeIds);
         }
 
-        // KỊCH BẢN: Lọc tiếp theo trạng thái (nếu có truyền vào)
         if (status != null) {
             records = records.stream()
                     .filter(r -> r.getStatus() == status)
                     .toList();
         }
-
-        // 3. CHỈ ĐẾM CÁC THỨ TRONG DANH SÁCH (Không dùng Map, không bị nuốt dữ liệu)
         long checkedIn = records.stream()
                 .filter(r -> r.getCheckInTime() != null)
                 .count();
@@ -189,7 +181,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     private LocalDate todayDate() {
-        return LocalDate.now(timeZoneProvider.getZoneId());
+        return LocalDate.now(applicationZoneId);
     }
 
     private DateRange getDateRange(

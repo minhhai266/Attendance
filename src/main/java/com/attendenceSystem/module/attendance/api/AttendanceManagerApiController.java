@@ -30,7 +30,7 @@ public class AttendanceManagerApiController {
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate,
             @RequestParam(required = false) String status) {
-        com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus attendanceStatus = null;
+        AttendanceStatus attendanceStatus = null;
         if (status != null && !status.isEmpty()) {
             try {
                 attendanceStatus = AttendanceStatus.valueOf(status);

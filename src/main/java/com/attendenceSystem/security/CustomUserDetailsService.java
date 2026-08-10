@@ -3,14 +3,14 @@ package com.attendenceSystem.security;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
