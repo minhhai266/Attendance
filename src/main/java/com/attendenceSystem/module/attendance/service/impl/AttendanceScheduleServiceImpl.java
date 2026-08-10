@@ -31,7 +31,7 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
 
     private static final String AUTO_ABSENT_NOTE = "Hệ thống tự động đánh vắng do không check-in";
     private static final String ON_LEAVE_NOTE = "Nghỉ phép đã được phê duyệt";
-    private static final String FORGOT_CHECKOUT_NOTE = "Quên check-out";
+    private static final String FORGOT_CHECKOUT_NOTE = "Quên check-out; Coi như vắng mặt";
 
     @Scheduled(cron = "0 15 17 * * MON-FRI", zone = "${app.timezone:Asia/Ho_Chi_Minh}")
     @Transactional
@@ -84,17 +84,20 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
 
         List<AttendanceRecord> missingCheckOutRecords = attendanceRecordRepository.findRecordsMissingCheckOut(today);
 
-        if(missingCheckOutRecords.isEmpty()){
+        if (missingCheckOutRecords.isEmpty()) {
             log.info("Tất cả nhân viên đều đã check-out hôm nay.");
             return;
         }
 
         List<Long> onLeaveUserIds = leaveRequestRepository.findUserIdsOnLeaveForDate(today, LeaveStatus.APPROVED);
 
-        for(AttendanceRecord record : missingCheckOutRecords){
+        for (AttendanceRecord record : missingCheckOutRecords) {
+            // Bỏ qua những user đang trong ngày nghỉ phép đã được duyệt
             if (onLeaveUserIds.contains(record.getUser().getId())) {
                 continue;
             }
+            // Không có checkout trong ngày → coi như vắng mặt
+            record.setStatus(AttendanceStatus.ABSENT);
             String currentNote = record.getNote() != null ? record.getNote() + "; " : "";
             record.setNote(currentNote + FORGOT_CHECKOUT_NOTE);
         }

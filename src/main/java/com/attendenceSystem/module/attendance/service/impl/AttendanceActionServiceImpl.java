@@ -100,6 +100,9 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
         if (checkOutTime.isBefore(attendance.getCheckInTime())) {
             throw new InvalidAttendanceStateException("Thời gian checkout phải sau thời gian check-in");
         }
+        if (attendanceCalculator.isBeforeMinCheckOutTime(checkOutTime)) {
+            throw new InvalidAttendanceStateException("Chưa đến thời gian tối thiểu để checkout");
+        }
         boolean earlyLeave = attendanceCalculator.isEarlyLeave(checkOutTime);
         attendance.setCheckOutTime(checkOutTime);
         if (earlyLeave) {

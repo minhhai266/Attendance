@@ -21,11 +21,19 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
     @Value("${attendance.start-work:08:00}")
     private String startWorkTimeStr;
 
+    @Value("${attendance.max-check-in-time:10:00}")
+    private String maxCheckInTimeStr;
+
+    @Value("${attendance.min-check-out-time:15:00}")
+    private String minCheckOutTimeStr;
+
     @Value("${attendance.end-work:17:00}")
     private String endWorkTimeStr;
 
     // Cache thời gian làm việc
     private LocalTime startWorkTime;
+    private LocalTime maxCheckInTime;
+    private LocalTime minCheckOutTime;
     private LocalTime endWorkTime;
 
     @PostConstruct
@@ -36,6 +44,22 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
         } catch (Exception e) {
             log.warn("Invalid start work time: {}, using default 08:00", startWorkTimeStr);
             this.startWorkTime = LocalTime.of(8, 0);
+        }
+
+        // Init Max Check-in Time
+        try {
+            this.maxCheckInTime = LocalTime.parse(maxCheckInTimeStr);
+        } catch (Exception e) {
+            log.warn("Invalid max check-in time: {}, using default 10:00", maxCheckInTimeStr);
+            this.maxCheckInTime = LocalTime.of(10, 0);
+        }
+
+        // Init Min Check-out Time
+        try {
+            this.minCheckOutTime = LocalTime.parse(minCheckOutTimeStr);
+        } catch (Exception e) {
+            log.warn("Invalid min check-out time: {}, using default 15:00", minCheckOutTimeStr);
+            this.minCheckOutTime = LocalTime.of(15, 0);
         }
 
         // Init End Time
@@ -52,7 +76,9 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
         if (checkInTime == null) {
             return false;
         }
-        return checkInTime.toLocalTime().isAfter(startWorkTime);
+        LocalTime time = checkInTime.toLocalTime();
+        // Đi muộn: check-in sau start-work VÀ trước max-check-in-time
+        return time.isAfter(startWorkTime) && time.isBefore(maxCheckInTime);
     }
 
     @Override
@@ -60,7 +86,9 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
         if (checkOutTime == null) {
             return false;
         }
-        return checkOutTime.toLocalTime().isBefore(endWorkTime);
+        LocalTime time = checkOutTime.toLocalTime();
+        // Về sớm: check-out trước end-work VÀ sau min-check-out-time
+        return time.isBefore(endWorkTime) && time.isAfter(minCheckOutTime);
     }
 
     @Override
@@ -79,9 +107,19 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
 
     @Override
     public boolean isPastAllowedCheckInTime(final LocalDateTime checkInTime) {
-        if(checkInTime == null) {
+        if (checkInTime == null) {
             return false;
         }
-        return checkInTime.toLocalTime().isAfter(endWorkTime);
+        // Quá thời gian tối đa check-in: check-in sau max-check-in-time
+        return checkInTime.toLocalTime().isAfter(maxCheckInTime);
+    }
+
+    @Override
+    public boolean isBeforeMinCheckOutTime(final LocalDateTime checkOutTime) {
+        if (checkOutTime == null) {
+            return false;
+        }
+        // Chưa đủ thời gian tối thiểu để check-out: check-out trước min-check-out-time
+        return checkOutTime.toLocalTime().isBefore(minCheckOutTime);
     }
 }
