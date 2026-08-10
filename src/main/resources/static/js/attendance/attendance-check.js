@@ -5,10 +5,26 @@
 let attendanceStream = null;
 let attendanceVideo = null;
 let currentUser = null;
-let isCheckingAttendance = false;
+let pollTimer = null;
+let overlayCanvas = null;
+let overlayCtx = null;
+let captureCanvas = null;
+let captureCtx = null;
+let consecutiveMatchState = { studentCode: null, count: 0 };
+let cooldownUntil = 0;
+
+const IDENTIFY_URL = '/api/face-id/identify';
+const ATTENDANCE_URL = '/api/face-id/attendance';
+const POLL_INTERVAL_MS = 800;
+const REQUIRED_CONSECUTIVE_MATCHES = 3;
+const COOLDOWN_AFTER_SUCCESS_MS = 8000;
 
 document.addEventListener('DOMContentLoaded', () => {
     attendanceVideo = document.getElementById('camera');
+    overlayCanvas = document.getElementById('overlay');
+    overlayCtx = overlayCanvas.getContext('2d');
+    captureCanvas = document.createElement('canvas');
+    captureCtx = captureCanvas.getContext('2d');
     const captureBtn = document.getElementById('btnCaptureAttendance');
     const toggleCameraBtn = document.getElementById('btnToggleCamera');
     const currentDateEl = document.getElementById('currentDate');
@@ -36,7 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (captureBtn) {
-        captureBtn.addEventListener('click', captureAndCheckIn);
+        captureBtn.addEventListener('click', () => {
+            showAttendanceMessage('Quét tự động đang chạy. Không cần bấm lại.', 'success');
+        });
     }
 
     if (toggleCameraBtn) {
@@ -87,11 +105,13 @@ function setProfileInfo(profile) {
 
 async function toggleAttendanceCamera() {
     if (attendanceStream) {
+        stopPolling();
         attendanceStream.getTracks().forEach((track) => track.stop());
         attendanceStream = null;
         if (attendanceVideo) {
             attendanceVideo.srcObject = null;
         }
+        overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
         showAttendanceMessage('Camera đã tắt.', 'success');
         return;
     }
@@ -112,6 +132,9 @@ async function startAttendanceCamera() {
 
         if (attendanceVideo) {
             attendanceVideo.srcObject = attendanceStream;
+            await attendanceVideo.play();
+            resizeOverlay();
+            startPolling();
         }
     } catch (error) {
         console.error('Không thể mở camera:', error);
@@ -119,60 +142,117 @@ async function startAttendanceCamera() {
     }
 }
 
-async function captureAndCheckIn() {
-    if (isCheckingAttendance) {
+function resizeOverlay() {
+    if (!attendanceVideo) return;
+    overlayCanvas.width = attendanceVideo.videoWidth || attendanceVideo.clientWidth || 640;
+    overlayCanvas.height = attendanceVideo.videoHeight || attendanceVideo.clientHeight || 480;
+}
+
+function startPolling() {
+    stopPolling();
+    pollTimer = window.setInterval(tick, POLL_INTERVAL_MS);
+}
+
+function stopPolling() {
+    if (pollTimer) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+    }
+}
+
+async function tick() {
+    if (!attendanceVideo || !attendanceVideo.videoWidth) return;
+    if (Date.now() < cooldownUntil) return;
+
+    const imageBase64 = captureFrame();
+    try {
+        const result = await postJson(IDENTIFY_URL, { imageBase64 });
+        drawOverlay(result);
+        handleMatchLogic(result, imageBase64);
+    } catch (error) {
+        console.error('identify lỗi:', error);
+    }
+}
+
+function captureFrame() {
+    if (!attendanceVideo) return '';
+    captureCanvas.width = attendanceVideo.videoWidth || 640;
+    captureCanvas.height = attendanceVideo.videoHeight || 480;
+    captureCtx.drawImage(attendanceVideo, 0, 0, captureCanvas.width, captureCanvas.height);
+    return captureCanvas.toDataURL('image/jpeg', 0.85);
+}
+
+function drawOverlay(result) {
+    overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+    if (!result || !result.faceDetected || !result.bbox) return;
+
+    const [x1, y1, x2, y2] = result.bbox;
+    const scaleX = overlayCanvas.width / (attendanceVideo.videoWidth || 1);
+    const scaleY = overlayCanvas.height / (attendanceVideo.videoHeight || 1);
+    const color = result.matched ? '#22c55e' : '#eab308';
+
+    overlayCtx.strokeStyle = color;
+    overlayCtx.lineWidth = 3;
+    overlayCtx.strokeRect(x1 * scaleX, y1 * scaleY, (x2 - x1) * scaleX, (y2 - y1) * scaleY);
+
+    const label = result.matched
+        ? `${result.fullName || result.studentCode} (${Math.round((result.confidence || 0) * 100)}%)`
+        : (result.message || 'Đang nhận diện...');
+    overlayCtx.fillStyle = color;
+    overlayCtx.font = '16px sans-serif';
+    overlayCtx.fillText(label, x1 * scaleX, Math.max(16, y1 * scaleY - 8));
+}
+
+function handleMatchLogic(result, imageBase64) {
+    if (!result || !result.matched) {
+        consecutiveMatchState = { studentCode: null, count: 0 };
         return;
     }
 
-    if (!attendanceVideo || !attendanceVideo.srcObject) {
-        showAttendanceMessage('Camera chưa sẵn sàng. Vui lòng bật camera trước.', 'error');
-        return;
+    if (consecutiveMatchState.studentCode === result.studentCode) {
+        consecutiveMatchState.count += 1;
+    } else {
+        consecutiveMatchState = { studentCode: result.studentCode, count: 1 };
     }
 
-    if (!currentUser) {
-        showAttendanceMessage('Bạn chưa có Face ID đã đăng ký. Hãy đăng ký trước khi điểm danh.', 'error');
-        return;
+    if (consecutiveMatchState.count >= REQUIRED_CONSECUTIVE_MATCHES) {
+        consecutiveMatchState = { studentCode: null, count: 0 };
+        submitAttendance(result, imageBase64);
     }
+}
 
-    isCheckingAttendance = true;
-    showAttendanceMessage('Đang quét khuôn mặt...', 'success');
+async function submitAttendance(result, imageBase64) {
+    const payload = {
+        studentCode: result.studentCode,
+        imageBase64,
+        confidence: result.confidence,
+        trackingId: crypto.randomUUID(),
+        cameraId: 'web-camera',
+        capturedAt: new Date().toISOString(),
+    };
 
     try {
-        const canvas = document.createElement('canvas');
-        canvas.width = attendanceVideo.videoWidth || 640;
-        canvas.height = attendanceVideo.videoHeight || 480;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(attendanceVideo, 0, 0, canvas.width, canvas.height);
-        const base64Image = canvas.toDataURL('image/jpeg', 0.85);
-
-        await post('/api/face-id/update-for-attendance', {
-            samples: [base64Image]
-        });
-
-        const result = await post('/api/face-id/attendance', {
-            studentCode: currentUser.username,
-            confidence: 0.98,
-            capturedAt: new Date().toISOString(),
-            cameraId: 'webcam',
-            trackingId: `${currentUser.username}-${Date.now()}`,
-            liveness: true
-        });
-
-        if (result.success) {
-            showAttendanceMessage(result.message || 'Điểm danh bằng Face ID thành công.', 'success');
-            const faceStatus = document.getElementById('faceStatus');
-            if (faceStatus) {
-                faceStatus.textContent = 'Đã xác thực';
-            }
-        } else {
-            showAttendanceMessage(result.message || 'Không thể xác thực khuôn mặt.', 'error');
+        const res = await postJson(ATTENDANCE_URL, payload);
+        showAttendanceMessage(res.message || 'Điểm danh thành công', res.success ? 'success' : 'error');
+        const faceStatus = document.getElementById('faceStatus');
+        if (faceStatus) {
+            faceStatus.textContent = res.success ? 'Đã xác thực' : 'Chờ duyệt';
         }
     } catch (error) {
-        console.error('Lỗi điểm danh:', error);
-        showAttendanceMessage('Lỗi điểm danh: ' + (error.message || 'Không rõ nguyên nhân'), 'error');
+        showAttendanceMessage('Lỗi điểm danh: ' + error.message, 'error');
     } finally {
-        isCheckingAttendance = false;
+        cooldownUntil = Date.now() + COOLDOWN_AFTER_SUCCESS_MS;
     }
+}
+
+async function postJson(url, body) {
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
 }
 
 function showAttendanceMessage(message, type) {
@@ -185,7 +265,8 @@ function showAttendanceMessage(message, type) {
     resultCard.className = 'result-card ' + (type === 'success' ? 'success-result' : 'error-result');
     resultCard.style.display = 'block';
 
-    setTimeout(() => {
+    clearTimeout(resultCard._hideTimer);
+    resultCard._hideTimer = setTimeout(() => {
         resultCard.style.display = 'none';
     }, 3000);
 }
@@ -198,6 +279,7 @@ function updateClock() {
 }
 
 window.addEventListener('beforeunload', () => {
+    stopPolling();
     if (attendanceStream) {
         attendanceStream.getTracks().forEach(track => track.stop());
     }

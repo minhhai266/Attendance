@@ -24,9 +24,9 @@
             <button class="header-btn theme-toggle" id="themeToggle" type="button">🌙</button>
         </div>
     </header>
-
+ 
     <div class="container">
-        <aside class="history">
+        <!-- <aside class="history">
             <h2 class="history-title">Nhật ký điểm danh</h2>
             <ul class="history-list">
                 <li class="history-card">
@@ -42,13 +42,14 @@
                     <span class="history-status status-in">Đã có dữ liệu</span>
                 </li>
             </ul>
-        </aside>
+        </aside> -->
 
         <main class="container-attend-main">
             <section class="scanner-card">
                 <div class="scan-frame">
                     <video id="camera" autoplay playsinline muted></video>
-                    <div class="scan-line"></div>
+                    <canvas id="overlay"></canvas>
+                    
                 </div>
                 <div class="result-card" id="attendanceMessage" style="display:none;"></div>
             </section>

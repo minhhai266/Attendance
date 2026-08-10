@@ -20,14 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.module.faceid.dto.request.FaceCaptureRequest;
 import com.attendenceSystem.module.faceid.dto.request.FaceIdAttendanceRequest;
+import com.attendenceSystem.module.faceid.dto.request.FaceIdentifyRequest;
 import com.attendenceSystem.module.faceid.dto.response.FaceCaptureResponse;
 import com.attendenceSystem.module.faceid.dto.response.FaceIdAttendanceResponse;
+import com.attendenceSystem.module.faceid.dto.response.FaceIdentifyResponse;
 import com.attendenceSystem.module.faceid.dto.response.LatestFaceResponse;
 import com.attendenceSystem.module.faceid.entity.FaceProfile;
 import com.attendenceSystem.module.faceid.entity.FaceSample;
 import com.attendenceSystem.module.faceid.repository.FaceProfileRepository;
 import com.attendenceSystem.module.faceid.repository.FaceSampleRepository;
 import com.attendenceSystem.module.faceid.service.FaceAiClient;
+import com.attendenceSystem.module.faceid.service.FaceEmbeddingCacheService;
 import com.attendenceSystem.module.faceid.service.FaceIdAttendanceService;
 import com.attendenceSystem.module.storage.exception.FileStorageException;
 import com.attendenceSystem.module.storage.provider.StorageProvider;
@@ -49,6 +52,7 @@ public class FaceIdApiController {
     private final UserRepository userRepository;
     private final StorageProvider storageProvider;
     private final FaceIdAttendanceService faceIdAttendanceService;
+    private final FaceEmbeddingCacheService faceEmbeddingCacheService;
 
     @PostMapping("/register")
 
@@ -111,6 +115,7 @@ public class FaceIdApiController {
         faceProfile.setThumbnailUrl(lastImagePath);
         faceProfile.setIsAccept(null);
         faceProfileRepository.save(faceProfile);
+        faceEmbeddingCacheService.invalidate();
 
         return ResponseEntity.ok(FaceCaptureResponse.builder()
                 .faceCode(faceProfile.getFaceCode())
@@ -193,6 +198,7 @@ public ResponseEntity<FaceAiClient.PoseResult> poseCheck(@RequestBody PoseCheckR
             // Khi employee cập nhật ảnh điểm danh, reset trạng thái duyệt
             faceProfile.setIsAccept(null);
             faceProfileRepository.save(faceProfile);
+            faceEmbeddingCacheService.invalidate();
 
             return ResponseEntity.ok(FaceCaptureResponse.builder()
                     .faceCode(faceProfile.getFaceCode())
@@ -227,6 +233,7 @@ public ResponseEntity<FaceAiClient.PoseResult> poseCheck(@RequestBody PoseCheckR
             // DB lỗi (Rollback).
             faceSampleRepository.deleteById(sampleId);
             deleteFileSafely(sample.getImagePath());
+            faceEmbeddingCacheService.invalidate();
 
             return ResponseEntity.noContent().build();
 
@@ -242,12 +249,15 @@ public ResponseEntity<FaceAiClient.PoseResult> poseCheck(@RequestBody PoseCheckR
     public ResponseEntity<FaceIdAttendanceResponse> processFaceIdAttendance(
             @RequestBody FaceIdAttendanceRequest request) {
 
-        // Ném thẳng request cho Service xử lý
         FaceIdAttendanceResponse response = faceIdAttendanceService.processAttendance(request);
-
-        // Trả kết quả về cho AI (AI sẽ nhận được cái JSON response này)
         return response.success() ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
     }
+
+    @PostMapping("/identify")
+    public ResponseEntity<FaceIdentifyResponse> identify(@RequestBody FaceIdentifyRequest request) {
+        return ResponseEntity.ok(faceIdAttendanceService.identify(request.getImageBase64()));
+    }
+
     // --- Helper Methods ---
 
     private User getCurrentUser() {

@@ -50,7 +50,24 @@ public class FaceAiClient {
                 EmbedBatchResponse.class
         );
         return response.getBody();
-        
+    }
+
+    public EmbedResult embedSingle(String imageBase64) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("X-API-Key", apiKey);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("image_base64", imageBase64);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<EmbedResult> response = restTemplate.postForEntity(
+                baseUrl + "/api/internal/face/embed",
+                entity,
+                EmbedResult.class
+        );
+        return response.getBody();
     }
     public static class PoseResult {
     public boolean ok;
