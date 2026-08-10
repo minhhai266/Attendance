@@ -1,0 +1,5 @@
+- Tách ExceptionHandler của AttendanceController []
+- Thay thế Controller bằng api và viết hàm javascript []
+- Tách các Exception thành các CustomException []
+- Refactor lại face-id module []
+- Sửa lỗi luôn trả về 500 bằng mọi lỗi để hiển thị 400,401,403,404,500 phù hợp []

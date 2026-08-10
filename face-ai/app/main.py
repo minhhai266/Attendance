@@ -10,6 +10,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.trustedhost import TrustedHostMiddleware
+from starlette.middleware.cors import CORSMiddleware
 from app.core.csrf import csrf_protect_middleware
 from app.core.config import settings
 from app.db import get_setting, init_db
@@ -107,6 +108,14 @@ app = FastAPI(
     docs_url=_docs_url("/docs"),
     redoc_url=_docs_url("/redoc"),
     openapi_url=_docs_url("/openapi.json"),
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 trusted_hosts = _csv_setting(settings.trusted_hosts)
 if trusted_hosts:

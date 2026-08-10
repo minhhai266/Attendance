@@ -195,18 +195,18 @@ async def recognize_ws(websocket: WebSocket):
         return
 
     await websocket.accept()
-    if not await websocket_auth(websocket):
-        await websocket.send_json({"type": "error", "message": "Chưa đăng nhập hoặc phiên hết hạn."})
-        await websocket.close()
-        return
+    # if not await websocket_auth(websocket):
+    #     await websocket.send_json({"type": "error", "message": "Chưa đăng nhập hoặc phiên hết hạn."})
+    #     await websocket.close()
+    #     return
     frame_count = 0
     try:
         while True:
             payload = await websocket.receive_text()
-            if not await websocket_auth(websocket):
-                await websocket.send_json({"type": "error", "message": "Phien dang nhap da het han hoac bi thu hoi."})
-                await websocket.close()
-                return
+            # if not await websocket_auth(websocket):
+            #     await websocket.send_json({"type": "error", "message": "Phien dang nhap da het han hoac bi thu hoi."})
+            #     await websocket.close()
+            #     return
             frame_count += 1
             try:
                 image_data = parse_realtime_payload(payload)

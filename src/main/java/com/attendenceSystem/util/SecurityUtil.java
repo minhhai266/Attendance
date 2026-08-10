@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class SecurityUtil {
 
-    public static CustomUserDetails getCurrentUser() {
+    public CustomUserDetails getCurrentUser() {
         if (!isAuthenticated()) {
             throw new IllegalStateException("Người dùng chưa đăng nhập");
         }
