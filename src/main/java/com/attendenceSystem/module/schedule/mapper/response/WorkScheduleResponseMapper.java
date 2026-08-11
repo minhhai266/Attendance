@@ -15,11 +15,10 @@ public class WorkScheduleResponseMapper {
         return new WorkScheduleResponse(
                 schedule.getId(),
                 schedule.getEffectiveDate(),
-                schedule.getStartTime(),
-                schedule.getEndTime(),
-                schedule.getAllowedLateMinutes(),
-                schedule.getAllowedEarlyLeaveMinutes(),
-                schedule.getMissingCheckoutDeadline(),
+                schedule.getStartWorkTime(),
+                schedule.getMaxCheckInTime(),
+                schedule.getMinCheckOutTime(),
+                schedule.getEndWorkTime(),
                 schedule.getWorkingDays());
     }
 }

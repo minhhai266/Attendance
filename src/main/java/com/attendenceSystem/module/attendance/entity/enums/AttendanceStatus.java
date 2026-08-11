@@ -9,7 +9,8 @@ public enum AttendanceStatus {
     PRESENT(1),
     LATE(2),
     ABSENT(3),
-    LEAVE(4);
+    LEAVE(4),
+    DAY_OFF(5);
 
     public final int value;
 

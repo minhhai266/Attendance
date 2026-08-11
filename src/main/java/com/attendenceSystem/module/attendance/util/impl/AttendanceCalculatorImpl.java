@@ -18,19 +18,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AttendanceCalculatorImpl implements AttendanceCalculator {
 
-    @Value("${attendance.start-work:08:00}")
+    @Value("${attendance.start-work:08:30}")
     private String startWorkTimeStr;
 
     @Value("${attendance.max-check-in-time:10:00}")
     private String maxCheckInTimeStr;
 
-    @Value("${attendance.min-check-out-time:15:00}")
+    @Value("${attendance.min-check-out-time:16:00}")
     private String minCheckOutTimeStr;
 
-    @Value("${attendance.end-work:17:00}")
+    @Value("${attendance.end-work:17:30}")
     private String endWorkTimeStr;
 
-    // Cache thời gian làm việc
     private LocalTime startWorkTime;
     private LocalTime maxCheckInTime;
     private LocalTime minCheckOutTime;
@@ -38,15 +37,13 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
 
     @PostConstruct
     public void init() {
-        // Init Start Time
         try {
             this.startWorkTime = LocalTime.parse(startWorkTimeStr);
         } catch (Exception e) {
-            log.warn("Invalid start work time: {}, using default 08:00", startWorkTimeStr);
-            this.startWorkTime = LocalTime.of(8, 0);
+            log.warn("Invalid start work time: {}, using default 08:30", startWorkTimeStr);
+            this.startWorkTime = LocalTime.of(8, 30);
         }
 
-        // Init Max Check-in Time
         try {
             this.maxCheckInTime = LocalTime.parse(maxCheckInTimeStr);
         } catch (Exception e) {
@@ -54,20 +51,18 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
             this.maxCheckInTime = LocalTime.of(10, 0);
         }
 
-        // Init Min Check-out Time
         try {
             this.minCheckOutTime = LocalTime.parse(minCheckOutTimeStr);
         } catch (Exception e) {
-            log.warn("Invalid min check-out time: {}, using default 15:00", minCheckOutTimeStr);
-            this.minCheckOutTime = LocalTime.of(15, 0);
+            log.warn("Invalid min check-out time: {}, using default 16:00", minCheckOutTimeStr);
+            this.minCheckOutTime = LocalTime.of(16, 0);
         }
 
-        // Init End Time
         try {
             this.endWorkTime = LocalTime.parse(endWorkTimeStr);
         } catch (Exception e) {
-            log.warn("Invalid end work time: {}, using default 17:00", endWorkTimeStr);
-            this.endWorkTime = LocalTime.of(17, 0);
+            log.warn("Invalid end work time: {}, using default 17:30", endWorkTimeStr);
+            this.endWorkTime = LocalTime.of(17, 30);
         }
     }
 
@@ -77,7 +72,6 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
             return false;
         }
         LocalTime time = checkInTime.toLocalTime();
-        // Đi muộn: check-in sau start-work VÀ trước max-check-in-time
         return time.isAfter(startWorkTime) && time.isBefore(maxCheckInTime);
     }
 
@@ -87,7 +81,6 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
             return false;
         }
         LocalTime time = checkOutTime.toLocalTime();
-        // Về sớm: check-out trước end-work VÀ sau min-check-out-time
         return time.isBefore(endWorkTime) && time.isAfter(minCheckOutTime);
     }
 
@@ -110,7 +103,6 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
         if (checkInTime == null) {
             return false;
         }
-        // Quá thời gian tối đa check-in: check-in sau max-check-in-time
         return checkInTime.toLocalTime().isAfter(maxCheckInTime);
     }
 
@@ -119,7 +111,6 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
         if (checkOutTime == null) {
             return false;
         }
-        // Chưa đủ thời gian tối thiểu để check-out: check-out trước min-check-out-time
         return checkOutTime.toLocalTime().isBefore(minCheckOutTime);
     }
 }

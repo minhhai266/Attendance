@@ -18,10 +18,9 @@ import lombok.Setter;
 @Builder
 public class UpdateWorkScheduleRequest {
     private LocalDate effectiveDate;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private Integer allowedLateMinutes;
-    private Integer allowedEarlyLeaveMinutes;
-    private LocalTime missingCheckoutDeadline;
+    private LocalTime startWorkTime;
+    private LocalTime maxCheckInTime;
+    private LocalTime minCheckOutTime;
+    private LocalTime endWorkTime;
     private Set<DayOfWeek> workingDays;
 }

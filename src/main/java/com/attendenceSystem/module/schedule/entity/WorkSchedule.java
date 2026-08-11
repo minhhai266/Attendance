@@ -34,20 +34,17 @@ public class WorkSchedule {
     @Column(name = "effective_date")
     private LocalDate effectiveDate;
 
-    @Column(name = "start_time")
-    private LocalTime startTime;
+    @Column(name = "start_work_time")
+    private LocalTime startWorkTime;
 
-    @Column(name = "end_time")
-    private LocalTime endTime;
+    @Column(name = "max_check_in_time")
+    private LocalTime maxCheckInTime;
 
-    @Column(name = "allowed_late_minutes")
-    private Integer allowedLateMinutes;
+    @Column(name = "min_check_out_time")
+    private LocalTime minCheckOutTime;
 
-    @Column(name = "allowed_early_leave_minutes")
-    private Integer allowedEarlyLeaveMinutes;
-
-    @Column(name = "missing_checkout_deadline")
-    private LocalTime missingCheckoutDeadline;
+    @Column(name = "end_work_time")
+    private LocalTime endWorkTime;
 
     @Convert(converter = DayOfWeekSetConverter.class)
     @Column(name = "working_days")
