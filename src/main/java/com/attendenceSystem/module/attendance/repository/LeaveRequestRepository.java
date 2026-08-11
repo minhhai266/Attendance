@@ -26,4 +26,6 @@ public interface LeaveRequestRepository
     List<Long> findUserIdsOnLeaveForDate(
             @Param("date") LocalDate date,
             @Param("status") LeaveStatus status);
+
+    List<LeaveRequest> findByStatusAndStartDateLessThanEqual(LeaveStatus status, LocalDate date);
 }

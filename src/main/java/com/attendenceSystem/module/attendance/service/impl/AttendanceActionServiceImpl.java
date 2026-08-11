@@ -32,6 +32,14 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(
+    noRollbackFor = {
+        AlreadyCheckedInException.class,
+        AlreadyCheckedOutException.class,
+        InvalidAttendanceStateException.class,
+        NotCheckedInException.class
+    }
+)
 public class AttendanceActionServiceImpl implements AttendanceActionService {
     private static final Long DEFAULT_SCHEDULE_ID = 1L;
     private static final String DAY_OFF_NOTE = "Ngày nghỉ";
@@ -44,19 +52,19 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
 
     private final ZoneId applicationZoneId;
 
-    @Transactional
+
     @Override
     public AttendanceResponse checkIn() {
         return checkIn(userContextProvider.getCurrentUserEntity());
     }
 
-    @Transactional
+
     @Override
     public AttendanceResponse checkOut() {
         return checkOut(userContextProvider.getCurrentUserEntity());
     }
 
-    @Transactional
+
     @Override
     public AttendanceResponse checkIn(final User user) {
         LocalDate today = todayDate();
@@ -71,7 +79,7 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
             boolean isWorkingDay = isWorkingDay(today);
 
             if (isWorkingDay && attendanceCalculator.isPastAllowedCheckInTime(checkInTime)) {
-                throw new InvalidAttendanceStateException("Đã quá thời gian ca làm, bạn tính là vắng măt ngày hôm nay");
+                throw new InvalidAttendanceStateException("Đã quá thời gian ca làm, bạn sẽ bị tính là vắng măt ngày hôm nay");
             }
 
             AttendanceStatus status;
@@ -101,7 +109,6 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
         }
     }
 
-    @Transactional
     @Override
     public AttendanceResponse checkOut(final User user) {
         LocalDate today = todayDate();

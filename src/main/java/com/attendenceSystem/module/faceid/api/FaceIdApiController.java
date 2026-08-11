@@ -1,14 +1,7 @@
 package com.attendenceSystem.module.faceid.api;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,18 +18,9 @@ import com.attendenceSystem.module.faceid.dto.response.FaceCaptureResponse;
 import com.attendenceSystem.module.faceid.dto.response.FaceIdAttendanceResponse;
 import com.attendenceSystem.module.faceid.dto.response.FaceIdentifyResponse;
 import com.attendenceSystem.module.faceid.dto.response.LatestFaceResponse;
-import com.attendenceSystem.module.faceid.entity.FaceProfile;
-import com.attendenceSystem.module.faceid.entity.FaceSample;
-import com.attendenceSystem.module.faceid.repository.FaceProfileRepository;
-import com.attendenceSystem.module.faceid.repository.FaceSampleRepository;
 import com.attendenceSystem.module.faceid.service.FaceAiClient;
-import com.attendenceSystem.module.faceid.service.FaceEmbeddingCacheService;
 import com.attendenceSystem.module.faceid.service.FaceIdAttendanceService;
-import com.attendenceSystem.module.storage.exception.FileStorageException;
-import com.attendenceSystem.module.storage.provider.StorageProvider;
-import com.attendenceSystem.module.user.entity.User;
-import com.attendenceSystem.module.user.repository.UserRepository;
-import com.attendenceSystem.util.SecurityUtil;
+import com.attendenceSystem.module.faceid.service.FaceIdCaptureService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,126 +30,37 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class FaceIdApiController {
-    private final FaceAiClient faceAiClient;
-    private final FaceProfileRepository faceProfileRepository;
-    private final FaceSampleRepository faceSampleRepository;
-    private final UserRepository userRepository;
-    private final StorageProvider storageProvider;
+    private final FaceIdCaptureService faceIdCaptureService;
     private final FaceIdAttendanceService faceIdAttendanceService;
-    private final FaceEmbeddingCacheService faceEmbeddingCacheService;
 
     @PostMapping("/register")
-
-    @Transactional
     public ResponseEntity<FaceCaptureResponse> registerFace(@RequestBody FaceCaptureRequest request) {
         try {
-            User user = getCurrentUser();
-
-            FaceProfile faceProfile = faceProfileRepository.findByUser(user)
-                    .orElseGet(() -> faceProfileRepository.save(
-                            FaceProfile.builder()
-                                    .user(user)
-                                    .faceCode(UUID.randomUUID().toString())
-                                    .sampleCount(0)
-                                    .build()));
-
-            cleanUpOldSamples(faceProfile);
-            faceSampleRepository.deleteByFaceProfile(faceProfile);
-
-            int sampleCount = 0;
-            String lastImagePath = null;
-
-            if (request.getSamples() != null && !request.getSamples().isEmpty()) {
-
-                // Gọi AI để lấy embedding cho toàn bộ 5 ảnh cùng lúc
-                FaceAiClient.EmbedBatchResponse aiResult = faceAiClient.embedBatch(request.getSamples());
-
-                for (int i = 0; i < request.getSamples().size(); i++) {
-                    FaceAiClient.EmbedResult embedResult = aiResult.results.get(i);
-
-                    // Bỏ qua ảnh không nhận diện được khuôn mặt (VD: mờ, không có mặt, nhiều mặt)
-                    if (!embedResult.success) {
-                        log.warn("Mẫu {} lỗi: {}", i + 1, embedResult.message);
-                        continue;
-                    }
-                
-
-                    String imagePath = saveBase64Image(request.getSamples().get(i), user.getId(), i + 1);
-
-                    faceSampleRepository.save(FaceSample.builder()
-                            .faceProfile(faceProfile)
-                            .imagePath(imagePath)
-                            .sampleOrder(i + 1)
-                            .embedding(embedResult.embedding)   // <-- LƯU EMBEDDING THẬT
-                            .build());
-
-                    sampleCount++;
-                    lastImagePath = imagePath;
-                }
-            }
-
-        if (sampleCount == 0) {
-            return ResponseEntity.badRequest().body(FaceCaptureResponse.builder()
-                    .message("Không nhận diện được khuôn mặt hợp lệ nào trong các mẫu đã chụp")
-                    .success(false)
-                    .build());
+            FaceCaptureResponse response = faceIdCaptureService.registerFace(request);
+            return response.success() ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(FaceCaptureResponse.builder().message(e.getMessage()).success(false).build());
+        } catch (Exception e) {
+            log.error("Lỗi khi đăng ký face", e);
+            return ResponseEntity.internalServerError()
+                    .body(FaceCaptureResponse.builder().message("Lỗi máy chủ").success(false).build());
         }
-
-        faceProfile.setSampleCount(sampleCount);
-        faceProfile.setThumbnailUrl(lastImagePath);
-        faceProfile.setIsAccept(null);
-        faceProfileRepository.save(faceProfile);
-        faceEmbeddingCacheService.invalidate();
-
-        return ResponseEntity.ok(FaceCaptureResponse.builder()
-                .faceCode(faceProfile.getFaceCode())
-                .thumbnailUrl(lastImagePath)
-                .message("Đăng ký thành công " + sampleCount + " mẫu khuôn mặt")
-                .success(true)
-                .build());
-
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.badRequest()
-                .body(FaceCaptureResponse.builder().message(e.getMessage()).success(false).build());
-    } catch (Exception e) {
-        log.error("Lỗi khi đăng ký face", e);
-        return ResponseEntity.internalServerError()
-                .body(FaceCaptureResponse.builder().message("Lỗi máy chủ").success(false).build());
     }
-}
+
     public static class PoseCheckRequest {
-    public String image_base64;
-}
-
-@PostMapping("/pose-check")
-public ResponseEntity<FaceAiClient.PoseResult> poseCheck(@RequestBody PoseCheckRequest request) {
-    try {
-        FaceAiClient.PoseResult result = faceAiClient.checkPose(request.image_base64);
-        return ResponseEntity.ok(result);
-    } catch (Exception e) {
-        log.error("Lỗi kiểm tra tư thế", e);
-        FaceAiClient.PoseResult error = new FaceAiClient.PoseResult();
-        error.ok = false;
-        error.message = "Không kết nối được AI";
-        return ResponseEntity.ok(error);
+        public String image_base64;
     }
-}
+
+    @PostMapping("/pose-check")
+    public ResponseEntity<FaceAiClient.PoseResult> poseCheck(@RequestBody PoseCheckRequest request) {
+        return ResponseEntity.ok(faceIdCaptureService.checkPose(request.image_base64));
+    }
+
     @GetMapping("/latest")
     public ResponseEntity<LatestFaceResponse> getLatestFace() {
         try {
-            User currentUser = getCurrentUser();
-            FaceProfile faceProfile = faceProfileRepository.findByUser(currentUser)
-                    .orElseThrow(() -> new IllegalArgumentException("Chưa đăng ký face"));
-
-            return ResponseEntity.ok(LatestFaceResponse.builder()
-                    .faceCode(faceProfile.getFaceCode())
-                    .imagePath(faceProfile.getThumbnailUrl())
-                    .username(currentUser.getUsername())
-                    .fullName(currentUser.getFullName())
-                    .email(currentUser.getEmail())
-                    .isAccept(faceProfile.getIsAccept())
-                    .build());
-
+            return ResponseEntity.ok(faceIdCaptureService.getLatestFace());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
@@ -175,38 +70,9 @@ public ResponseEntity<FaceAiClient.PoseResult> poseCheck(@RequestBody PoseCheckR
     }
 
     @PostMapping("/update-for-attendance")
-    @Transactional // Bổ sung Transactional
     public ResponseEntity<FaceCaptureResponse> updateForAttendance(@RequestBody FaceCaptureRequest request) {
         try {
-            User user = getCurrentUser();
-            FaceProfile faceProfile = faceProfileRepository.findByUser(user)
-                    .orElseThrow(() -> new IllegalArgumentException("Chưa đăng ký face"));
-
-            // Xóa ảnh cũ
-            String oldImagePath = faceProfile.getThumbnailUrl();
-            if (oldImagePath != null) {
-                deleteFileSafely(oldImagePath);
-            }
-
-            // Lưu ảnh mới
-            String newImagePath = null;
-            if (request.getSamples() != null && !request.getSamples().isEmpty()) {
-                newImagePath = saveBase64Image(request.getSamples().get(0), user.getId(), 1);
-            }
-
-            faceProfile.setThumbnailUrl(newImagePath);
-            // Khi employee cập nhật ảnh điểm danh, reset trạng thái duyệt
-            faceProfile.setIsAccept(null);
-            faceProfileRepository.save(faceProfile);
-            faceEmbeddingCacheService.invalidate();
-
-            return ResponseEntity.ok(FaceCaptureResponse.builder()
-                    .faceCode(faceProfile.getFaceCode())
-                    .thumbnailUrl(newImagePath)
-                    .message("Cập nhật ảnh điểm danh thành công")
-                    .success(true)
-                    .build());
-
+            return ResponseEntity.ok(faceIdCaptureService.updateForAttendance(request));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
                     .body(FaceCaptureResponse.builder().message(e.getMessage()).success(false).build());
@@ -218,25 +84,12 @@ public ResponseEntity<FaceAiClient.PoseResult> poseCheck(@RequestBody PoseCheckR
     }
 
     @DeleteMapping("/sample/{sampleId}")
-    @Transactional // Bổ sung Transactional
     public ResponseEntity<Void> deleteFaceSample(@PathVariable Long sampleId) {
         try {
-            User user = getCurrentUser();
-            FaceSample sample = faceSampleRepository.findById(sampleId)
-                    .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mẫu"));
-
-            if (!sample.getFaceProfile().getUser().getId().equals(user.getId())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-
-            // Nên xóa DB trước, nếu thành công mới xóa file. Tránh trường hợp xóa file xong
-            // DB lỗi (Rollback).
-            faceSampleRepository.deleteById(sampleId);
-            deleteFileSafely(sample.getImagePath());
-            faceEmbeddingCacheService.invalidate();
-
+            faceIdCaptureService.deleteFaceSample(sampleId);
             return ResponseEntity.noContent().build();
-
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(403).build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
@@ -256,55 +109,5 @@ public ResponseEntity<FaceAiClient.PoseResult> poseCheck(@RequestBody PoseCheckR
     @PostMapping("/identify")
     public ResponseEntity<FaceIdentifyResponse> identify(@RequestBody FaceIdentifyRequest request) {
         return ResponseEntity.ok(faceIdAttendanceService.identify(request.getImageBase64()));
-    }
-
-    // --- Helper Methods ---
-
-    private User getCurrentUser() {
-        return userRepository.findByUsername(SecurityUtil.getCurrentUserName())
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng"));
-    }
-
-    private void cleanUpOldSamples(FaceProfile faceProfile) {
-        List<FaceSample> oldSamples = faceSampleRepository.findByFaceProfile(faceProfile);
-        for (FaceSample oldSample : oldSamples) {
-            deleteFileSafely(oldSample.getImagePath());
-        }
-    }
-
-    private void deleteFileSafely(String url) {
-        try {
-            String path = extractPathFromUrl(url);
-            if (path != null) {
-                storageProvider.delete(path);
-            }
-        } catch (FileStorageException e) {
-            log.warn("Không thể xóa file: {}", url);
-        }
-    }
-
-    private String saveBase64Image(String base64Image, Long userId, int order) {
-        try {
-            String imageContent = base64Image.contains(",") ? base64Image.split(",")[1] : base64Image;
-            byte[] imageBytes = Base64.getDecoder().decode(imageContent);
-
-            String fileName = "face_" + userId + "_" + order + ".jpg";
-            String directory = "face_samples";
-            Path targetPath = Paths.get(directory, String.valueOf(userId), fileName);
-
-            storageProvider.save(targetPath, imageBytes);
-
-            return "/uploads/" + directory + "/" + userId + "/" + fileName;
-        } catch (Exception e) {
-            log.error("Lỗi khi lưu ảnh base64", e);
-            throw new RuntimeException("Không thể lưu ảnh: " + e.getMessage());
-        }
-    }
-
-
-    private String extractPathFromUrl(String url) {
-        if (url == null || url.isBlank())
-            return null;
-        return url.startsWith("/uploads/") ? url.substring(9) : url;
     }
 }

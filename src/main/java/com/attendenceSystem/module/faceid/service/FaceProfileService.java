@@ -13,4 +13,5 @@ public interface FaceProfileService {
     FaceProfileResponse getFaceProfile(Long id);
     FaceProfileResponse getByFaceCode(String faceCode);
     Page<FaceProfileResponse> searchFaceProfiles(String query, Pageable pageable);
+    
 }

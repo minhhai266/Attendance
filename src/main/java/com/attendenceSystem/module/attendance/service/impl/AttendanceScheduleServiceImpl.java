@@ -41,7 +41,7 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
     private static final String FORGOT_CHECKOUT_NOTE = "Quên check-out; Coi như vắng mặt";
     private static final String DAY_OFF_NO_CHECKOUT_NOTE = "Ngày nghỉ; Không checkout";
 
-    @Scheduled(cron = "0 15 17 * * *", zone = "${app.timezone:Asia/Ho_Chi_Minh}")
+    @Scheduled(cron = "${attendance.auto-mark-absent-cron:0 0 10 * * *}", zone = "${app.timezone:Asia/Ho_Chi_Minh}")
     @Transactional
     @Override
     public void autoMarkAbsent() {
@@ -86,7 +86,7 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
         log.info("Đã đánh vắng tự động cho {} nhân viên ({} nghỉ phép).", absentUsers.size(), onLeaveUserIds.size());
     }
 
-    @Scheduled(cron = "0 50 23 * * *",
+    @Scheduled(cron = "${attendance.auto-handle-missing-checkout-cron:0 50 23 * * *}",
             zone = "${app.timezone:Asia/Ho_Chi_Minh}")
     @Transactional
     @Override
@@ -126,7 +126,7 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
         log.info("Đã xử lý {} trường hợp quên check-out.", missingCheckOutRecords.size());
     }
 
-    private boolean isWorkingDay(LocalDate date) {
+    private boolean isWorkingDay(final LocalDate date) {
         WorkSchedule schedule = workScheduleRepository.findById(DEFAULT_SCHEDULE_ID).orElse(null);
         if (schedule == null || schedule.getWorkingDays() == null || schedule.getWorkingDays().isEmpty()) {
             // Không có schedule → mặc định là working day (giữ hành vi cũ)

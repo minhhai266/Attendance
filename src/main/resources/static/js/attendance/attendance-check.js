@@ -251,8 +251,12 @@ async function postJson(url, body) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
     });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    return res.json();
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok){
+        const errorMessage = data.message || ('HTTP ' + res.status);
+        throw new Error(errorMessage);
+    }
+    return data;
 }
 
 function showAttendanceMessage(message, type) {

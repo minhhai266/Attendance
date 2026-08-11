@@ -16,6 +16,7 @@ import com.attendenceSystem.module.attendance.mapper.response.LeaveDetailRespons
 import com.attendenceSystem.module.attendance.mapper.response.LeaveRequestResponseMapper;
 import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
 import com.attendenceSystem.module.attendance.repository.LeaveRequestSpecification;
+import com.attendenceSystem.module.attendance.service.LeaveScheduleService;
 import com.attendenceSystem.module.attendance.service.LeaveService;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Role;
@@ -26,11 +27,13 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class LeaveServiceImpl implements LeaveService {
     private final LeaveRequestRepository leaveRequestRepository;
     private final LeaveRequestResponseMapper leaveRequestResponseMapper;
     private final LeaveDetailResponseMapper leaveDetailResponseMapper;
     private final UserContextProvider userContextProvider;
+    private final LeaveScheduleService leaveScheduleService;
 
     @Transactional
     @Override
@@ -60,6 +63,9 @@ public class LeaveServiceImpl implements LeaveService {
         if (request.getStartDate().isAfter(request.getEndDate())) {
             throw new IllegalArgumentException("Ngày bắt đầu phải trước ngày kết thúc");
         }
+
+        leaveScheduleService.validateBlackoutPeriod(request.getStartDate());
+
         User user = userContextProvider.getCurrentUserEntity();
         LeaveRequest leave = CreateLeaveRequestMapper.toEntity(request, user);
         LeaveRequest saved = leaveRequestRepository.save(leave);
@@ -74,7 +80,8 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    public Page<LeaveRequestResponse> getLeaveRequests(final LeaveStatus status, final String week, final Pageable pageable) {
+    public Page<LeaveRequestResponse> getLeaveRequests(final LeaveStatus status, final String week,
+            final Pageable pageable) {
         User user = userContextProvider.getCurrentUserEntity();
         Specification<LeaveRequest> spec = Specification
                 .where(hasUser(user))
@@ -83,17 +90,14 @@ public class LeaveServiceImpl implements LeaveService {
         return leaveRequestRepository.findAll(spec, pageable).map(leaveRequestResponseMapper::fromEntity);
     }
 
-    private Specification<LeaveRequest> hasUser(User user) {
-        return (root, query, cb) -> cb.equal(root.get("user"), user);
-    }
-
     @Override
     public Page<LeaveRequestResponse> getAllLeaveRequests(final Pageable pageable) {
         return leaveRequestRepository.findAll(pageable).map(leaveRequestResponseMapper::fromEntity);
     }
 
     @Override
-    public Page<LeaveRequestResponse> getAllLeaveRequests(final String keyword, final LeaveStatus status, final String week, final Pageable pageable) {
+    public Page<LeaveRequestResponse> getAllLeaveRequests(final String keyword, final LeaveStatus status,
+            final String week, final Pageable pageable) {
         Specification<LeaveRequest> spec = Specification
                 .where(LeaveRequestSpecification.hasKeyword(keyword))
                 .and(LeaveRequestSpecification.hasStatus(status))
@@ -117,13 +121,17 @@ public class LeaveServiceImpl implements LeaveService {
         }
     }
 
-    private LeaveRequest findByIdWithStatusPending(Long id) {
+    private LeaveRequest findByIdWithStatusPending(final Long id) {
         LeaveRequest leaveRequest = leaveRequestRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Không tìm thấy đơn xin nghỉ phép"));
         if (leaveRequest.getStatus() != LeaveStatus.PENDING) {
             throw new IllegalStateException("Đơn nghỉ phép đã được xử lý");
         }
         return leaveRequest;
+    }
+
+    private Specification<LeaveRequest> hasUser(final User user) {
+        return (root, query, cb) -> cb.equal(root.get("user"), user);
     }
 
 }
