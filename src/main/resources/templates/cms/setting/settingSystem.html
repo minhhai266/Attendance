@@ -1,0 +1,184 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cài đặt hệ thống</title>
+    <link rel="stylesheet" th:href="@{/css/setting/settingSystem.css}" />
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div class="layout">
+        <div th:replace="~{cms/sidebar/sidebar-role :: sidebar}"></div>
+
+        <section class="container-layout">
+
+            <div class="container-header">
+                <h1>Cài đặt hệ thống</h1>
+                <p>Chọn cài đặt để hiển thị chi tiết và thay đổi giờ check-in/check-out.</p>
+            </div>
+
+            <main class="main-container">
+                <section class="dashboard-card settings-panel">
+                    <div class="card-header">
+                        <div>
+                            <h2>Danh sách cài đặt</h2>
+                            <p class="card-description">Chọn mục để chỉnh cấu hình.</p>
+                        </div>
+                    </div>
+                    <div class="card-body settings-list">
+                        <button type="button" class="setting-item active" data-setting="time">
+                            <span class="setting-item-icon">
+                                <i class="bi bi-clock-history"></i>
+                            </span>
+                            <span class="setting-item-text">
+                                <strong>Thời gian</strong>
+                                <span>Thiết lập giờ check-in / check-out</span>
+                            </span>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="dashboard-card setting-detail-card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Chi tiết cài đặt</h2>
+                            <p class="card-description">Nhập giờ bắt đầu và kết thúc cho check-in/check-out.</p>
+                        </div>
+                    </div>
+                    <div class="card-body setting-detail-body">
+                        <div class="setting-panel active" id="setting-time">
+                            <div class="setting-section">
+                                <div class="setting-group">
+                                    <label for="checkin-start">Check-in bắt đầu</label>
+                                    <input id="checkin-start" type="time" value="08:00" />
+                                </div>
+                                <div class="setting-group">
+                                    <label for="checkin-end">Check-in kết thúc</label>
+                                    <input id="checkin-end" type="time" value="09:00" />
+                                </div>
+                            </div>
+
+                            <div class="setting-section">
+                                <div class="setting-group">
+                                    <label for="checkout-start">Check-out bắt đầu</label>
+                                    <input id="checkout-start" type="time" value="17:00" />
+                                </div>
+                                <div class="setting-group">
+                                    <label for="checkout-end">Check-out kết thúc</label>
+                                    <input id="checkout-end" type="time" value="18:00" />
+                                </div>
+                            </div>
+
+                            <div class="setting-actions">
+                                <button type="button" class="save-btn">Lưu cài đặt</button>
+                                <span class="save-note">Cài đặt sẽ áp dụng cho giờ làm việc hiện tại.</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <!-- FOOTER -->
+            <div th:replace="~{cms/layout/footer :: footer}"></div>
+        </section>
+    </div>
+
+
+    <!-- CONFIRMATION MODAL FOR ROLE CHANGE -->
+    <div id="roleConfirmModal" class="detail-modal">
+        <div class="detail-content" style="max-width: 480px;">
+            <div class="detail-header">
+                <h2>Xác nhận đổi quyền</h2>
+                <button class="close-btn" onclick="closeRoleConfirm()">✕</button>
+            </div>
+            <div class="detail-body" style="grid-template-columns: 1fr;">
+                <p id="roleConfirmMessage" style="color: #e2e8f0; font-size: 1rem; line-height: 1.6;"></p>
+            </div>
+            <div class="detail-header"
+                style="border-top: 1px solid var(--border); border-bottom: none; justify-content: flex-end; gap: 12px;">
+                <button class="icon-btn" style="background: var(--bg-form);" onclick="closeRoleConfirm()">Hủy</button>
+                <button class="icon-btn btn-role" id="roleConfirmSubmit" style="min-width: 100px;">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="accountModal" class="detail-modal">
+
+        <div class="detail-content">
+
+            <div class="detail-header">
+
+                <h2>Thông tin cá nhân</h2>
+
+                <button class="close-btn" onclick="closeAccountDetail()">
+
+                    ✕
+
+                </button>
+
+            </div>
+
+            <div class="detail-body">
+
+                <div class="detail-item">
+                    <label>Họ và tên</label>
+                    <p id="detailFullName"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Email</label>
+                    <p id="detailEmail"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Số điện thoại</label>
+                    <p id="detailPhone"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Phòng ban</label>
+                    <p id="detailDepartment"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Vai trò</label>
+                    <p id="detailRole"></p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Trạng thái</label>
+                    <span id="detailStatus"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const items = document.querySelectorAll('.setting-item');
+            const panels = document.querySelectorAll('.setting-panel');
+
+            items.forEach(item => {
+                item.addEventListener('click', function () {
+                    const selected = this.dataset.setting;
+
+                    items.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+
+                    panels.forEach(panel => {
+                        panel.classList.toggle('active', panel.id === `setting-${selected}`);
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
