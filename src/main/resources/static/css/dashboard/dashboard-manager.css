@@ -117,6 +117,13 @@
 
 .card-body{
     padding:18px;
+    min-height: 360px;
+    position: relative;
+}
+
+.chart-card canvas {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 /* ===================================

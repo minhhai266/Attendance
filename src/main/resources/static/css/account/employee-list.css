@@ -241,6 +241,7 @@ tbody tr:hover {
 .actions {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .icon-btn {
@@ -258,6 +259,40 @@ tbody tr:hover {
 .icon-btn:hover {
     transform: translateY(-2px);
     background: rgba(255, 255, 255, .12);
+}
+
+.department-select {
+    min-width: 170px;
+    max-width: 220px;
+    height: 44px;
+    padding: 0 14px;
+    padding-right: 42px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    background: rgba(255, 255, 255, .08);
+    color: white;
+    font-size: .95rem;
+    cursor: pointer;
+    transition: .25s;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='1.5' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px 7px;
+}
+
+.department-select option {
+    background: #0f172a;
+    color: #e2e8f0;
+}
+
+.department-select:hover,
+.department-select:focus {
+    border-color: var(--indigo-06);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, .12);
+    outline: none;
 }
 
 .btn-role {

@@ -39,7 +39,7 @@ footer {
     font-weight: 700;
 
     background: linear-gradient(90deg,
-            #8b5cf6,
+            #4c318b,
             #b794ff);
     background-clip: text;
     -webkit-background-clip: text;
@@ -92,7 +92,7 @@ footer {
     padding: 20px;
 
     color: var(--text-light);
-    background-color: var(--bg-dark);
+    background-color: #161237;
     
     border-top: 1px solid var(--bg-table-06);
 }

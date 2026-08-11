@@ -109,8 +109,57 @@
             </div>
         </section>
 
-        <!-- Features -->
         <section class="features">
+            <div class="container">
+
+                <div class="section-header">
+                    <h2 class="section-title">
+                        Giao diện người dùng thân thiện
+                    </h2>
+
+                    <p class="section-description">
+                        Giải pháp toàn diện cho quản lý điểm danh
+                    </p>
+                </div>
+
+                <div class="feature-carousel">
+                    <button class="carousel-btn carousel-prev" type="button">‹</button>
+                    <div class="carousel-window">
+                        <div class="carousel-track">
+                            <article class="carousel-slide">
+                                <img src="/image/Admin.png" alt="Admin dashboard feature" />
+                                <div class="carousel-caption">
+                                    <span class="badge">Admin</span>
+                                    <h3>Giao diện quản trị</h3>
+                                    <p>Trang quản trị lớn, tối ưu cho quyết định nhanh.</p>
+                                </div>
+                            </article>
+                            <article class="carousel-slide">
+                                <img src="/image/Manager.png" alt="Manager dashboard feature" />
+                                <div class="carousel-caption">
+                                    <span class="badge">Manager</span>
+                                    <h3>Quản lý điểm danh</h3>
+                                    <p>Trực quan rõ ràng, báo cáo và lịch sử ngay trong tầm mắt.</p>
+                                </div>
+                            </article>
+                            <article class="carousel-slide">
+                                <img src="/image/Employee.png" alt="Employee interface feature" />
+                                <div class="carousel-caption">
+                                    <span class="badge">Employee</span>
+                                    <h3>Giao diện nhân viên</h3>
+                                    <p>Trải nghiệm đơn giản, cho nhân viên thao tác nhanh.</p>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                    <button class="carousel-btn carousel-next" type="button">›</button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="hero">
             <div class="container">
 
                 <div class="section-header">
@@ -191,6 +240,7 @@
 
     <div th:replace="~{cms/layout/footer :: footer}"></div>
 
+    <script th:src="@{/js/homepage/carousel.js}"></script>
 </body>
 
 </html>

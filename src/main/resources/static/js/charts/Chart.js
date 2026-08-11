@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     label: "Có mặt",
                     data: weeklyStatsData.map(item => item.present),
                     backgroundColor: "#10b981",
-                    borderRadius: 4
+                    borderRadius: 1
                 },
                 {
                     label: "Đi muộn",
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     label: "Vắng mặt",
                     data: weeklyStatsData.map(item => item.absent),
                     backgroundColor: "#ef4444",
-                    borderRadius: 4
+                    borderRadius: 2
                 }
             ]
         },
@@ -47,4 +47,4 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-});
+}); 

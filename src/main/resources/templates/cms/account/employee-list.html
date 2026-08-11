@@ -131,8 +131,8 @@
 
                                         <form th:action="@{/manager/accounts/update/{id}(id=${user.id()})}"
                                             method="post" style="display:inline;">
-                                            <select name="department" onchange="this.form.submit()">
-                                                <option value="">Chuyển phòng</option>
+                                            <select name="department" class="department-select" onchange="this.form.submit()">
+                                                <option value="" disabled selected hidden>Chuyển phòng</option>
                                                 <option th:each="dept : ${departments}" th:value="${dept.name()}"
                                                     th:text="${dept.displayName}"></option>
                                             </select>
