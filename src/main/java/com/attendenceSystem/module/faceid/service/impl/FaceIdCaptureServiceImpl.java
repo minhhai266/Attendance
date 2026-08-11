@@ -184,7 +184,7 @@ public class FaceIdCaptureServiceImpl implements FaceIdCaptureService {
     }
 
     private User getCurrentUser() {
-        return userRepository.findByUsername(SecurityUtil.getCurrentUserName())
+        return userRepository.findById(SecurityUtil.getCurrentUserId())
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng"));
     }
 
