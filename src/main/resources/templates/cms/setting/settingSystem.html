@@ -18,7 +18,7 @@
 
             <div class="container-header">
                 <h1>Cài đặt hệ thống</h1>
-                <p>Chọn cài đặt để hiển thị chi tiết và thay đổi giờ check-in/check-out.</p>
+                <p>Chọn cài đặt để hiển thị chi tiết và thay đổi cấu hình tương ứng.</p>
             </div>
 
             <main class="main-container">
@@ -30,56 +30,38 @@
                         </div>
                     </div>
                     <div class="card-body settings-list">
-                        <button type="button" class="setting-item active" data-setting="time">
+                        <button type="button" class="setting-item active" data-setting="mail">
+                            <span class="setting-item-icon">
+                                <i class="bi bi-envelope-fill"></i>
+                            </span>
+                            <span class="setting-item-text">
+                                <strong>Email hệ thống</strong>
+                                <span>Cấu hình tài khoản gửi mail (SMTP)</span>
+                            </span>
+                        </button>
+
+                        <button type="button" class="setting-item" data-setting="time">
                             <span class="setting-item-icon">
                                 <i class="bi bi-clock-history"></i>
                             </span>
                             <span class="setting-item-text">
-                                <strong>Thời gian</strong>
+                                <strong>Giờ điểm danh</strong>
                                 <span>Thiết lập giờ check-in / check-out</span>
+                            </span>
+                        </button>
+
+                        <button type="button" class="setting-item" data-setting="cron">
+                            <span class="setting-item-icon">
+                                <i class="bi bi-arrow-repeat"></i>
+                            </span>
+                            <span class="setting-item-text">
+                                <strong>Tự động hoá</strong>
+                                <span>Lịch chạy tự động chấm công / xử lý nghỉ phép</span>
                             </span>
                         </button>
                     </div>
                 </section>
-
-                <section class="dashboard-card setting-detail-card">
-                    <div class="card-header">
-                        <div>
-                            <h2>Chi tiết cài đặt</h2>
-                            <p class="card-description">Nhập giờ bắt đầu và kết thúc cho check-in/check-out.</p>
-                        </div>
-                    </div>
-                    <div class="card-body setting-detail-body">
-                        <div class="setting-panel active" id="setting-time">
-                            <div class="setting-section">
-                                <div class="setting-group">
-                                    <label for="checkin-start">Check-in bắt đầu</label>
-                                    <input id="checkin-start" type="time" value="08:00" />
-                                </div>
-                                <div class="setting-group">
-                                    <label for="checkin-end">Check-in kết thúc</label>
-                                    <input id="checkin-end" type="time" value="09:00" />
-                                </div>
-                            </div>
-
-                            <div class="setting-section">
-                                <div class="setting-group">
-                                    <label for="checkout-start">Check-out bắt đầu</label>
-                                    <input id="checkout-start" type="time" value="17:00" />
-                                </div>
-                                <div class="setting-group">
-                                    <label for="checkout-end">Check-out kết thúc</label>
-                                    <input id="checkout-end" type="time" value="18:00" />
-                                </div>
-                            </div>
-
-                            <div class="setting-actions">
-                                <button type="button" class="save-btn">Lưu cài đặt</button>
-                                <span class="save-note">Cài đặt sẽ áp dụng cho giờ làm việc hiện tại.</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                
             </main>
             <!-- FOOTER -->
             <div th:replace="~{cms/layout/footer :: footer}"></div>
@@ -87,96 +69,246 @@
     </div>
 
 
-    <!-- CONFIRMATION MODAL FOR ROLE CHANGE -->
-    <div id="roleConfirmModal" class="detail-modal">
-        <div class="detail-content" style="max-width: 480px;">
-            <div class="detail-header">
-                <h2>Xác nhận đổi quyền</h2>
-                <button class="close-btn" onclick="closeRoleConfirm()">✕</button>
+
+ 
+
+    
+
+    <!-- SETTING DETAIL MODAL (nổi lên giữa màn hình khi chọn 1 mục cài đặt) -->
+    <div id="settingDetailModal" class="setting-modal-overlay">
+        <div class="setting-modal">
+            <div class="card-header">
+                <div>
+                    <h2 id="detailTitle">Cấu hình Email</h2>
+                    <p class="card-description" id="detailDesc">Thông tin tài khoản dùng để gửi mail (SMTP).</p>
+                </div>
+                <button class="close-btn" onclick="closeSettingModal()">✕</button>
             </div>
-            <div class="detail-body" style="grid-template-columns: 1fr;">
-                <p id="roleConfirmMessage" style="color: #e2e8f0; font-size: 1rem; line-height: 1.6;"></p>
-            </div>
-            <div class="detail-header"
-                style="border-top: 1px solid var(--border); border-bottom: none; justify-content: flex-end; gap: 12px;">
-                <button class="icon-btn" style="background: var(--bg-form);" onclick="closeRoleConfirm()">Hủy</button>
-                <button class="icon-btn btn-role" id="roleConfirmSubmit" style="min-width: 100px;">Xác nhận</button>
+            <div class="card-body setting-detail-body">
+
+                <!-- 1. EMAIL SETTINGS -->
+                <div class="setting-panel active" id="setting-mail">
+                    <div class="setting-section">
+                        <div class="setting-group">
+                            <label for="mail-username">spring.mail.username</label>
+                            <input id="mail-username" type="email" placeholder="example@gmail.com" />
+                        </div>
+                        <div class="setting-group">
+                            <label for="mail-password">spring.mail.password</label>
+                            <div class="setting-toggle-eye">
+                                <input id="mail-password" type="password" placeholder="Mật khẩu ứng dụng (App password)" />
+                                <button type="button" title="Hiện/ẩn mật khẩu" onclick="togglePassword('mail-password', this)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-actions">
+                        <button type="button" class="save-btn" onclick="saveMailSetting()">Lưu cài đặt</button>
+                        <span class="save-note">Áp dụng cho toàn bộ email hệ thống gửi đi.</span>
+                    </div>
+                </div>
+
+                <!-- 2. ATTENDANCE TIME SETTINGS -->
+                <div class="setting-panel" id="setting-time">
+                    <div class="setting-section">
+                        <div class="setting-group">
+                            <label for="start-work">attendance.start-work</label>
+                            <input id="start-work" type="time" value="08:30" />
+                        </div>
+                        <div class="setting-group">
+                            <label for="max-checkin">attendance.max-check-in-time</label>
+                            <input id="max-checkin" type="time" value="10:00" />
+                        </div>
+                    </div>
+
+                    <div class="setting-section">
+                        <div class="setting-group">
+                            <label for="min-checkout">attendance.min-check-out-time</label>
+                            <input id="min-checkout" type="time" value="16:00" />
+                        </div>
+                        <div class="setting-group">
+                            <label for="end-work">attendance.end-work</label>
+                            <input id="end-work" type="time" value="17:30" />
+                        </div>
+                    </div>
+
+                    <div class="setting-actions">
+                        <button type="button" class="save-btn" onclick="saveTimeSetting()">Lưu cài đặt</button>
+                        <span class="save-note">Cài đặt sẽ áp dụng cho giờ làm việc hiện tại.</span>
+                    </div>
+                </div>
+
+                <!-- 3. AUTO CRON SETTINGS -->
+                <div class="setting-panel" id="setting-cron">
+                    <div class="setting-section">
+                        <div class="setting-group">
+                            <label for="cron-absent">attendance.auto-mark-absent-cron</label>
+                            <p class="setting-hint">Thời điểm tự động đánh dấu vắng mặt trong ngày</p>
+                            <input id="cron-absent" type="time" value="10:00" />
+                        </div>
+                        <div class="setting-group">
+                            <label for="cron-missing-checkout">attendance.auto-handle-missing-checkout-cron</label>
+                            <p class="setting-hint">Thời điểm tự động xử lý các trường hợp quên check-out</p>
+                            <input id="cron-missing-checkout" type="time" value="23:50" />
+                        </div>
+                    </div>
+
+                    <div class="setting-section">
+                        <div class="setting-group">
+                            <label for="cron-leave-reject">attendance.leave.auto-reject-cron</label>
+                            <p class="setting-hint">Thời điểm tự động từ chối đơn nghỉ phép chưa duyệt</p>
+                            <input id="cron-leave-reject" type="time" value="22:00" />
+                        </div>
+                        <div class="setting-group">
+                            <label for="leave-blackout">attendance.leave.blackout-minutes</label>
+                            <p class="setting-hint">Số phút "khoá" trước giờ nghỉ, không cho gửi đơn nghỉ phép</p>
+                            <input id="leave-blackout" type="number" min="0" step="1" value="2" />
+                        </div>
+                    </div>
+
+                    <div class="setting-actions">
+                        <button type="button" class="save-btn" onclick="saveCronSetting()">Lưu cài đặt</button>
+                        <span class="save-note">Các tác vụ sẽ chạy tự động theo giờ thiết lập mỗi ngày.</span>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
-
-    <div id="accountModal" class="detail-modal">
-
-        <div class="detail-content">
-
-            <div class="detail-header">
-
-                <h2>Thông tin cá nhân</h2>
-
-                <button class="close-btn" onclick="closeAccountDetail()">
-
-                    ✕
-
-                </button>
-
-            </div>
-
-            <div class="detail-body">
-
-                <div class="detail-item">
-                    <label>Họ và tên</label>
-                    <p id="detailFullName"></p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Email</label>
-                    <p id="detailEmail"></p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Số điện thoại</label>
-                    <p id="detailPhone"></p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Phòng ban</label>
-                    <p id="detailDepartment"></p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Vai trò</label>
-                    <p id="detailRole"></p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Trạng thái</label>
-                    <span id="detailStatus"></span>
-                </div>
-
-            </div>
-
-        </div>
-
     </div>
 
     <script>
+        const SETTING_META = {
+            mail: {
+                title: 'Cấu hình Email',
+                desc: 'Thông tin tài khoản dùng để gửi mail (SMTP).'
+            },
+            time: {
+                title: 'Giờ điểm danh',
+                desc: 'Nhập giờ bắt đầu và kết thúc cho check-in/check-out.'
+            },
+            cron: {
+                title: 'Tự động hoá',
+                desc: 'Lịch chạy tự động cho chấm công và xử lý đơn nghỉ phép.'
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', function () {
             const items = document.querySelectorAll('.setting-item');
-            const panels = document.querySelectorAll('.setting-panel');
+            const overlay = document.getElementById('settingDetailModal');
 
             items.forEach(item => {
                 item.addEventListener('click', function () {
-                    const selected = this.dataset.setting;
-
                     items.forEach(i => i.classList.remove('active'));
                     this.classList.add('active');
-
-                    panels.forEach(panel => {
-                        panel.classList.toggle('active', panel.id === `setting-${selected}`);
-                    });
+                    openSettingModal(this.dataset.setting);
                 });
             });
+
+            // Click ra ngoài khối modal (vào lớp nền mờ) sẽ đóng modal
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) {
+                    closeSettingModal();
+                }
+            });
+
+            // Nhấn Esc để đóng modal
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && overlay.classList.contains('open')) {
+                    closeSettingModal();
+                }
+            });
         });
+
+        // Mở modal chi tiết cài đặt (nổi lên giữa màn hình)
+        function openSettingModal(selected) {
+            const overlay = document.getElementById('settingDetailModal');
+            const panels = document.querySelectorAll('.setting-panel');
+            const detailTitle = document.getElementById('detailTitle');
+            const detailDesc = document.getElementById('detailDesc');
+
+            panels.forEach(panel => {
+                panel.classList.toggle('active', panel.id === `setting-${selected}`);
+            });
+
+            const meta = SETTING_META[selected];
+            if (meta) {
+                detailTitle.textContent = meta.title;
+                detailDesc.textContent = meta.desc;
+            }
+
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // khoá scroll nền khi mở modal
+        }
+
+        function closeSettingModal() {
+            const overlay = document.getElementById('settingDetailModal');
+            overlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // Hiện / ẩn mật khẩu
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        }
+
+        function timeToCron(timeStr) {
+            const [hour, minute] = timeStr.split(':').map(v => parseInt(v, 10));
+            return `0 ${minute} ${hour} * * *`;
+        }
+
+        function cronToTime(cronStr) {
+            const parts = cronStr.trim().split(/\s+/);
+            const minute = parts[1].padStart(2, '0');
+            const hour = parts[2].padStart(2, '0');
+            return `${hour}:${minute}`;
+        }
+
+        function saveMailSetting() {
+            const payload = {
+                'spring.mail.username': document.getElementById('mail-username').value,
+                'spring.mail.password': document.getElementById('mail-password').value
+            };
+            console.log('Lưu cấu hình Email:', payload);
+            // TODO: gọi API lưu cấu hình email, ví dụ:
+            // fetch('/api/settings/mail', { method: 'POST', body: JSON.stringify(payload) })
+            alert('Đã lưu cấu hình Email.');
+        }
+
+        function saveTimeSetting() {
+            const payload = {
+                'attendance.start-work': document.getElementById('start-work').value,
+                'attendance.max-check-in-time': document.getElementById('max-checkin').value,
+                'attendance.min-check-out-time': document.getElementById('min-checkout').value,
+                'attendance.end-work': document.getElementById('end-work').value
+            };
+            console.log('Lưu giờ điểm danh:', payload);
+            // TODO: gọi API lưu giờ điểm danh
+            alert('Đã lưu giờ điểm danh.');
+        }
+
+        function saveCronSetting() {
+            const payload = {
+                'attendance.auto-mark-absent-cron': timeToCron(document.getElementById('cron-absent').value),
+                'attendance.auto-handle-missing-checkout-cron': timeToCron(document.getElementById('cron-missing-checkout').value),
+                'attendance.leave.auto-reject-cron': timeToCron(document.getElementById('cron-leave-reject').value),
+                'attendance.leave.blackout-minutes': parseInt(document.getElementById('leave-blackout').value, 10)
+            };
+            console.log('Lưu cấu hình tự động hoá:', payload);
+            // TODO: gọi API lưu lịch cron
+            alert('Đã lưu cấu hình tự động hoá.');
+        }
     </script>
 
 </body>

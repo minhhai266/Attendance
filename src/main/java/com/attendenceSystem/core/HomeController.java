@@ -10,4 +10,8 @@ public class HomeController {
     public String homePage() {
         return "cms/homePage";
     }
+    @GetMapping({"/setting"})
+    public String settingSystem() {
+        return "cms/setting/settingSystem";
+    }
 }
