@@ -114,4 +114,45 @@
             }
         });
     </script>
+
+    <!-- Toggle sidebar trên mobile (hamburger + overlay) -->
+    <script>
+        (function () {
+            const sidebar = document.querySelector(".sidebar");
+            if (!sidebar) return;
+
+            const toggleBtn = document.createElement("button");
+            toggleBtn.className = "sidebar-toggle-btn";
+            toggleBtn.setAttribute("aria-label", "Mở/đóng menu");
+            toggleBtn.innerHTML = '<i class="bi bi-list"></i>';
+            document.body.appendChild(toggleBtn);
+
+            const backdrop = document.createElement("div");
+            backdrop.className = "sidebar-backdrop";
+            document.body.appendChild(backdrop);
+
+            function openSidebar() {
+                sidebar.classList.add("sidebar-open");
+                backdrop.classList.add("active");
+                toggleBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove("sidebar-open");
+                backdrop.classList.remove("active");
+                toggleBtn.innerHTML = '<i class="bi bi-list"></i>';
+            }
+
+            toggleBtn.addEventListener("click", function () {
+                sidebar.classList.contains("sidebar-open") ? closeSidebar() : openSidebar();
+            });
+
+            backdrop.addEventListener("click", closeSidebar);
+
+            // Bấm 1 mục trong menu thì tự đóng sidebar (mobile)
+            sidebar.querySelectorAll(".sidebar-link").forEach(function (link) {
+                link.addEventListener("click", closeSidebar);
+            });
+        })();
+    </script>
 </div>

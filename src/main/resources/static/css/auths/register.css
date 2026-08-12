@@ -373,3 +373,69 @@ hr {
         gap: 12px;
     }
 }
+
+/* =========================
+   RESPONSIVE - LAYOUT (MOBILE)
+   Sửa lỗi .layout vẫn nằm ngang trên mobile,
+   .left và .card cùng flex:1 khiến 2 cột bị bóp/tràn
+========================= */
+
+@media (max-width: 900px) {
+    .layout {
+        flex-direction: column;   /* xếp dọc thay vì ngang */
+        align-items: center;      /* căn giữa cả 2 khối */
+        gap: 40px;                 /* giảm khoảng cách 80px -> 40px */
+        padding: 40px 16px;
+        text-align: center;
+    }
+
+    .left {
+        padding: 0;                /* bỏ padding 50px thừa */
+        position: static;          /* bỏ sticky, không cần khi xếp dọc */
+        top: auto;
+        flex: none;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .hero-content {
+        max-width: 100%;
+    }
+
+    .hero-description {
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .card {
+        flex: none;         /* bỏ flex:1, tránh bị bóp cạnh .left */
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .layout {
+        padding: 24px 12px;
+        gap: 28px;
+    }
+
+    .hero-title {
+        font-size: 2.4rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+        margin-bottom: 24px;
+    }
+
+    .card-header,
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-title {
+        font-size: 1.6rem;
+    }
+}

@@ -250,3 +250,80 @@
     background: var(--bg-table-06);
     color: var(--text-white);
 }
+
+/* ===== TOGGLE BUTTON (hamburger) & BACKDROP =====
+   Được JS chèn vào <body>, mặc định ẩn trên desktop,
+   chỉ hiện ở mobile */
+
+.sidebar-toggle-btn {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    width: 44px;
+    height: 44px;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: var(--indigo-0);
+    color: var(--text-white);
+    font-size: 1.3rem;
+
+    cursor: pointer;
+    z-index: 1100;
+
+    box-shadow: 0 4px 15px rgba(2, 6, 23, .4);
+}
+
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, .55);
+    z-index: 999;
+}
+
+.sidebar-backdrop.active {
+    display: block;
+}
+
+/* ===================================
+   RESPONSIVE - MOBILE (<=980px)
+   Sidebar mặc định ẩn ngoài màn hình (trái),
+   bấm nút hamburger để trượt vào (overlay)
+=================================== */
+
+@media (max-width: 980px) {
+    .sidebar-toggle-btn {
+        display: flex;
+    }
+
+    /* Vị trí ẩn/hiện (position, left) của .sidebar được đặt
+       trong layout.css — vì layout.css có rule .sidebar{left:0}
+       không nằm trong media query, cần override SAU nó mới
+       thắng được, đặt ở đây sẽ bị layout.css đè ngược lại. */
+
+    .sidebar-header {
+        /* Chừa chỗ bên trái cho nút hamburger (44px + margin)
+           để logo không bị nút đè lên */
+        padding: 20px 20px 20px 68px;
+    }
+
+    .sidebar-menu {
+        padding: 12px 16px;
+    }
+
+    .sidebar-link {
+        padding: 12px 16px;
+        font-size: 1rem;
+    }
+
+    .sidebar-footer {
+        padding: 12px 16px 20px;
+    }
+}
