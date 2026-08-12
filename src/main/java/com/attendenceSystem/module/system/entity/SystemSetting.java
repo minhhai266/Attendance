@@ -3,6 +3,9 @@ package com.attendenceSystem.module.system.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import java.time.LocalTime;
+
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,23 +24,36 @@ public class SystemSetting {
 
     @Id
     @Column(name = "id")
-    private Long id;
+    @Builder.Default
+    private Long id = 1L;
 
-    @Column(name = "recognition_threshold", nullable = false)
-    private Double recognitionThreshold;
+    @Column(name = "system_email", nullable = true)
+    private String email;
 
-    @Column(name = "cooldown_seconds", nullable = false)
-    private Integer cooldownSeconds;
+    @Column(name = "system_email_password", nullable = true)
+    private String emailPassword;
 
-    @Column(name = "frame_skip", nullable = false)
-    private Integer frameSkip;
+    @Column(name = "start_work_time", nullable = true)
+    private LocalTime startWorkTime;
 
-    @Column(name = "anti_spoofing_enabled", nullable = false)
-    private Boolean antiSpoofingEnabled;
+    @Column(name = "end_work_time", nullable = true)
+    private LocalTime endWorkTime;
 
-    @Column(name = "check_in_camera_source", length = 500)
-    private String checkInCameraSource;
+    @Column(name = "max_checkin_time", nullable = true)
+    private LocalTime maxCheckinTime;
 
-    @Column(name = "check_out_camera_source", length = 500)
-    private String checkOutCameraSource;
+    @Column(name = "min_checkout_time", nullable = true)
+    private LocalTime minCheckoutTime;
+
+    @Column(name = "auto_mark_absent_cron", nullable = true)
+    private String autoMarkAbsentCron;
+
+    @Column(name = "auto_handle_missing_checkout_cron", nullable = true)
+    private String autoHandleMissingCheckoutCron;
+
+    @Column(name = "leave_auto_reject_cron", nullable = true)
+    private String leaveAutoRejectCron;
+
+    @Column(name = "leave_blackout_minutes", nullable = true)
+    private Integer leaveBlackoutMinutes;
 }

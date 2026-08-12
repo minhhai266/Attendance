@@ -4,11 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.attendenceSystem.config.SystemConfig;
 import com.attendenceSystem.module.attendance.entity.LeaveRequest;
 import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
@@ -22,12 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LeaveScheduleServiceImpl implements LeaveScheduleService {
     private final LeaveRequestRepository leaveRequestRepository;
+    private final SystemConfig systemConfig;
 
-    @Value("${attendance.leave.auto-reject-cron:0 0 22 * * *}")
-    private String autoRejectCron;
-
-    @Value("${attendance.leave.blackout-minutes:2}")
-    private int blackoutMinutes;
+    private static final LocalTime DEFAULT_AUTO_REJECT_TIME = LocalTime.of(22, 0);
 
     @Override
     public void validateBlackoutPeriod(final LocalDate startDate) {
@@ -35,7 +31,10 @@ public class LeaveScheduleServiceImpl implements LeaveScheduleService {
         LocalTime currentTime = now.toLocalTime();
         LocalDate tomorrow = LocalDate.now().plusDays(1);
 
-        LocalTime autoReject = LocalTime.parse("22:00");
+        int blackoutMinutes = systemConfig.get().getLeaveBlackoutMinutes() != null
+                ? systemConfig.get().getLeaveBlackoutMinutes()
+                : 2;
+        LocalTime autoReject = DEFAULT_AUTO_REJECT_TIME;
         LocalTime blackoutStart = autoReject.minusMinutes(blackoutMinutes);
         LocalTime blackoutEnd = autoReject.plusMinutes(blackoutMinutes);
 
@@ -54,7 +53,6 @@ public class LeaveScheduleServiceImpl implements LeaveScheduleService {
         }
     }
 
-    @Scheduled(cron = "${attendance.leave.auto-reject-cron:0 0 22 * * *}")
     @Transactional
     public void autoRejectExpiredLeaveRequests() {
         LocalDate tomorrow = LocalDate.now().plusDays(1);

@@ -68,12 +68,6 @@
         </section>
     </div>
 
-
-
- 
-
-    
-
     <!-- SETTING DETAIL MODAL (nổi lên giữa màn hình khi chọn 1 mục cài đặt) -->
     <div id="settingDetailModal" class="setting-modal-overlay">
         <div class="setting-modal">
@@ -106,7 +100,7 @@
 
                     <div class="setting-actions">
                         <button type="button" class="save-btn" onclick="saveMailSetting()">Lưu cài đặt</button>
-                        <span class="save-note">Áp dụng cho toàn bộ email hệ thống gửi đi.</span>
+                        <span id="mail-save-status" class="save-note">Áp dụng cho toàn bộ email hệ thống gửi đi.</span>
                     </div>
                 </div>
 
@@ -136,7 +130,7 @@
 
                     <div class="setting-actions">
                         <button type="button" class="save-btn" onclick="saveTimeSetting()">Lưu cài đặt</button>
-                        <span class="save-note">Cài đặt sẽ áp dụng cho giờ làm việc hiện tại.</span>
+                        <span id="time-save-status" class="save-note">Cài đặt sẽ áp dụng cho giờ làm việc hiện tại.</span>
                     </div>
                 </div>
 
@@ -170,7 +164,7 @@
 
                     <div class="setting-actions">
                         <button type="button" class="save-btn" onclick="saveCronSetting()">Lưu cài đặt</button>
-                        <span class="save-note">Các tác vụ sẽ chạy tự động theo giờ thiết lập mỗi ngày.</span>
+                        <span id="cron-save-status" class="save-note">Các tác vụ sẽ chạy tự động theo giờ thiết lập mỗi ngày.</span>
                     </div>
                 </div>
 
@@ -192,6 +186,12 @@
                 title: 'Tự động hoá',
                 desc: 'Lịch chạy tự động cho chấm công và xử lý đơn nghỉ phép.'
             }
+        };
+
+        const API = {
+            email: '/api/system/email',
+            time: '/api/system/work-shift-time',
+            cron: '/api/system/automation'
         };
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -221,7 +221,19 @@
             });
         });
 
-        // Mở modal chi tiết cài đặt (nổi lên giữa màn hình)
+        // ===== HIỂN THỊ THÔNG BÁO =====
+        function showStatus(panelId, message, isError) {
+            const el = document.getElementById(panelId);
+            if (!el) return;
+            el.textContent = message;
+            el.style.color = isError ? '#dc3545' : '#198754';
+            setTimeout(() => {
+                el.textContent = isError ? 'Đã có lỗi xảy ra' : '';
+                el.style.color = '';
+            }, 5000);
+        }
+
+        // ===== MỞ / ĐÓNG MODAL =====
         function openSettingModal(selected) {
             const overlay = document.getElementById('settingDetailModal');
             const panels = document.querySelectorAll('.setting-panel');
@@ -240,6 +252,11 @@
 
             overlay.classList.add('open');
             document.body.style.overflow = 'hidden'; // khoá scroll nền khi mở modal
+
+            // Load dữ liệu tương ứng khi mở tab
+            if (selected === 'mail') loadMailSetting();
+            else if (selected === 'time') loadTimeSetting();
+            else if (selected === 'cron') loadCronSetting();
         }
 
         function closeSettingModal() {
@@ -269,45 +286,131 @@
         }
 
         function cronToTime(cronStr) {
+            if (!cronStr) return '';
             const parts = cronStr.trim().split(/\s+/);
-            const minute = parts[1].padStart(2, '0');
-            const hour = parts[2].padStart(2, '0');
+            // Hỗ trợ cron 5 hoặc 6 phần
+            const minuteIdx = parts.length === 6 ? 1 : 0;
+            const hourIdx = parts.length === 6 ? 2 : 1;
+            const minute = parts[minuteIdx].padStart(2, '0');
+            const hour = parts[hourIdx].padStart(2, '0');
             return `${hour}:${minute}`;
         }
 
-        function saveMailSetting() {
-            const payload = {
-                'spring.mail.username': document.getElementById('mail-username').value,
-                'spring.mail.password': document.getElementById('mail-password').value
-            };
-            console.log('Lưu cấu hình Email:', payload);
-            // TODO: gọi API lưu cấu hình email, ví dụ:
-            // fetch('/api/settings/mail', { method: 'POST', body: JSON.stringify(payload) })
-            alert('Đã lưu cấu hình Email.');
+        async function fetchJson(url, options) {
+            const resp = await fetch(url, options);
+            if (!resp.ok) {
+                let errorMsg = `HTTP ${resp.status}`;
+                try {
+                    const data = await resp.json();
+                    if (data && (data.message || data.error)) {
+                        errorMsg = data.message || data.error;
+                    }
+                } catch (e) { /* ignore */ }
+                throw new Error(errorMsg);
+            }
+            // Read as text first to safely handle empty response bodies (e.g., 200 OK with no content, 204 No Content)
+            const text = await resp.text();
+            if (!text) {
+                return null;
+            }
+            return JSON.parse(text);
         }
 
-        function saveTimeSetting() {
-            const payload = {
-                'attendance.start-work': document.getElementById('start-work').value,
-                'attendance.max-check-in-time': document.getElementById('max-checkin').value,
-                'attendance.min-check-out-time': document.getElementById('min-checkout').value,
-                'attendance.end-work': document.getElementById('end-work').value
+        function apiOptions(method, body) {
+            return {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
             };
-            console.log('Lưu giờ điểm danh:', payload);
-            // TODO: gọi API lưu giờ điểm danh
-            alert('Đã lưu giờ điểm danh.');
         }
 
-        function saveCronSetting() {
+        // ===== EMAIL SETTINGS =====
+        async function loadMailSetting() {
+            try {
+                const data = await fetchJson(API.email);
+                document.getElementById('mail-username').value = data.email || '';
+                document.getElementById('mail-password').value = data.emailPassword || '';
+            } catch (e) {
+                showStatus('mail-save-status', 'Lỗi tải cấu hình email: ' + e.message, true);
+            }
+        }
+
+        async function saveMailSetting() {
             const payload = {
-                'attendance.auto-mark-absent-cron': timeToCron(document.getElementById('cron-absent').value),
-                'attendance.auto-handle-missing-checkout-cron': timeToCron(document.getElementById('cron-missing-checkout').value),
-                'attendance.leave.auto-reject-cron': timeToCron(document.getElementById('cron-leave-reject').value),
-                'attendance.leave.blackout-minutes': parseInt(document.getElementById('leave-blackout').value, 10)
+                email: document.getElementById('mail-username').value.trim(),
+                emailPassword: document.getElementById('mail-password').value
             };
-            console.log('Lưu cấu hình tự động hoá:', payload);
-            // TODO: gọi API lưu lịch cron
-            alert('Đã lưu cấu hình tự động hoá.');
+            const statusEl = document.getElementById('mail-save-status');
+            statusEl.textContent = 'Đang lưu...';
+            statusEl.style.color = '#6c757d';
+            try {
+                await fetchJson(API.email, apiOptions('PUT', payload));
+                showStatus('mail-save-status', 'Đã lưu cấu hình Email thành công.', false);
+            } catch (e) {
+                showStatus('mail-save-status', 'Lỗi lưu cấu hình email: ' + e.message, true);
+            }
+        }
+
+        // ===== TIME SETTINGS =====
+        async function loadTimeSetting() {
+            try {
+                const data = await fetchJson(API.time);
+                document.getElementById('start-work').value = data.startWorkTime || '08:30';
+                document.getElementById('max-checkin').value = data.maxCheckinTime || '10:00';
+                document.getElementById('min-checkout').value = data.minCheckoutTime || '16:00';
+                document.getElementById('end-work').value = data.endWorkTime || '17:30';
+            } catch (e) {
+                showStatus('time-save-status', 'Lỗi tải cấu hình giờ điểm danh: ' + e.message, true);
+            }
+        }
+
+        async function saveTimeSetting() {
+            const payload = {
+                startWorkTime: document.getElementById('start-work').value,
+                endWorkTime: document.getElementById('end-work').value,
+                maxCheckinTime: document.getElementById('max-checkin').value,
+                minCheckoutTime: document.getElementById('min-checkout').value
+            };
+            const statusEl = document.getElementById('time-save-status');
+            statusEl.textContent = 'Đang lưu...';
+            statusEl.style.color = '#6c757d';
+            try {
+                await fetchJson(API.time, apiOptions('PUT', payload));
+                showStatus('time-save-status', 'Đã lưu giờ điểm danh thành công.', false);
+            } catch (e) {
+                showStatus('time-save-status', 'Lỗi lưu giờ điểm danh: ' + e.message, true);
+            }
+        }
+
+        // ===== CRON SETTINGS =====
+        async function loadCronSetting() {
+            try {
+                const data = await fetchJson(API.cron);
+                document.getElementById('cron-absent').value = cronToTime(data.autoMarkAbsentCron) || '10:00';
+                document.getElementById('cron-missing-checkout').value = cronToTime(data.autoHandleMissingCheckoutCron) || '23:50';
+                document.getElementById('cron-leave-reject').value = cronToTime(data.leaveAutoRejectCron) || '22:00';
+                document.getElementById('leave-blackout').value = data.leaveBlackoutMinutes != null ? data.leaveBlackoutMinutes : 2;
+            } catch (e) {
+                showStatus('cron-save-status', 'Lỗi tải cấu hình tự động hoá: ' + e.message, true);
+            }
+        }
+
+        async function saveCronSetting() {
+            const payload = {
+                autoMarkAbsentCron: timeToCron(document.getElementById('cron-absent').value),
+                autoHandleMissingCheckoutCron: timeToCron(document.getElementById('cron-missing-checkout').value),
+                leaveAutoRejectCron: timeToCron(document.getElementById('cron-leave-reject').value),
+                leaveBlackoutMinutes: parseInt(document.getElementById('leave-blackout').value, 10)
+            };
+            const statusEl = document.getElementById('cron-save-status');
+            statusEl.textContent = 'Đang lưu...';
+            statusEl.style.color = '#6c757d';
+            try {
+                await fetchJson(API.cron, apiOptions('PUT', payload));
+                showStatus('cron-save-status', 'Đã lưu cấu hình tự động hoá thành công.', false);
+            } catch (e) {
+                showStatus('cron-save-status', 'Lỗi lưu cấu hình tự động hoá: ' + e.message, true);
+            }
         }
     </script>
 

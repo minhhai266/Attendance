@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.attendenceSystem.config.SystemConfig;
 import com.attendenceSystem.module.attendance.entity.LeaveRequest;
 import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
@@ -25,6 +26,9 @@ class LeaveScheduleServiceImplTest {
 
     @Mock
     private LeaveRequestRepository leaveRequestRepository;
+
+    @Mock
+    private SystemConfig systemConfig;
 
     @InjectMocks
     private LeaveScheduleServiceImpl leaveScheduleService;

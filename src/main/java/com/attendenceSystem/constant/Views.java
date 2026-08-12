@@ -50,4 +50,8 @@ public final class Views {
         public static final String CREATE = "cms/document/document-create";
         public static final String LIST = "cms/document/document-list";
     }
+
+    public static final class System {
+        public static final String SETTING = "cms/setting/settingSystem";
+    }
 }

@@ -6,7 +6,6 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +40,6 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
     private static final String FORGOT_CHECKOUT_NOTE = "Quên check-out; Coi như vắng mặt";
     private static final String DAY_OFF_NO_CHECKOUT_NOTE = "Ngày nghỉ; Không checkout";
 
-    @Scheduled(cron = "${attendance.auto-mark-absent-cron:0 0 10 * * *}", zone = "${app.timezone:Asia/Ho_Chi_Minh}")
     @Transactional
     @Override
     public void autoMarkAbsent() {
@@ -86,8 +84,6 @@ public class AttendanceScheduleServiceImpl implements AttendanceScheduleService 
         log.info("Đã đánh vắng tự động cho {} nhân viên ({} nghỉ phép).", absentUsers.size(), onLeaveUserIds.size());
     }
 
-    @Scheduled(cron = "${attendance.auto-handle-missing-checkout-cron:0 50 23 * * *}",
-            zone = "${app.timezone:Asia/Ho_Chi_Minh}")
     @Transactional
     @Override
     public void autoHandleMissingCheckOut() {

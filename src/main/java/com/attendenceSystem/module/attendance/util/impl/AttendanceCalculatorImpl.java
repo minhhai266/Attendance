@@ -4,66 +4,43 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.attendenceSystem.config.SystemConfig;
 import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
+import com.attendenceSystem.module.system.entity.SystemSetting;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AttendanceCalculatorImpl implements AttendanceCalculator {
 
-    @Value("${attendance.start-work:08:30}")
-    private String startWorkTimeStr;
+    private static final LocalTime DEFAULT_START_WORK_TIME = LocalTime.of(8, 30);
+    private static final LocalTime DEFAULT_MAX_CHECK_IN_TIME = LocalTime.of(10, 0);
+    private static final LocalTime DEFAULT_MIN_CHECK_OUT_TIME = LocalTime.of(16, 0);
+    private static final LocalTime DEFAULT_END_WORK_TIME = LocalTime.of(17, 30);
 
-    @Value("${attendance.max-check-in-time:10:00}")
-    private String maxCheckInTimeStr;
+    private final SystemConfig systemConfig;
 
-    @Value("${attendance.min-check-out-time:16:00}")
-    private String minCheckOutTimeStr;
+    private LocalTime startWorkTime() {
+        SystemSetting s = systemConfig.get();
+        return s.getStartWorkTime() != null ? s.getStartWorkTime() : DEFAULT_START_WORK_TIME;
+    }
 
-    @Value("${attendance.end-work:17:30}")
-    private String endWorkTimeStr;
+    private LocalTime maxCheckInTime() {
+        SystemSetting s = systemConfig.get();
+        return s.getMaxCheckinTime() != null ? s.getMaxCheckinTime() : DEFAULT_MAX_CHECK_IN_TIME;
+    }
 
-    private LocalTime startWorkTime;
-    private LocalTime maxCheckInTime;
-    private LocalTime minCheckOutTime;
-    private LocalTime endWorkTime;
+    private LocalTime minCheckOutTime() {
+        SystemSetting s = systemConfig.get();
+        return s.getMinCheckoutTime() != null ? s.getMinCheckoutTime() : DEFAULT_MIN_CHECK_OUT_TIME;
+    }
 
-    @PostConstruct
-    public void init() {
-        try {
-            this.startWorkTime = LocalTime.parse(startWorkTimeStr);
-        } catch (Exception e) {
-            log.warn("Invalid start work time: {}, using default 08:30", startWorkTimeStr);
-            this.startWorkTime = LocalTime.of(8, 30);
-        }
-
-        try {
-            this.maxCheckInTime = LocalTime.parse(maxCheckInTimeStr);
-        } catch (Exception e) {
-            log.warn("Invalid max check-in time: {}, using default 10:00", maxCheckInTimeStr);
-            this.maxCheckInTime = LocalTime.of(10, 0);
-        }
-
-        try {
-            this.minCheckOutTime = LocalTime.parse(minCheckOutTimeStr);
-        } catch (Exception e) {
-            log.warn("Invalid min check-out time: {}, using default 16:00", minCheckOutTimeStr);
-            this.minCheckOutTime = LocalTime.of(16, 0);
-        }
-
-        try {
-            this.endWorkTime = LocalTime.parse(endWorkTimeStr);
-        } catch (Exception e) {
-            log.warn("Invalid end work time: {}, using default 17:30", endWorkTimeStr);
-            this.endWorkTime = LocalTime.of(17, 30);
-        }
+    private LocalTime endWorkTime() {
+        SystemSetting s = systemConfig.get();
+        return s.getEndWorkTime() != null ? s.getEndWorkTime() : DEFAULT_END_WORK_TIME;
     }
 
     @Override
@@ -72,7 +49,7 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
             return false;
         }
         LocalTime time = checkInTime.toLocalTime();
-        return time.isAfter(startWorkTime) && time.isBefore(maxCheckInTime);
+        return time.isAfter(startWorkTime()) && time.isBefore(maxCheckInTime());
     }
 
     @Override
@@ -81,7 +58,7 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
             return false;
         }
         LocalTime time = checkOutTime.toLocalTime();
-        return time.isBefore(endWorkTime) && time.isAfter(minCheckOutTime);
+        return time.isBefore(endWorkTime()) && time.isAfter(minCheckOutTime());
     }
 
     @Override
@@ -103,7 +80,7 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
         if (checkInTime == null) {
             return false;
         }
-        return checkInTime.toLocalTime().isAfter(maxCheckInTime);
+        return checkInTime.toLocalTime().isAfter(maxCheckInTime());
     }
 
     @Override
@@ -111,6 +88,6 @@ public class AttendanceCalculatorImpl implements AttendanceCalculator {
         if (checkOutTime == null) {
             return false;
         }
-        return checkOutTime.toLocalTime().isBefore(minCheckOutTime);
+        return checkOutTime.toLocalTime().isBefore(minCheckOutTime());
     }
 }

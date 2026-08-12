@@ -83,4 +83,12 @@ public final class Routes {
         public static final String SEND = "/send";
         public static final String VERIFY = "/verify";
     }
+
+    public static final class System {
+        public static final String ROOT = "/system";
+        public static final String SETTING = "/setting";
+        public static final String EMAIL = "/email";
+        public static final String WORK_SHIFT_TIME = "/work-shift-time";
+        public static final String AUTOMATION = "/automation";
+    }
 }

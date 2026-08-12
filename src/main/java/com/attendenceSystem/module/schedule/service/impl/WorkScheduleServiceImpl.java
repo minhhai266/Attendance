@@ -5,16 +5,17 @@ import java.time.LocalTime;
 import java.util.EnumSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.attendenceSystem.config.SystemConfig;
 import com.attendenceSystem.module.schedule.dto.request.UpdateWorkScheduleRequest;
 import com.attendenceSystem.module.schedule.dto.response.WorkScheduleResponse;
 import com.attendenceSystem.module.schedule.entity.WorkSchedule;
 import com.attendenceSystem.module.schedule.mapper.response.WorkScheduleResponseMapper;
 import com.attendenceSystem.module.schedule.repository.WorkScheduleRepository;
 import com.attendenceSystem.module.schedule.service.WorkScheduleService;
+import com.attendenceSystem.module.system.entity.SystemSetting;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,20 +25,14 @@ public class WorkScheduleServiceImpl implements WorkScheduleService {
 
     private static final Long DEFAULT_SCHEDULE_ID = 1L;
 
-    @Value("${attendance.start-work:08:30}")
-    private String startWorkTimeStr;
-
-    @Value("${attendance.max-check-in-time:10:00}")
-    private String maxCheckInTimeStr;
-
-    @Value("${attendance.min-check-out-time:16:00}")
-    private String minCheckOutTimeStr;
-
-    @Value("${attendance.end-work:17:30}")
-    private String endWorkTimeStr;
+    private static final LocalTime DEFAULT_START_WORK_TIME = LocalTime.of(8, 30);
+    private static final LocalTime DEFAULT_MAX_CHECK_IN_TIME = LocalTime.of(10, 0);
+    private static final LocalTime DEFAULT_MIN_CHECK_OUT_TIME = LocalTime.of(16, 0);
+    private static final LocalTime DEFAULT_END_WORK_TIME = LocalTime.of(17, 30);
 
     private final WorkScheduleRepository workScheduleRepository;
     private final WorkScheduleResponseMapper mapper;
+    private final SystemConfig systemConfig;
 
     @Override
     public WorkScheduleResponse getSchedule() {
@@ -77,25 +72,19 @@ public class WorkScheduleServiceImpl implements WorkScheduleService {
 
     @Transactional
     private WorkSchedule createDefaultSchedule() {
+        SystemSetting settings = systemConfig.get();
+
         WorkSchedule schedule = WorkSchedule.builder()
                 .id(DEFAULT_SCHEDULE_ID)
                 .effectiveDate(null)
-                .startWorkTime(parseTime(startWorkTimeStr, LocalTime.of(8, 30)))
-                .maxCheckInTime(parseTime(maxCheckInTimeStr, LocalTime.of(10, 0)))
-                .minCheckOutTime(parseTime(minCheckOutTimeStr, LocalTime.of(16, 0)))
-                .endWorkTime(parseTime(endWorkTimeStr, LocalTime.of(17, 30)))
+                .startWorkTime(settings.getStartWorkTime() != null ? settings.getStartWorkTime() : DEFAULT_START_WORK_TIME)
+                .maxCheckInTime(settings.getMaxCheckinTime() != null ? settings.getMaxCheckinTime() : DEFAULT_MAX_CHECK_IN_TIME)
+                .minCheckOutTime(settings.getMinCheckoutTime() != null ? settings.getMinCheckoutTime() : DEFAULT_MIN_CHECK_OUT_TIME)
+                .endWorkTime(settings.getEndWorkTime() != null ? settings.getEndWorkTime() : DEFAULT_END_WORK_TIME)
                 .workingDays(defaultWorkingDays())
                 .build();
 
         return workScheduleRepository.save(schedule);
-    }
-
-    private LocalTime parseTime(String value, LocalTime fallback) {
-        try {
-            return LocalTime.parse(value);
-        } catch (Exception e) {
-            return fallback;
-        }
     }
 
     private Set<DayOfWeek> defaultWorkingDays() {
