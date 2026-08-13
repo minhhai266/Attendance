@@ -646,7 +646,148 @@ a {
 /* =========================
    RESPONSIVE
 ========================= */
+/* ==================================================
+   GLITCH / SHUTTER TITLE EFFECT
+================================================== */
 
+.hero-title-gradient.glitch-text {
+    position: relative;
+    display: inline-block;
+    filter: blur(14px);
+    opacity: 0;
+    animation:
+        glitchReveal 1.3s cubic-bezier(.16, 1, .3, 1) 0.15s forwards,
+        glitchFlicker 6s ease-in-out 1.6s infinite;
+}
+
+/* lớp glitch màu 1 (xanh/tím) */
+.hero-title-gradient.glitch-text::before,
+.hero-title-gradient.glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.hero-title-gradient.glitch-text::before {
+    background: linear-gradient(to right, #22d3ee, #6366f1);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glitchLayer1 1.3s steps(2, jump-none) 0.15s forwards;
+    mix-blend-mode: screen;
+}
+
+.hero-title-gradient.glitch-text::after {
+    background: linear-gradient(to right, #f472b6, #ec4899);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glitchLayer2 1.3s steps(2, jump-none) 0.15s forwards;
+    mix-blend-mode: screen;
+}
+
+/* --- reveal chính: nhòe -> nét, dùng clip-path kiểu "chớp cửa trập" --- */
+@keyframes glitchReveal {
+    0% {
+        opacity: 0;
+        filter: blur(18px);
+        clip-path: inset(0 0 0 100%);
+        transform: translateX(6px);
+    }
+    12% {
+        opacity: 1;
+        filter: blur(10px);
+        clip-path: inset(0 45% 0 0);
+    }
+    24% {
+        clip-path: inset(0 0 0 60%);
+        filter: blur(9px);
+    }
+    36% {
+        clip-path: inset(0 70% 0 0);
+        filter: blur(7px);
+    }
+    48% {
+        clip-path: inset(0 0 0 35%);
+        filter: blur(6px);
+    }
+    62% {
+        clip-path: inset(0 20% 0 0);
+        filter: blur(4px);
+    }
+    78% {
+        clip-path: inset(0 0 0 8%);
+        filter: blur(2px);
+        transform: translateX(1px);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0);
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+    }
+}
+
+/* lớp glitch xanh: xẹt ngang lệch trái */
+@keyframes glitchLayer1 {
+    0%   { opacity: .9; clip-path: inset(10% 0 70% 0); transform: translateX(-8px); }
+    20%  { opacity: .7; clip-path: inset(60% 0 5% 0); transform: translateX(6px); }
+    40%  { opacity: .8; clip-path: inset(20% 0 50% 0); transform: translateX(-4px); }
+    60%  { opacity: .5; clip-path: inset(70% 0 10% 0); transform: translateX(3px); }
+    80%  { opacity: .3; clip-path: inset(30% 0 40% 0); transform: translateX(-1px); }
+    100% { opacity: 0; clip-path: inset(0 0 0 0); transform: translateX(0); }
+}
+
+/* lớp glitch hồng: xẹt ngang lệch phải */
+@keyframes glitchLayer2 {
+    0%   { opacity: .9; clip-path: inset(65% 0 5% 0); transform: translateX(8px); }
+    20%  { opacity: .6; clip-path: inset(5% 0 65% 0); transform: translateX(-6px); }
+    40%  { opacity: .8; clip-path: inset(45% 0 25% 0); transform: translateX(5px); }
+    60%  { opacity: .5; clip-path: inset(15% 0 60% 0); transform: translateX(-3px); }
+    80%  { opacity: .3; clip-path: inset(50% 0 20% 0); transform: translateX(1px); }
+    100% { opacity: 0; clip-path: inset(0 0 0 0); transform: translateX(0); }
+}
+
+/* sau khi hiện rõ, thi thoảng "nháy" glitch nhẹ để giữ cảm giác ngầu */
+@keyframes glitchFlicker {
+    0%, 92%, 100% {
+        filter: blur(0);
+        transform: translateX(0);
+    }
+    93% {
+        filter: blur(1.5px);
+        transform: translateX(-2px);
+    }
+    94% {
+        filter: blur(0);
+        transform: translateX(2px);
+    }
+    95% {
+        filter: blur(1px);
+        transform: translateX(-1px);
+    }
+    96% {
+        filter: blur(0);
+        transform: translateX(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-title-gradient.glitch-text,
+    .hero-title-gradient.glitch-text::before,
+    .hero-title-gradient.glitch-text::after {
+        animation: none !important;
+        opacity: 1 !important;
+        filter: none !important;
+        clip-path: none !important;
+    }
+}
 @media (max-width: 992px) {
 
     .hero-grid {

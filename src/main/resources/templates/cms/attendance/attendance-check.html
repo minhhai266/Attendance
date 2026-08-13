@@ -6,6 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Điểm danh bằng Face ID</title>
     <link href="/css/attendance/attendance-check.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 70px); /* trừ chiều cao header, chỉnh lại nếu header khác 70px */
+        }
+        .container-attend-main {
+            flex: 1;
+            display: flex;
+        }
+        .scanner-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .scan-frame {
+            flex: 1;
+            position: relative;
+        }
+        #camera {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .capture-bar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 14px;
+        }
+    </style>
 </head>
 
 <body>
@@ -24,70 +66,21 @@
             <button class="header-btn theme-toggle" id="themeToggle" type="button">🌙</button>
         </div>
     </header>
- 
-    <div class="container">
-        <!-- <aside class="history">
-            <h2 class="history-title">Nhật ký điểm danh</h2>
-            <ul class="history-list">
-                <li class="history-card">
-                    <span class="history-date">Hôm nay</span>
-                    <span class="history-status status-in">Check-in</span>
-                </li>
-                <li class="history-card">
-                    <span class="history-date">Hôm qua</span>
-                    <span class="history-status status-out">Checkout</span>
-                </li>
-                <li class="history-card">
-                    <span class="history-date">Tuần này</span>
-                    <span class="history-status status-in">Đã có dữ liệu</span>
-                </li>
-            </ul>
-        </aside> -->
 
+    <div class="container">
         <main class="container-attend-main">
             <section class="scanner-card">
                 <div class="scan-frame">
                     <video id="camera" autoplay playsinline muted></video>
                     <canvas id="overlay"></canvas>
-                    
                 </div>
                 <div class="result-card" id="attendanceMessage" style="display:none;"></div>
-            </section>
-
-            <section class="guide-card">
-                <h2 class="guide-title">Hướng dẫn quét Face ID</h2>
-                <ol class="guide-list">
-                    <li>Đảm bảo ánh sáng đủ và không đeo khẩu trang, kính râm.</li>
-                    <li>Nhìn thẳng vào camera trong khoảng 2–3 giây.</li>
-                    <li>Nhấn nút “Quét điểm danh” để xác thực khuôn mặt đã đăng ký.</li>
-                    <li>Hệ thống sẽ tự động chấm công check-in hoặc check-out theo trạng thái hiện tại.</li>
-                </ol>
+                <div class="capture-bar">
+                    <button id="btnCaptureAttendance" class="header-btn" type="button" style="width:auto;height:auto;padding:14px 20px;border-radius:12px;font-weight:700;">📸 Quét điểm danh</button>
+                    <button id="btnToggleCamera" class="header-btn" type="button" style="width:auto;height:auto;padding:14px 20px;border-radius:12px;font-weight:700;">📹 Mở camera</button>
+                </div>
             </section>
         </main>
-
-        <aside class="container-attend-right">
-            <div class="attendance-info">
-                <div class="attendance-title">Thông tin cá nhân</div>
-                <div class="attendance-sum" id="profileName">Đang tải...</div>
-                <div class="attendance-date" id="profileUsername">--</div>
-                <div class="attendance-date" id="profileEmail">--</div>
-            </div>
-
-            <div class="stat-card success-card">
-                <p>Trạng thái Face ID</p>
-                <span class="stat-number attendance-present" id="faceStatus">Đang kiểm tra</span>
-            </div>
-
-            <div class="stat-card warning-card">
-                <p>Ngày hiện tại</p>
-                <span class="stat-number attendance-late" id="todayLabel">--</span>
-            </div>
-
-            <div class="attendance-info">
-                <button id="btnCaptureAttendance" class="header-btn" type="button" style="width:auto;height:auto;padding:14px 20px;border-radius:12px;font-weight:700;">📸 Quét điểm danh</button>
-                <button id="btnToggleCamera" class="header-btn" type="button" style="width:auto;height:auto;padding:14px 20px;border-radius:12px;font-weight:700;">📹 Mở camera</button>
-            </div>
-        </aside>
     </div>
 
     <script src="/js/api/method.js"></script>
