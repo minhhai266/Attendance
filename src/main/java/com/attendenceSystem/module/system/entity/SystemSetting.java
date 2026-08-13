@@ -56,19 +56,4 @@ public class SystemSetting {
     @Column(name = "leave_blackout_minutes", nullable = true)
     private Integer leaveBlackoutMinutes;
 
-    @Column(name = "anti_spoofing_enabled", nullable = false)
-    @Builder.Default
-    private Boolean antiSpoofingEnabled = false;
-
-    @Column(name = "cooldown_seconds", nullable = false)
-    @Builder.Default
-    private Integer cooldownSeconds = 5;
-
-    @Column(name = "frame_skip", nullable = false)
-    @Builder.Default
-    private Integer frameSkip = 3;
-
-    @Column(name = "recognition_threshold", nullable = false)
-    @Builder.Default
-    private Double recognitionThreshold = 0.6;
 }
