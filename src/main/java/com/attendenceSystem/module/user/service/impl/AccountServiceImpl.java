@@ -5,11 +5,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.attendenceSystem.module.user.dto.response.AdminAccountManageListResponse;
 import com.attendenceSystem.module.user.dto.response.UserResponse;
 import com.attendenceSystem.module.user.entity.User;
 import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Role;
 import com.attendenceSystem.module.user.entity.enums.Status;
+import com.attendenceSystem.module.user.mapper.response.AdminAccountManageListResponseMapper;
 import com.attendenceSystem.module.user.mapper.response.UserResponseMapper;
 import com.attendenceSystem.module.user.repository.UserRepository;
 import com.attendenceSystem.module.user.service.AccountService;
@@ -22,10 +24,11 @@ import lombok.RequiredArgsConstructor;
 public class AccountServiceImpl implements AccountService {
     private final UserRepository userRepository;
     private final UserResponseMapper userResponseMapper;
+    private final AdminAccountManageListResponseMapper accountManageListResponseMapper;
 
     @Override
-    public Page<UserResponse> getUsers(final Pageable pageable) {
-        return userRepository.findAll(pageable).map(userResponseMapper::fromEntity);
+    public Page<AdminAccountManageListResponse> getUsers(final Pageable pageable) {
+        return userRepository.findBy(pageable).map(accountManageListResponseMapper::fromEntity);
     }
 
     @Override

@@ -63,7 +63,7 @@
                                 </td>
                                 <td>
                                     <div class="actions"
-                                        th:with="canManage=${users.username() != currentUsername and users.role() != 'ADMIN'}">
+                                        th:with="canManage=${users.id() != #authentication.principal.id and users.role() != 'ADMIN'}">
 
                                         <div class="role-change" th:if="${canManage}">
                                             <form th:action="@{/admin/accounts/change-role/{id}(id=${users.id()})}" method="post" class="role-change-form">

@@ -18,6 +18,7 @@ import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Specialization;
 import com.attendenceSystem.module.user.entity.enums.Role;
 import com.attendenceSystem.module.user.entity.enums.Status;
+import com.attendenceSystem.module.user.repository.projection.AdminAccountManageList;
 import com.attendenceSystem.module.user.repository.projection.RoleCountProjection;
 
 @Repository
@@ -54,6 +55,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
         List<User> findByDepartmentAndRoleNot(Department department, Role role);
 
         List<User> findByRoleNot(Role role);
+
+        Page<AdminAccountManageList> findBy(Pageable pageable);
 
         @Query("SELECT u FROM User u WHERE u.status = :status AND NOT EXISTS " +
                         "(SELECT a FROM AttendanceRecord a WHERE a.user = u AND a.attendanceDate = :date)")

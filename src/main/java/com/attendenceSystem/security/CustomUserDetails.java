@@ -23,7 +23,7 @@ public class CustomUserDetails implements UserDetails {
     private final String fullName;
     private final String email;
     private final String phone;
-    private final String department;
+    private final String specialization;
     private final String role;
     private final Status status;
 

@@ -3,3 +3,5 @@
 - Tách các Exception thành các CustomException []
 - Refactor lại face-id module []
 - Sửa lỗi luôn trả về 500 bằng mọi lỗi để hiển thị 400,401,403,404,500 phù hợp []
+- Phần Tự động hóa đang bị lỗi (Không chặn gửi đơn xin nghỉ phép) []
+- Làm thêm phần thêm trạng thái (Đang làm việc nêu đã checkin, Không làm việc nếu đã checkout, nghỉ nếu không checkin)

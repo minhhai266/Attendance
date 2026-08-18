@@ -32,8 +32,8 @@ import lombok.Setter;
 @Setter
 @Builder
 @Entity
-@Table(name = "attendance_records",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "attendance_date"}))
+@Table(name = "attendance_records", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id",
+        "attendance_date" }))
 public class AttendanceRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,16 +43,15 @@ public class AttendanceRecord {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "check_in_time", nullable = false)
-    private LocalDateTime checkInTime;
-    
     @Column(name = "attendance_date", nullable = false)
     private LocalDate attendanceDate;
+
+    @Column(name = "check_in_time", nullable = false)
+    private LocalDateTime checkInTime;
 
     @Column(name = "check_out_time")
     private LocalDateTime checkOutTime;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private AttendanceStatus status;
 

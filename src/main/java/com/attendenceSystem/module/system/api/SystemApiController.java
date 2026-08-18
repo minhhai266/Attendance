@@ -27,7 +27,6 @@ public class SystemApiController {
     private final WorkShiftTimeSettingService workShiftTimeSettingService;
     private final AttendanceAutomationSettingService attendanceAutomationSettingService;
 
-    // ===== EMAIL SETTINGS =====
     @GetMapping(Routes.System.EMAIL)
     public ResponseEntity<EmailConfigRequest> getEmailConfig() {
         return ResponseEntity.ok(emailSettingService.getEmailConfigMasked());
@@ -39,7 +38,6 @@ public class SystemApiController {
         return ResponseEntity.noContent().build();
     }
 
-    // ===== WORK SHIFT TIME SETTINGS =====
     @GetMapping(Routes.System.WORK_SHIFT_TIME)
     public ResponseEntity<WorkShiftTimeSettingRequest> getWorkShiftTime() {
         return ResponseEntity.ok(workShiftTimeSettingService.getWorkShiftTimeSetting());
@@ -51,7 +49,6 @@ public class SystemApiController {
         return ResponseEntity.noContent().build();
     }
 
-    // ===== AUTOMATION SETTINGS =====
     @GetMapping(Routes.System.AUTOMATION)
     public ResponseEntity<AttendanceAutomationSettingsRequest> getAutomationSettings() {
         return ResponseEntity.ok(attendanceAutomationSettingService.getAttendanceAutomationSettings());

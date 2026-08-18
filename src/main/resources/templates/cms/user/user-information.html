@@ -62,7 +62,7 @@
 
                             <div class="info-item">
                                 <label>Chuyên ngành</label>
-                                <p th:text="${#authentication.principal.department}">Không có </p>
+                                <p th:text="${#authentication.principal.specialization}">Không có </p>
                             </div>
 
                         </div>
@@ -149,7 +149,7 @@
                                         <option
                                             th:each="spec : ${T(com.attendenceSystem.module.user.entity.enums.Specialization).values()}"
                                             th:value="${spec.name()}" th:text="${spec.displayName}"
-                                            th:selected="${#authentication.principal.department == spec.name()}">
+                                            th:selected="${#authentication.principal.specialization == spec.name()}">
                                         </option>
                                     </select>
                                 </div>
