@@ -227,12 +227,16 @@
 =================================== */
 
 .badge{
+    display:inline-flex;
+
     padding:6px 12px;
 
     border-radius:999px;
 
     font-size:.85rem;
     font-weight:600;
+
+    margin:2px 4px 2px 0;
 }
 
 .badge-success{
@@ -250,6 +254,34 @@
 }
 
 .badge-danger{
+    background:
+        var(--btn-reject-15);
+
+    color:var(--danger);
+}
+
+.badge.success{
+    background:
+        var(--btn-approv-15);
+
+    color:var(--success);
+}
+
+.badge.late{
+    background:
+        var(--btn-reject-15);
+
+    color:var(--warning);
+}
+
+.badge.warning{
+    background:
+        var(--btn-warning);
+
+    color:var(--purple);
+}
+
+.badge.absent{
     background:
         var(--btn-reject-15);
 

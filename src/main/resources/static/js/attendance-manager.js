@@ -86,7 +86,7 @@
             const list = await fetchJSON(`${API_BASE}/attendance/manager/list?${params.toString()}`);
             tbody.innerHTML = '';
             if (!Array.isArray(list) || list.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" class="text-center">Không có dữ liệu</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">Không có dữ liệu</td></tr>';
                 return;
             }
             for (const item of list) {
@@ -96,30 +96,24 @@
                 const checkIn = formatTime(item?.checkInTime);
                 const checkOut = formatTime(item?.checkOutTime);
                 const workingHours = formatWorkingHours(item?.workingMinutes);
-                const statusValue = item?.status;
-                let statusClass = 'status-absent';
-                let statusText = 'Vắng';
-                if (statusValue === 'PRESENT' || statusValue === 'LATE') {
-                    if (statusValue === 'LATE') {
-                        statusClass = 'status-late';
-                        statusText = 'Đi muộn';
-                    } else if (item.checkOutTime) {
-                        statusClass = 'status-checked-out';
-                        statusText = 'Đã checkout';
-                    } else {
-                        statusClass = 'status-present';
-                        statusText = 'Đã điểm danh';
-                    }
+                const late = item?.late;
+                const earlyLeave = item?.earlyLeave;
+                const hasCheckIn = !!item?.checkInTime;
+                let statusBadges = '';
+                if (!hasCheckIn) {
+                    statusBadges = '<span class="badge absent">Vắng mặt</span>';
+                } else {
+                    if (late) statusBadges += '<span class="badge late">Đi muộn</span>';
+                    if (earlyLeave) statusBadges += '<span class="badge warning">Về sớm</span>';
+                    if (!late && !earlyLeave) statusBadges = '<span class="badge success">Đúng giờ</span>';
                 }
                 tr.innerHTML = `
                     <td>${item?.attendanceDate ?? '--'}</td>
                     <td>${name}</td>
                     <td>${checkIn}</td>
                     <td>${checkOut}</td>
-                    <td><span class="history-status ${statusClass}">${statusText}</span></td>
-                    <td>${item?.department ?? '--'}</td>
-                    <td>${item?.late ? 'Có' : 'Không'}</td>
-                    <td>${item?.earlyLeave ? 'Có' : 'Không'}</td>
+                    <td>${statusBadges}</td>
+                    <td>${department}</td>
                     <td>${workingHours}</td>
                     <td>${item?.note ?? '--'}</td>
                 `;
@@ -128,7 +122,7 @@
         } catch (e) {
             console.error('Failed to load list', e);
             const target = getListTarget();
-            if (target) target.innerHTML = '<tr><td colspan="10" class="text-center">Lỗi tải dữ liệu</td></tr>';
+            if (target) target.innerHTML = '<tr><td colspan="8" class="text-center">Lỗi tải dữ liệu</td></tr>';
         }
     }
 
