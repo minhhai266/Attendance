@@ -19,6 +19,7 @@ import com.attendenceSystem.module.user.entity.enums.Specialization;
 import com.attendenceSystem.module.user.entity.enums.Role;
 import com.attendenceSystem.module.user.entity.enums.Status;
 import com.attendenceSystem.module.user.repository.projection.AdminAccountManageList;
+import com.attendenceSystem.module.user.repository.projection.ManagerAccountManageList;
 import com.attendenceSystem.module.user.repository.projection.RoleCountProjection;
 
 @Repository

@@ -23,6 +23,7 @@ public class UserResponseMapper {
                 .role(user.getRole().name())
                 .department(user.getDepartment() == null ? null : user.getDepartment().getRoomCode())
                 .departmentDisplay(user.getDepartment() == null ? "N/A" : user.getDepartment().getDisplayName())
+                .specialization(user.getSpecialization().getDisplayName())
                 .build();
     }
 }
