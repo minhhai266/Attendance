@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.attendenceSystem.constant.Routes;
+import com.attendenceSystem.module.user.dto.response.ManagerAccountManageListResponse;
 import com.attendenceSystem.module.user.dto.response.UserResponse;
 import com.attendenceSystem.module.user.service.AccountService;
 
@@ -24,8 +25,8 @@ public class ManagerAccountApiController {
     private final AccountService accountService;
 
     @GetMapping(Routes.Account.ROOT)
-    public ResponseEntity<Page<UserResponse>> getListEmployeeAccount(@PageableDefault(size = 10) Pageable pageable){
-        Page<UserResponse> users = accountService.getEmployees(pageable);
+    public ResponseEntity<Page<ManagerAccountManageListResponse>> getListEmployeeAccount(@PageableDefault(size = 10) Pageable pageable){
+        Page<ManagerAccountManageListResponse> users = accountService.getEmployees(pageable);
         return ResponseEntity.ok(users);
     }
     @GetMapping(Routes.Account.ROOT + "/{id}")

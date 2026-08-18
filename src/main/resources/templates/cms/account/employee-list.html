@@ -50,18 +50,6 @@
 
                     </div>
 
-                    <div class="room-list" id="roomList">
-                        <button class="room-chip active" type="button" data-room="all">
-                            <span>Tất cả phòng</span>
-                            <strong>0</strong>
-                        </button>
-                        <button class="room-chip" type="button" th:each="dept : ${departments}"
-                            th:attr="data-room=${dept.name()}">
-                            <span th:text="${dept.displayName}"></span>
-                            <strong>0</strong>
-                        </button>
-                    </div>
-
                     <!-- TABLE -->
                     <table>
 
@@ -86,7 +74,7 @@
                         <tbody>
 
                             <tr class="employee-row" th:each="user : ${users.content}"
-                                th:attr="data-room=${user.department() != null ? user.department() : ''}, data-name=${user.fullName()}, data-email=${user.email()}, data-id=${user.username()}">
+                                th:attr="data-name=${user.fullName()}, data-id=${user.username()}">
 
                                 <td>
 

@@ -49,7 +49,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
         Page<User> findAllByOrderByIdAsc(Pageable pageable);
 
-        Page<User> findByRole(Role role, Pageable pageable);
+        Page<ManagerAccountManageList> findByRole(Role role, Pageable pageable);
 
         List<User> findBySpecializationAndRoleNot(Specialization specialization, Role role);
 
