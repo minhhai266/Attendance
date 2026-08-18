@@ -43,11 +43,9 @@
 
     async function loadStats() {
         const params = new URLSearchParams();
-        const dept = el('departmentFilter')?.value || el('departmentId')?.value;
         const startDate = el('attendanceDateFrom')?.value || el('dateFilter')?.value;
         const endDate = el('attendanceDateTo')?.value || el('dateFilter')?.value;
         const status = el('attendanceStatusFilter')?.value;
-        if (dept) params.set('departmentId', dept);
         if (startDate) params.set('startDate', startDate);
         if (endDate) params.set('endDate', endDate);
         if (status) params.set('status', status);
@@ -74,11 +72,9 @@
         const tbody = getListTarget();
         if (!tbody) return;
         const params = new URLSearchParams();
-        const dept = el('departmentFilter')?.value || el('departmentId')?.value;
         const startDate = el('attendanceDateFrom')?.value || el('dateFilter')?.value;
         const endDate = el('attendanceDateTo')?.value || el('dateFilter')?.value;
         const status = el('attendanceStatusFilter')?.value;
-        if (dept) params.set('departmentId', dept);
         if (startDate) params.set('startDate', startDate);
         if (endDate) params.set('endDate', endDate);
         if (status) params.set('status', status);
@@ -92,7 +88,6 @@
             for (const item of list) {
                 const tr = document.createElement('tr');
                 const name = item?.fullName || '--';
-                const department = item?.department || '--';
                 const checkIn = formatTime(item?.checkInTime);
                 const checkOut = formatTime(item?.checkOutTime);
                 const workingHours = formatWorkingHours(item?.workingMinutes);
@@ -113,7 +108,6 @@
                     <td>${checkIn}</td>
                     <td>${checkOut}</td>
                     <td>${statusBadges}</td>
-                    <td>${department}</td>
                     <td>${workingHours}</td>
                     <td>${item?.note ?? '--'}</td>
                 `;
@@ -133,12 +127,10 @@
         const dateFrom = el('attendanceDateFrom');
         const dateTo = el('attendanceDateTo');
         const statusFilter = el('attendanceStatusFilter');
-        const deptFilter = el('departmentFilter');
 
         if (dateFrom) dateFrom.value = today;
         if (dateTo) dateTo.value = today;
         if (statusFilter) statusFilter.value = '';
-        if (deptFilter) deptFilter.value = '';
         loadStats();
         loadList();
     };
