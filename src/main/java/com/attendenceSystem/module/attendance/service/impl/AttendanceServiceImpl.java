@@ -12,12 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceHistoryStatsResponse;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
+import com.attendenceSystem.module.attendance.dto.response.ManagerAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
+import com.attendenceSystem.module.attendance.mapper.response.ManagerAttendanceListResponseMapper;
 import com.attendenceSystem.module.attendance.model.DateRange;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
+import com.attendenceSystem.module.attendance.repository.projection.ManagerAttendanceList;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
 import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
 import com.attendenceSystem.module.user.entity.User;
@@ -31,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceRecordRepository attendanceRecordRepository;
     private final AttendanceResponseMapper attendanceResponseMapper;
+    private final ManagerAttendanceListResponseMapper managerAttendanceListResponseMapper;
     private final AttendanceCalculator attendanceCalculator;
     private final ZoneId applicationZoneId;
     private final UserContextProvider userContextProvider;
@@ -115,23 +119,23 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public List<AttendanceResponse> getManagerAttendanceList(
+    public List<ManagerAttendanceListResponse> getManagerAttendanceList(
             final LocalDate startDate,
             final LocalDate endDate) {
         return getManagerAttendanceList(startDate, endDate, null);
     }
 
-    public List<AttendanceResponse> getManagerAttendanceList(
+    public List<ManagerAttendanceListResponse> getManagerAttendanceList(
             final LocalDate startDate,
             final LocalDate endDate,
             final AttendanceStatus status) {
 
         DateRange dateRange = getDateRange(startDate, endDate);
 
-        List<AttendanceRecord> records = getFilteredRecords(dateRange.startDate(), dateRange.endDate(), status);
+        List<ManagerAttendanceList> records = getFilteredRecords(dateRange.startDate(), dateRange.endDate(), status);
 
         return records.stream()
-                .map(attendanceResponseMapper::fromEntity)
+                .map(managerAttendanceListResponseMapper::fromEntity)
                 .sorted((a, b) -> {
                     if (a.attendanceDate() == null && b.attendanceDate() == null)
                         return 0;
@@ -199,7 +203,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         return new DateRange(startDate, endDate);
     }
 
-    private List<AttendanceRecord> getFilteredRecords(
+    private List<ManagerAttendanceList> getFilteredRecords(
             final LocalDate startDate,
             final LocalDate endDate,
             final AttendanceStatus status) {

@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
+import com.attendenceSystem.module.attendance.repository.projection.ManagerAttendanceList;
 import com.attendenceSystem.module.user.entity.User;
 import jakarta.persistence.LockModeType;
 
@@ -41,9 +42,9 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
 
         List<AttendanceRecord> findByAttendanceDate(LocalDate attendanceDate);
 
-        List<AttendanceRecord> findByAttendanceDateBetween(LocalDate startDate, LocalDate endDate);
+        List<ManagerAttendanceList> findByAttendanceDateBetween(LocalDate startDate, LocalDate endDate);
 
-        List<AttendanceRecord> findByAttendanceDateBetweenAndStatus(
+        List<ManagerAttendanceList> findByAttendanceDateBetweenAndStatus(
                         LocalDate startDate,
                         LocalDate endDate,
                         AttendanceStatus status);

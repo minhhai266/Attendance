@@ -36,9 +36,23 @@
     function formatWorkingHours(minutes) {
         if (minutes === null || minutes === undefined || minutes === '') return '--';
         const numericMinutes = Number(minutes);
-        if (!Number.isFinite(numericMinutes) || numericMinutes <= 0) return '0.0';
-        const hours = numericMinutes / 60;
-        return hours.toFixed(1);
+        if (!Number.isFinite(numericMinutes) || numericMinutes <= 0) return '--';
+        const hours = Math.floor(numericMinutes / 60);
+        const mins = numericMinutes % 60;
+        let result = '';
+        if (hours > 0) result += `${hours} giờ`;
+        if (mins > 0) result += (result ? ' ' : '') + `${mins} phút`;
+        return result || '--';
+    }
+
+    function formatDate(isoDate) {
+        if (!isoDate) return '--';
+        const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(isoDate);
+        if (match) {
+            const [, year, month, day] = match;
+            return `${day}/${month}/${year}`;
+        }
+        return isoDate;
     }
 
     async function loadStats() {
@@ -87,7 +101,7 @@
             }
             for (const item of list) {
                 const tr = document.createElement('tr');
-                const name = item?.fullName || '--';
+                const name = item?.userFullName || '--';
                 const checkIn = formatTime(item?.checkInTime);
                 const checkOut = formatTime(item?.checkOutTime);
                 const workingHours = formatWorkingHours(item?.workingMinutes);
@@ -103,12 +117,12 @@
                     if (!late && !earlyLeave) statusBadges = '<span class="badge success">Đúng giờ</span>';
                 }
                 tr.innerHTML = `
-                    <td>${item?.attendanceDate ?? '--'}</td>
+                    <td>${formatDate(item?.attendanceDate)}</td>
                     <td>${name}</td>
                     <td>${checkIn}</td>
                     <td>${checkOut}</td>
-                    <td>${statusBadges}</td>
                     <td>${workingHours}</td>
+                    <td>${statusBadges}</td>
                     <td>${item?.note ?? '--'}</td>
                 `;
                 tbody.appendChild(tr);
@@ -148,3 +162,4 @@
         }
     });
 })();
+

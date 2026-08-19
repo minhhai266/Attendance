@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceHistoryStatsResponse;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
-
+import com.attendenceSystem.module.attendance.dto.response.ManagerAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
@@ -30,9 +30,9 @@ public interface AttendanceService {
     ManagerStatsResponse getManagerStats(String departmentId, LocalDate startDate, LocalDate endDate,
             AttendanceStatus status);
 
-    List<AttendanceResponse> getManagerAttendanceList(LocalDate startDate, LocalDate endDate);
+    List<ManagerAttendanceListResponse> getManagerAttendanceList(LocalDate startDate, LocalDate endDate);
 
-    List<AttendanceResponse> getManagerAttendanceList(LocalDate startDate, LocalDate endDate, AttendanceStatus status);
+    List<ManagerAttendanceListResponse> getManagerAttendanceList(LocalDate startDate, LocalDate endDate, AttendanceStatus status);
 
     Optional<AttendanceRecord> getTodayAttendanceRecord(User user);
 }

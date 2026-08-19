@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
-import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
 
 import lombok.RequiredArgsConstructor;
@@ -15,8 +14,10 @@ public class AttendanceResponseMapper {
     private final AttendanceCalculator attendanceCalculator;
 
     public AttendanceResponse fromEntity(AttendanceRecord attendance) {
-    boolean late = (attendance.getStatus() == AttendanceStatus.LATE);
-    boolean earlyLeave = attendanceCalculator.isEarlyLeave(attendance.getCheckOutTime());
+    boolean late = attendanceCalculator.isLate(attendance.getCheckInTime())
+            || attendanceCalculator.isPastAllowedCheckInTime(attendance.getCheckInTime());
+    boolean earlyLeave = attendanceCalculator.isEarlyLeave(attendance.getCheckOutTime())
+            || attendanceCalculator.isBeforeMinCheckOutTime(attendance.getCheckOutTime());
     long workingMinutes = attendanceCalculator.workingMinutes(
             attendance.getCheckInTime(),
             attendance.getCheckOutTime()

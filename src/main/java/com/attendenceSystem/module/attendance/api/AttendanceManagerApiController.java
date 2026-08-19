@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
+import com.attendenceSystem.module.attendance.dto.response.ManagerAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
@@ -43,7 +44,7 @@ public class AttendanceManagerApiController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<AttendanceResponse>> getList(
+    public ResponseEntity<List<ManagerAttendanceListResponse>> getList(
             @RequestParam(required = false) String departmentId,
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate,
@@ -56,7 +57,7 @@ public class AttendanceManagerApiController {
                 // Invalid status, ignore
             }
         }
-        List<AttendanceResponse> list = attendanceService.getManagerAttendanceList(startDate, endDate, attendanceStatus);
+        List<ManagerAttendanceListResponse> list = attendanceService.getManagerAttendanceList(startDate, endDate, attendanceStatus);
         return ResponseEntity.ok(list);
     }
 }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -48,7 +49,9 @@ public class AttendanceController {
     private final AttendanceActionService attendanceActionService;
 
     @GetMapping
-    public String toAttendanceListPage(@PageableDefault(size = 10) Pageable pageable, Model model) {
+    public String toAttendanceListPage(
+            @PageableDefault(size = 10, sort = "attendanceDate", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model) {
         model.addAttribute("attendanceHistory", attendanceService.getAttendanceHistory(pageable));
         return Views.Attendance.LIST;
     }
@@ -77,7 +80,7 @@ public class AttendanceController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) AttendanceStatus status,
-            @PageableDefault(size = 10) Pageable pageable,
+            @PageableDefault(size = 10, sort = "attendanceDate", direction = Sort.Direction.DESC) Pageable pageable,
             Model model) {
 
         boolean hasFilter = startDate != null || endDate != null || status != null;
