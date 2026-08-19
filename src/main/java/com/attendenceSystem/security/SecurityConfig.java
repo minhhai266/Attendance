@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,9 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
@@ -49,13 +51,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(c -> c.configurationSource(corsConfigurationSource()))
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/login/**", "/css/**", "/js/**").permitAll()
                         .requestMatchers("/dashboard/**", "/attendance/**", "/attendance", "/attendanceCheck",
                                 "/attendanceHistory", "/attendanceLists")
                         .permitAll()
-                        .requestMatchers("/api/attendance/**").permitAll()
+                        .requestMatchers("/api/attendance/**").authenticated()
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
@@ -72,6 +74,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -82,25 +85,6 @@ public class SecurityConfig {
         return new HttpSessionSecurityContextRepository();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        // Cho phép frontend Flutter web (5000) truy cập
-        configuration.setAllowedOrigins(List.of("http://localhost:5000", "http://127.0.0.1:5000"));
-
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration
-                .setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-CSRF-Token"));
-
-        // Cực kỳ quan trọng để Flutter có thể lưu Session/Cookie
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Áp dụng luật CORS này cho tất cả các endpoint (/**)
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
     // Chỉ dùng để test admin
     // @Bean
     // public UserDetailsService userDetailsService(
