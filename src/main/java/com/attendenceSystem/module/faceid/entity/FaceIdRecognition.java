@@ -1,15 +1,23 @@
 package com.attendenceSystem.module.faceid.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.attendenceSystem.module.faceid.dto.FaceIdAction;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "face_id_recognition_logs")
@@ -25,8 +33,14 @@ public class FaceIdRecognition {
     @Column(name = "student_code", nullable = false, length = 50)
     private String studentCode;
 
-    @Column(name = "confidence", nullable = false)
+    /** Null khi là bản ghi điểm danh thủ công (không qua AI). */
+    @Column(name = "confidence")
     private Double confidence;
+
+    /** true nếu đây là điểm danh thủ công (offline, chọn tên thay vì AI nhận diện). */
+    @Builder.Default
+    @Column(name = "manual", nullable = false)
+    private Boolean manual = false;
 
     @Column(name = "camera_id", length = 50)
     private String cameraId;

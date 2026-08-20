@@ -7,8 +7,6 @@ import java.time.ZoneId;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,45 +66,39 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
     @Override
     public AttendanceResponse checkIn(final User user) {
         LocalDate today = todayDate();
-        try {
-            Optional<AttendanceRecord> existing = attendanceRecordRepository
-                    .findByUserAndAttendanceDateWithLock(user, today);
-            if (existing.isPresent()) {
-                throw new AlreadyCheckedInException("Bạn đã điểm danh hôm nay");
-            }
-            LocalDateTime checkInTime = LocalDateTime.now(applicationZoneId);
-
-            boolean isWorkingDay = isWorkingDay(today);
-
-            if (isWorkingDay && attendanceCalculator.isPastAllowedCheckInTime(checkInTime)) {
-                throw new InvalidAttendanceStateException("Đã quá thời gian ca làm, bạn sẽ bị tính là vắng măt ngày hôm nay");
-            }
-
-            AttendanceStatus status;
-            String note;
-            if (!isWorkingDay) {
-                status = AttendanceStatus.DAY_OFF;
-                note = DAY_OFF_NOTE;
-            } else {
-                boolean late = attendanceCalculator.isLate(checkInTime);
-                status = late ? AttendanceStatus.LATE : AttendanceStatus.PRESENT;
-                note = late ? "Đi muộn" : null;
-            }
-
-            AttendanceRecord attendanceRecord = AttendanceRecord.builder()
-                    .user(user)
-                    .attendanceDate(today)
-                    .checkInTime(checkInTime)
-                    .status(status)
-                    .note(note)
-                    .build();
-            attendanceRecordRepository.save(attendanceRecord);
-            return attendanceResponseMapper.fromEntity(attendanceRecord);
-        } catch (DataIntegrityViolationException e) {
+        Optional<AttendanceRecord> existing = attendanceRecordRepository
+                .findByUserAndAttendanceDateWithLock(user, today);
+        if (existing.isPresent()) {
             throw new AlreadyCheckedInException("Bạn đã điểm danh hôm nay");
-        } catch (ObjectOptimisticLockingFailureException e) {
-            throw new AlreadyCheckedInException("Dữ liệu đã bị thay đổi, vui lòng thử lại");
         }
+        LocalDateTime checkInTime = LocalDateTime.now(applicationZoneId);
+
+        boolean isWorkingDay = isWorkingDay(today);
+
+        if (isWorkingDay && attendanceCalculator.isPastAllowedCheckInTime(checkInTime)) {
+            throw new InvalidAttendanceStateException("Đã quá thời gian ca làm, bạn sẽ bị tính là vắng măt ngày hôm nay");
+        }
+
+        AttendanceStatus status;
+        String note;
+        if (!isWorkingDay) {
+            status = AttendanceStatus.DAY_OFF;
+            note = DAY_OFF_NOTE;
+        } else {
+            boolean late = attendanceCalculator.isLate(checkInTime);
+            status = late ? AttendanceStatus.LATE : AttendanceStatus.PRESENT;
+            note = late ? "Đi muộn" : null;
+        }
+
+        AttendanceRecord attendanceRecord = AttendanceRecord.builder()
+                .user(user)
+                .attendanceDate(today)
+                .checkInTime(checkInTime)
+                .status(status)
+                .note(note)
+                .build();
+        attendanceRecordRepository.save(attendanceRecord);
+        return attendanceResponseMapper.fromEntity(attendanceRecord);
     }
 
     @Override

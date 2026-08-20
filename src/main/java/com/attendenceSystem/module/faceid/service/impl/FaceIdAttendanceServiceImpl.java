@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,8 @@ import com.attendenceSystem.module.attendance.service.AttendanceActionService;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
 import com.attendenceSystem.module.faceid.dto.FaceIdAction;
 import com.attendenceSystem.module.faceid.dto.request.FaceIdAttendanceRequest;
+import com.attendenceSystem.module.faceid.dto.request.FaceIdManualAttendanceRequest;
+import com.attendenceSystem.module.faceid.dto.response.EmployeeDirectoryResponse;
 import com.attendenceSystem.module.faceid.dto.response.FaceIdAttendanceResponse;
 import com.attendenceSystem.module.faceid.dto.response.FaceIdentifyResponse;
 import com.attendenceSystem.module.faceid.entity.FaceProfile;
@@ -267,6 +270,127 @@ public class FaceIdAttendanceServiceImpl implements FaceIdAttendanceService {
                 .fullName(matchedEntry != null ? matchedEntry.getFullName() : null)
                 .confidence(Math.round(bestSimilarity * 10000.0) / 10000.0)
                 .message(matched ? "Nhận diện thành công" : "Chưa khớp với dữ liệu đã đăng ký")
+                .build();
+    }
+
+    /* ==================================================
+       ĐIỂM DANH THỦ CÔNG (OFFLINE - mất kết nối AI)
+    ================================================== */
+
+    @Override
+    public FaceIdAttendanceResponse processManualAttendance(FaceIdManualAttendanceRequest request) {
+        String trackingId = request.getTrackingId();
+        LocalDateTime timestamp = LocalDateTime.now();
+
+        // 1. Check idempotency (giống luồng AI, tránh double-submit do mạng chậm)
+        if (StringUtils.hasText(trackingId)) {
+            FaceIdAction cachedAction = processedTrackingIds.getIfPresent(trackingId);
+            if (cachedAction != null) {
+                return buildManualResponseAndLog(request, FaceIdAction.IGNORED, "DUPLICATE", trackingId, timestamp, null);
+            }
+        }
+
+        // 2. Tìm nhân viên theo mã đã chọn trên danh sách (không qua nhận diện AI)
+        User user = userRepository.findByUsername(request.getEmployeeCode()).orElse(null);
+        if (user == null) {
+            String message = "Không tìm thấy nhân viên: " + request.getEmployeeCode();
+            log.warn(message);
+            return buildManualResponseAndLog(request, FaceIdAction.FAILED, message, trackingId, timestamp, null);
+        }
+
+        // 3. Xác định check-in/check-out giống hệt luồng AI
+        FaceIdAction action;
+        AttendanceResponse attendanceResponse = null;
+        String responseMessage;
+
+        try {
+            Optional<AttendanceRecord> todayRecord = attendanceService.getTodayAttendanceRecord(user);
+
+            if (todayRecord.isEmpty()) {
+                attendanceResponse = attendanceActionService.checkIn(user);
+                action = FaceIdAction.CHECKIN;
+                responseMessage = "Điểm danh vào ca thành công (thủ công)";
+            } else if (todayRecord.get().getCheckOutTime() == null) {
+                attendanceResponse = attendanceActionService.checkOut(user);
+                action = FaceIdAction.CHECKOUT;
+                responseMessage = "Điểm danh tan ca thành công (thủ công)";
+            } else {
+                action = FaceIdAction.IGNORED;
+                responseMessage = "Nhân viên đã điểm danh đủ 2 lượt hôm nay";
+            }
+
+            appendManualLeaveNote(user, action);
+
+            log.info("Manual Face ID attendance: employee={}, action={}", request.getEmployeeCode(), action);
+
+        } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            log.error("Manual attendance processing error for {}: {}", request.getEmployeeCode(), errorMessage, e);
+            return buildManualResponseAndLog(request, FaceIdAction.FAILED, errorMessage, trackingId, timestamp, null);
+        }
+
+        if (StringUtils.hasText(trackingId)) {
+            processedTrackingIds.put(trackingId, action);
+        }
+
+        return buildManualResponseAndLog(request, action, responseMessage, trackingId, timestamp, attendanceResponse);
+    }
+
+    private void appendManualLeaveNote(User user, FaceIdAction action) {
+        if (action != FaceIdAction.CHECKIN && action != FaceIdAction.CHECKOUT) {
+            return;
+        }
+
+        try {
+            LocalDate today = LocalDate.now();
+            List<Long> onLeaveUserIds = leaveRequestRepository.findUserIdsOnLeaveForDate(today, LeaveStatus.APPROVED);
+            if (!onLeaveUserIds.contains(user.getId())) {
+                return;
+            }
+
+            Optional<AttendanceRecord> updatedRecord = attendanceRecordRepository.findByUserAndAttendanceDate(user, today);
+            updatedRecord.ifPresent(record -> {
+                String currentNote = record.getNote() != null ? record.getNote() + "; " : "";
+                record.setNote(currentNote + "Đi làm trong ngày nghỉ phép (điểm danh thủ công)");
+                attendanceRecordRepository.save(record);
+            });
+        } catch (RuntimeException e) {
+            log.warn("Không thể ghi chú ngày nghỉ cho điểm danh thủ công của {}", user.getUsername(), e);
+        }
+    }
+
+    @Override
+    public List<EmployeeDirectoryResponse> listEmployeesForManualAttendance() {
+        // TODO: nếu User có trường trạng thái (active) hoặc role (employee/admin),
+        // lọc thêm ở đây để tránh lộ danh sách toàn bộ tài khoản hệ thống.
+        return userRepository.findAll().stream()
+                .map(u -> EmployeeDirectoryResponse.builder()
+                        .code(u.getUsername())
+                        .fullName(u.getFullName())
+                        .build())
+                .sorted(Comparator.comparing(
+                        EmployeeDirectoryResponse::fullName,
+                        Comparator.nullsLast(String::compareToIgnoreCase)))
+                .toList();
+    }
+
+    private FaceIdAttendanceResponse buildManualResponseAndLog(
+            FaceIdManualAttendanceRequest request,
+            FaceIdAction action,
+            String message,
+            String trackingId,
+            LocalDateTime timestamp,
+            AttendanceResponse attendance) {
+
+        faceIdLogService.saveManualRecognitionLog(request, action, message, attendance, timestamp);
+
+        return FaceIdAttendanceResponse.builder()
+                .success(action != FaceIdAction.FAILED)
+                .action(action)
+                .message(message)
+                .trackingId(trackingId)
+                .timestamp(timestamp)
+                .attendance(attendance)
                 .build();
     }
 

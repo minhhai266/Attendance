@@ -1,5 +1,7 @@
 package com.attendenceSystem.module.faceid.api;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.module.faceid.dto.request.FaceCaptureRequest;
 import com.attendenceSystem.module.faceid.dto.request.FaceIdAttendanceRequest;
+import com.attendenceSystem.module.faceid.dto.request.FaceIdManualAttendanceRequest;
 import com.attendenceSystem.module.faceid.dto.request.FaceIdentifyRequest;
+import com.attendenceSystem.module.faceid.dto.response.EmployeeDirectoryResponse;
 import com.attendenceSystem.module.faceid.dto.response.FaceCaptureResponse;
 import com.attendenceSystem.module.faceid.dto.response.FaceIdAttendanceResponse;
 import com.attendenceSystem.module.faceid.dto.response.FaceIdentifyResponse;
@@ -109,5 +113,19 @@ public class FaceIdApiController {
     @PostMapping("/identify")
     public ResponseEntity<FaceIdentifyResponse> identify(@RequestBody FaceIdentifyRequest request) {
         return ResponseEntity.ok(faceIdAttendanceService.identify(request.getImageBase64()));
+    }
+
+    @GetMapping("/employees")
+    public ResponseEntity<List<EmployeeDirectoryResponse>> listEmployees() {
+        return ResponseEntity.ok(faceIdAttendanceService.listEmployeesForManualAttendance());
+    }
+
+    
+    @PostMapping("/attendance/manual")
+    public ResponseEntity<FaceIdAttendanceResponse> processManualAttendance(
+            @RequestBody FaceIdManualAttendanceRequest request) {
+
+        FaceIdAttendanceResponse response = faceIdAttendanceService.processManualAttendance(request);
+        return response.success() ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
     }
 }
