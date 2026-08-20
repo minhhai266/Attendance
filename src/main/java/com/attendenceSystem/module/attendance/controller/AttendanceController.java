@@ -26,7 +26,6 @@ import com.attendenceSystem.module.attendance.dto.response.AttendanceHistoryStat
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.EmployeeLeaveListResponse;
-import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerLeaveListResponse;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;

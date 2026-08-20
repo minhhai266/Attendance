@@ -19,7 +19,7 @@ async function fetchAPI(url, method, body = null) {
   return response.json();
 }
 
-export const get = (url) => fetchApi(url, "GET");
-export const post = (url, body) => fetchApi(url, "POST", body);
-export const put = (url, body) => fetchApi(url, "PUT", body);
-export const patch = (url, body) => fetchApi(url, "PATCH", body);
+export const get = (url) => fetchAPI(url, "GET");
+export const post = (url, body) => fetchAPI(url, "POST", body);
+export const put = (url, body) => fetchAPI(url, "PUT", body);
+export const patch = (url, body) => fetchAPI(url, "PATCH", body);

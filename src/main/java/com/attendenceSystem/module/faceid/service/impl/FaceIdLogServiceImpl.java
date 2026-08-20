@@ -95,13 +95,14 @@ public class FaceIdLogServiceImpl implements FaceIdLogService {
                     .capturedAt(request.getCapturedAt())
                     .build();
 
-            faceIdRecognitionRepository.save(logEntity);
+            faceIdRecognitionRepository.saveAndFlush(logEntity);
             log.info("Lưu FaceID log (thủ công) cho nhân viên: {}", request.getEmployeeCode());
 
         } catch (JsonProcessingException e) {
             log.error("Failed to serialize manual request/response for log", e);
         } catch (Exception e) {
             log.error("Error saving manual FaceID log to database", e);
+            throw e;
         }
     }
 

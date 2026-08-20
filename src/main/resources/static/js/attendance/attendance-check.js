@@ -1,4 +1,4 @@
-
+import { get, post } from '../api/method.js';
 
 let attendanceStream = null;
 let attendanceVideo = null;

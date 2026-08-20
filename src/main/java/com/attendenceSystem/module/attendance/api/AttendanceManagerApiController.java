@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.attendenceSystem.constant.Routes;
-import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;

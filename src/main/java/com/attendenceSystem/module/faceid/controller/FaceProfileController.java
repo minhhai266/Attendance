@@ -22,7 +22,6 @@ import com.attendenceSystem.module.faceid.service.FaceProfileService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller

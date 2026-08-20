@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.repository.projection.EmployeeAttendanceList;

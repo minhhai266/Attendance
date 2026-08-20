@@ -13,7 +13,6 @@ import com.attendenceSystem.constant.Views;
 import com.attendenceSystem.module.report.dto.request.CreateReportRequest;
 import com.attendenceSystem.module.report.service.ReportService;
 import com.attendenceSystem.module.user.dto.response.UserWithSpecializationResponse;
-import com.attendenceSystem.module.user.entity.enums.Department;
 import com.attendenceSystem.module.user.entity.enums.Role;
 import com.attendenceSystem.module.user.entity.enums.Specialization;
 import com.attendenceSystem.module.user.repository.UserRepository;
