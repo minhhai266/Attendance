@@ -24,7 +24,10 @@ import com.attendenceSystem.constant.Views;
 import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceHistoryStatsResponse;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
+import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
+import com.attendenceSystem.module.attendance.dto.response.EmployeeLeaveListResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
+import com.attendenceSystem.module.attendance.dto.response.ManagerLeaveListResponse;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 import com.attendenceSystem.module.attendance.exception.AlreadyCheckedInException;
@@ -85,7 +88,7 @@ public class AttendanceController {
 
         boolean hasFilter = startDate != null || endDate != null || status != null;
 
-        Page<AttendanceResponse> attendanceHistory;
+        Page<EmployeeAttendanceListResponse> attendanceHistory;
         AttendanceHistoryStatsResponse stats;
 
         if (hasFilter) {
@@ -116,7 +119,7 @@ public class AttendanceController {
 
         boolean hasFilter = (keyword != null && !keyword.isBlank()) || status != null || (week != null && !week.isBlank());
 
-        Page<LeaveRequestResponse> leaveRequests;
+        Page<ManagerLeaveListResponse> leaveRequests;
         if (hasFilter) {
             leaveRequests = leaveService.getAllLeaveRequests(keyword, status, week, pageable);
         } else {
@@ -141,7 +144,7 @@ public class AttendanceController {
 
         boolean hasFilter = status != null || (week != null && !week.isBlank());
 
-        Page<LeaveRequestResponse> leaveRequests;
+        Page<EmployeeLeaveListResponse> leaveRequests;
         if (hasFilter) {
             leaveRequests = leaveService.getLeaveRequests(status, week, pageable);
         } else {

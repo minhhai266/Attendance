@@ -4,7 +4,8 @@ import java.time.LocalDate;
 
 import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 
-public interface ManageLeaveList {
+public interface ManagerLeaveList {
+    Long getId();
     String getUserFullName();
     LocalDate getStartDate();
     LocalDate getEndDate();

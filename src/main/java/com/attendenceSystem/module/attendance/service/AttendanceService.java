@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceHistoryStatsResponse;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
+import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
@@ -17,9 +18,9 @@ import com.attendenceSystem.module.user.entity.User;
 
 public interface AttendanceService {
 
-    Page<AttendanceResponse> getAttendanceHistory(Pageable pageable);
+    Page<EmployeeAttendanceListResponse> getAttendanceHistory(Pageable pageable);
 
-    Page<AttendanceResponse> getAttendanceHistory(LocalDate startDate, LocalDate endDate, AttendanceStatus status, Pageable pageable);
+    Page<EmployeeAttendanceListResponse> getAttendanceHistory(LocalDate startDate, LocalDate endDate, AttendanceStatus status, Pageable pageable);
 
     AttendanceHistoryStatsResponse getAttendanceHistoryStats();
 

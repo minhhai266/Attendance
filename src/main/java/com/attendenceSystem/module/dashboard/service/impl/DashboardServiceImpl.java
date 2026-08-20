@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
+import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.provider.AttendanceStatisticsProvider;
 import com.attendenceSystem.module.dashboard.dto.response.AccountTypeDistributionResponse;
@@ -110,7 +111,7 @@ public class DashboardServiceImpl implements DashboardService {
                 long totalDays = attendanceStatisticsProvider.getTotalDaysByUser(user);
                 long attendedDays = attendanceStatisticsProvider.getAttendedDaysByUser(user);
                 String attendanceRate = DashboardCalculator.showResultStr(attendedDays, totalDays);
-                Page<AttendanceResponse> attendanceHistory = attendanceStatisticsProvider
+                Page<EmployeeAttendanceListResponse> attendanceHistory = attendanceStatisticsProvider
                                 .getRecentHistoryByUser(user, 10);
                 return dashboardResponseMapper.toEmployeeDashboardResponse(
                                 totalReports,

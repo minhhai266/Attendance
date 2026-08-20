@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
+import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
+import com.attendenceSystem.module.attendance.dto.response.EmployeeLeaveListResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveDetailResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
 import com.attendenceSystem.module.attendance.service.AttendanceActionService;
@@ -43,8 +45,8 @@ public class AttendanceApiController {
     }
 
     @GetMapping(Routes.Attendance.HISTORY)
-    public ResponseEntity<Page<AttendanceResponse>> getHistory(Pageable pageable) {
-        Page<AttendanceResponse> page = attendanceService.getAttendanceHistory(pageable);
+    public ResponseEntity<Page<EmployeeAttendanceListResponse>> getHistory(Pageable pageable) {
+        Page<EmployeeAttendanceListResponse> page = attendanceService.getAttendanceHistory(pageable);
         return ResponseEntity.ok(page);
     }
 
@@ -55,8 +57,8 @@ public class AttendanceApiController {
     }
 
     @GetMapping("/leaves")
-    public ResponseEntity<Page<LeaveRequestResponse>> getLeaves(Pageable pageable) {
-        Page<LeaveRequestResponse> page = leaveService.getLeaveRequests(pageable);
+    public ResponseEntity<Page<EmployeeLeaveListResponse>> getLeaves(Pageable pageable) {
+        Page<EmployeeLeaveListResponse> page = leaveService.getLeaveRequests(pageable);
         return ResponseEntity.ok(page);
     }
 

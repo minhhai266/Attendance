@@ -1,5 +1,8 @@
 package com.attendenceSystem.module.attendance.service.impl;
 
+import java.time.LocalDate;
+import java.time.temporal.IsoFields;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -7,15 +10,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
+import com.attendenceSystem.module.attendance.dto.response.EmployeeLeaveListResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveDetailResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveRequestResponse;
+import com.attendenceSystem.module.attendance.dto.response.ManagerLeaveListResponse;
 import com.attendenceSystem.module.attendance.entity.LeaveRequest;
 import com.attendenceSystem.module.attendance.entity.enums.LeaveStatus;
 import com.attendenceSystem.module.attendance.mapper.request.CreateLeaveRequestMapper;
+import com.attendenceSystem.module.attendance.mapper.response.EmployeeLeaveListResponseMapper;
 import com.attendenceSystem.module.attendance.mapper.response.LeaveDetailResponseMapper;
 import com.attendenceSystem.module.attendance.mapper.response.LeaveRequestResponseMapper;
+import com.attendenceSystem.module.attendance.mapper.response.ManagerLeaveListResponseMapper;
+import com.attendenceSystem.module.attendance.model.DateRange;
 import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
-import com.attendenceSystem.module.attendance.repository.LeaveRequestSpecification;
+
 import com.attendenceSystem.module.attendance.service.LeaveScheduleService;
 import com.attendenceSystem.module.attendance.service.LeaveService;
 import com.attendenceSystem.module.user.entity.User;
@@ -32,6 +40,8 @@ public class LeaveServiceImpl implements LeaveService {
     private final LeaveRequestRepository leaveRequestRepository;
     private final LeaveRequestResponseMapper leaveRequestResponseMapper;
     private final LeaveDetailResponseMapper leaveDetailResponseMapper;
+    private final EmployeeLeaveListResponseMapper employeeLeaveListResponseMapper;
+    private final ManagerLeaveListResponseMapper managerLeaveListResponseMapper;
     private final UserContextProvider userContextProvider;
     private final LeaveScheduleService leaveScheduleService;
 
@@ -73,36 +83,42 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    public Page<LeaveRequestResponse> getLeaveRequests(final Pageable pageable) {
+    public Page<EmployeeLeaveListResponse> getLeaveRequests(final Pageable pageable) {
         User user = userContextProvider.getCurrentUserEntity();
         return leaveRequestRepository.findByUser(user, pageable)
-                .map(leaveRequestResponseMapper::fromEntity);
+                .map(employeeLeaveListResponseMapper::fromEntity);
     }
 
     @Override
-    public Page<LeaveRequestResponse> getLeaveRequests(final LeaveStatus status, final String week,
+    public Page<EmployeeLeaveListResponse> getLeaveRequests(final LeaveStatus status, final String week,
             final Pageable pageable) {
         User user = userContextProvider.getCurrentUserEntity();
-        Specification<LeaveRequest> spec = Specification
-                .where(hasUser(user))
-                .and(LeaveRequestSpecification.hasStatus(status))
-                .and(LeaveRequestSpecification.hasWeek(week));
-        return leaveRequestRepository.findAll(spec, pageable).map(leaveRequestResponseMapper::fromEntity);
+
+        DateRange range = parseWeekRange(week);
+
+        return leaveRequestRepository.findLeaveRequestsWithFilters(user, status, range.startDate(), range.endDate(), pageable)
+                .map(employeeLeaveListResponseMapper::fromEntity);
     }
 
     @Override
-    public Page<LeaveRequestResponse> getAllLeaveRequests(final Pageable pageable) {
-        return leaveRequestRepository.findAll(pageable).map(leaveRequestResponseMapper::fromEntity);
+    public Page<ManagerLeaveListResponse> getAllLeaveRequests(final Pageable pageable) {
+        return getAllLeaveRequests(null, null, null, pageable);
     }
 
     @Override
-    public Page<LeaveRequestResponse> getAllLeaveRequests(final String keyword, final LeaveStatus status,
+    public Page<ManagerLeaveListResponse> getAllLeaveRequests(final String keyword, final LeaveStatus status,
             final String week, final Pageable pageable) {
-        Specification<LeaveRequest> spec = Specification
-                .where(LeaveRequestSpecification.hasKeyword(keyword))
-                .and(LeaveRequestSpecification.hasStatus(status))
-                .and(LeaveRequestSpecification.hasWeek(week));
-        return leaveRequestRepository.findAll(spec, pageable).map(leaveRequestResponseMapper::fromEntity);
+        DateRange range = parseWeekRange(week);
+        String searchKeyword = null;
+        if (keyword != null && !keyword.isBlank()) {
+            searchKeyword = "%" + keyword.trim().toLowerCase() + "%";
+        }
+        return leaveRequestRepository.findAllManagerLeaveRequestsWithFilters(
+                searchKeyword,
+                status,
+                range.startDate(),
+                range.endDate(),
+                pageable).map(managerLeaveListResponseMapper::fromEntity);
     }
 
     @Override
@@ -130,8 +146,22 @@ public class LeaveServiceImpl implements LeaveService {
         return leaveRequest;
     }
 
-    private Specification<LeaveRequest> hasUser(final User user) {
-        return (root, query, cb) -> cb.equal(root.get("user"), user);
+    private DateRange parseWeekRange(String week) {
+    if (week == null || week.isBlank()) {
+        return new DateRange(null, null);
     }
+    try {
+        int year = Integer.parseInt(week.substring(0, 4));
+        int weekNumber = Integer.parseInt(week.substring(6));
 
+        LocalDate weekStart = LocalDate.of(year, 1, 1)
+                .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekNumber)
+                .with(java.time.DayOfWeek.MONDAY);
+        LocalDate weekEnd = weekStart.plusDays(6);
+        
+        return new DateRange(weekStart, weekEnd);
+    } catch (Exception e) {
+        return new DateRange(null, null);
+    }
+}
 }

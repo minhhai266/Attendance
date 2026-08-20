@@ -8,9 +8,10 @@ import lombok.Builder;
 
 @Builder
 public record EmployeeLeaveListResponse(
+        Long id,
         LocalDate startDate,
         LocalDate endDate,
         String reason,
-        LeaveStatus status) {
+        String status) {
 
 }

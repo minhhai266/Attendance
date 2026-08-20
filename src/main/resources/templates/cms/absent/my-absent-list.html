@@ -46,9 +46,15 @@
                                     <label>Trạng thái</label>
                                     <select name="status">
                                         <option value="" th:selected="${selectedStatus == null}">Tất cả</option>
-                                        <option value="PENDING" th:selected="${selectedStatus?.name() == 'PENDING'}">Chờ duyệt</option>
-                                        <option value="APPROVED" th:selected="${selectedStatus?.name() == 'APPROVED'}">Đã duyệt</option>
-                                        <option value="REJECTED" th:selected="${selectedStatus?.name() == 'REJECTED'}">Từ chối</option>
+                                        <option value="PENDING"
+                                            th:selected="${#strings.toString(selectedStatus) == 'PENDING'}">Chờ duyệt
+                                        </option>
+                                        <option value="APPROVED"
+                                            th:selected="${#strings.toString(selectedStatus) == 'APPROVED'}">Đã duyệt
+                                        </option>
+                                        <option value="REJECTED"
+                                            th:selected="${#strings.toString(selectedStatus) == 'REJECTED'}">Từ chối
+                                        </option>
                                     </select>
                                 </div>
 
@@ -100,21 +106,26 @@
                                 </thead>
 
                                 <tbody>
-                                    <!-- Không có dữ liệu -->
                                     <tr th:if="${leaveRequests == null or leaveRequests.content.isEmpty()}">
                                         <td colspan="5" class="text-center">
                                             Chưa có đơn nghỉ phép nào.
                                         </td>
                                     </tr>
+
                                     <tr th:each="leave : ${leaveRequests.content}">
-                                        <td th:text="${#temporals.format(leave.startDate(), 'dd/MM/yyyy')}">Từ ngày</td>
-                                        <td th:text="${#temporals.format(leave.endDate(), 'dd/MM/yyyy')}">Đến ngày</td>
-                                        <td th:text="${leave.reason()}">Lý do</td>
+                                        <td
+                                            th:text="${leave.startDate != null ? #temporals.format(leave.startDate, 'dd/MM/yyyy') : '--'}">
+                                            Từ ngày</td>
+                                        <td
+                                            th:text="${leave.endDate != null ? #temporals.format(leave.endDate, 'dd/MM/yyyy') : '--'}">
+                                            Đến ngày</td>
+                                        <td th:text="${leave.reason}">Lý do</td>
                                         <td>
-                                            <span th:classappend="${leave.status()} ? 'status-' + ${leave.status().name().toLowerCase()}" 
-                                                  class="status"
-                                                  th:text="${leave.status()}">
+                                            <span th:if="${leave.status != null}"
+                                                th:classappend="'status-' + ${#strings.toLowerCase(leave.status)}"
+                                                class="status" th:text="${leave.status}">
                                             </span>
+                                            <span th:if="${leave.status == null}" class="status">--</span>
                                         </td>
                                         <td>
                                             <button th:data-id="${leave.id}"
@@ -124,7 +135,6 @@
                                             </button>
                                         </td>
                                     </tr>
-
                                 </tbody>
 
                             </table>
@@ -138,23 +148,23 @@
                 <!-- PAGINATION -->
                 <div class="pagination" th:if="${leaveRequests.totalPages > 1}">
                     <a th:if="${leaveRequests.hasPrevious()}"
-                       th:href="@{/attendance/leave/list(page=${leaveRequests.number - 1}, size=${leaveRequests.size}, status=${selectedStatus}, week=${selectedWeek})}"
-                       class="btn btn-pagination">← Trước</a>
+                        th:href="@{/attendance/leave/list(page=${leaveRequests.number - 1}, size=${leaveRequests.size}, status=${selectedStatus}, week=${selectedWeek})}"
+                        class="btn btn-pagination">← Trước</a>
 
                     <span class="page-info">
                         <a th:each="i : ${#numbers.sequence(0, leaveRequests.totalPages - 1)}"
-                           th:if="${i == leaveRequests.number}"
-                           th:href="@{/attendance/leave/list(page=${i}, size=${leaveRequests.size}, status=${selectedStatus}, week=${selectedWeek})}"
-                           class="page-link active" th:text="${i + 1}">1</a>
+                            th:if="${i == leaveRequests.number}"
+                            th:href="@{/attendance/leave/list(page=${i}, size=${leaveRequests.size}, status=${selectedStatus}, week=${selectedWeek})}"
+                            class="page-link active" th:text="${i + 1}">1</a>
                         <a th:each="i : ${#numbers.sequence(0, leaveRequests.totalPages - 1)}"
-                           th:unless="${i == leaveRequests.number}"
-                           th:href="@{/attendance/leave/list(page=${i}, size=${leaveRequests.size}, status=${selectedStatus}, week=${selectedWeek})}"
-                           class="page-link" th:text="${i + 1}">1</a>
+                            th:unless="${i == leaveRequests.number}"
+                            th:href="@{/attendance/leave/list(page=${i}, size=${leaveRequests.size}, status=${selectedStatus}, week=${selectedWeek})}"
+                            class="page-link" th:text="${i + 1}">1</a>
                     </span>
 
                     <a th:if="${leaveRequests.hasNext()}"
-                       th:href="@{/attendance/leave/list(page=${leaveRequests.number + 1}, size=${leaveRequests.size}, status=${selectedStatus}, week=${selectedWeek})}"
-                       class="btn btn-pagination">Sau →</a>
+                        th:href="@{/attendance/leave/list(page=${leaveRequests.number + 1}, size=${leaveRequests.size}, status=${selectedStatus}, week=${selectedWeek})}"
+                        class="btn btn-pagination">Sau →</a>
                 </div>
 
                 <div id="absentDetailModal" class="absent-modal">

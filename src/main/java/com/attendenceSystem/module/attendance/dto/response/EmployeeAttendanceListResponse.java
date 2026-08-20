@@ -9,10 +9,13 @@ import lombok.Builder;
 
 @Builder
 public record EmployeeAttendanceListResponse(
-        LocalDate attendanceDate,
-        LocalDateTime checkInTime,
-        LocalDateTime checkOutTime,
-        AttendanceStatus status,
-        String note) {
+                LocalDate attendanceDate,
+                LocalDateTime checkInTime,
+                LocalDateTime checkOutTime,
+                AttendanceStatus status,
+                boolean late,
+                boolean earlyLeave,
+                long workingMinutes,
+                String note) {
 
 }

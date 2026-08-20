@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.attendenceSystem.module.dashboard.dto.response.AccountTypeDistributionResponse;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
+import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
 import com.attendenceSystem.module.dashboard.dto.response.AdminDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.ManagerDashboardResponse;
 import com.attendenceSystem.module.dashboard.dto.response.EmployeeDashboardResponse;
@@ -48,7 +49,7 @@ public class DashboardResponseMapper {
     public EmployeeDashboardResponse toEmployeeDashboardResponse(
             long totalReports,
             String attendanceRate,
-            Page<AttendanceResponse> attendanceHistory) {
+            Page<EmployeeAttendanceListResponse> attendanceHistory) {
         return new EmployeeDashboardResponse(
                 totalReports,
                 attendanceRate,

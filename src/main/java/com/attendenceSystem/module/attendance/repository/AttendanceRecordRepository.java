@@ -11,8 +11,10 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
+import com.attendenceSystem.module.attendance.repository.projection.EmployeeAttendanceList;
 import com.attendenceSystem.module.attendance.repository.projection.ManagerAttendanceList;
 import com.attendenceSystem.module.user.entity.User;
 import jakarta.persistence.LockModeType;
@@ -26,7 +28,7 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
                         @Param("user") User user,
                         @Param("date") LocalDate date);
 
-        Page<AttendanceRecord> findByUser(User user, Pageable pageable);
+        Page<EmployeeAttendanceList> findByUser(User user, Pageable pageable);
 
         List<AttendanceRecord> findAllByUser(User user);
 
@@ -71,7 +73,7 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
                         "AND (:startDate IS NULL OR a.attendanceDate >= :startDate) " +
                         "AND (:endDate IS NULL OR a.attendanceDate <= :endDate) " +
                         "AND (:status IS NULL OR a.status = :status)")
-        Page<AttendanceRecord> findFilteredAttendanceHistory(
+        Page<EmployeeAttendanceList> findFilteredAttendanceHistory(
                         @Param("user") User user,
                         @Param("startDate") LocalDate startDate,
                         @Param("endDate") LocalDate endDate,

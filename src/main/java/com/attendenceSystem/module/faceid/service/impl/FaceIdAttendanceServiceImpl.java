@@ -22,7 +22,6 @@ import com.attendenceSystem.module.attendance.repository.AttendanceRecordReposit
 import com.attendenceSystem.module.attendance.repository.LeaveRequestRepository;
 import com.attendenceSystem.module.attendance.service.AttendanceActionService;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
-import com.attendenceSystem.module.faceid.dto.FaceIdAction;
 import com.attendenceSystem.module.faceid.dto.request.FaceIdAttendanceRequest;
 import com.attendenceSystem.module.faceid.dto.request.FaceIdManualAttendanceRequest;
 import com.attendenceSystem.module.faceid.dto.response.EmployeeDirectoryResponse;
@@ -30,6 +29,7 @@ import com.attendenceSystem.module.faceid.dto.response.FaceIdAttendanceResponse;
 import com.attendenceSystem.module.faceid.dto.response.FaceIdentifyResponse;
 import com.attendenceSystem.module.faceid.entity.FaceProfile;
 import com.attendenceSystem.module.faceid.entity.FaceSample;
+import com.attendenceSystem.module.faceid.entity.enums.FaceIdAction;
 import com.attendenceSystem.module.faceid.repository.FaceProfileRepository;
 import com.attendenceSystem.module.faceid.repository.FaceSampleRepository;
 import com.attendenceSystem.module.faceid.service.FaceAiClient;

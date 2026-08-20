@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceHistoryStatsResponse;
-import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
+import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
-import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
+import com.attendenceSystem.module.attendance.mapper.response.EmployeeAttendanceListResponseMapper;
 import com.attendenceSystem.module.attendance.mapper.response.ManagerAttendanceListResponseMapper;
 import com.attendenceSystem.module.attendance.model.DateRange;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
@@ -33,19 +33,19 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceRecordRepository attendanceRecordRepository;
-    private final AttendanceResponseMapper attendanceResponseMapper;
     private final ManagerAttendanceListResponseMapper managerAttendanceListResponseMapper;
+    private final EmployeeAttendanceListResponseMapper employeeAttendanceListResponseMapper;
     private final AttendanceCalculator attendanceCalculator;
     private final ZoneId applicationZoneId;
     private final UserContextProvider userContextProvider;
 
     @Override
-    public Page<AttendanceResponse> getAttendanceHistory(final Pageable pageable) {
+    public Page<EmployeeAttendanceListResponse> getAttendanceHistory(final Pageable pageable) {
         User user = userContextProvider.getCurrentUserEntity();
 
         return attendanceRecordRepository
                 .findByUser(user, pageable)
-                .map(attendanceResponseMapper::fromEntity);
+                .map(employeeAttendanceListResponseMapper::fromEntity);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public Page<AttendanceResponse> getAttendanceHistory(
+    public Page<EmployeeAttendanceListResponse> getAttendanceHistory(
             final LocalDate startDate,
             final LocalDate endDate,
             final AttendanceStatus status,
@@ -157,7 +157,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         User user = userContextProvider.getCurrentUserEntity();
         return attendanceRecordRepository
                 .findFilteredAttendanceHistory(user, startDate, endDate, status, pageable)
-                .map(attendanceResponseMapper::fromEntity);
+                .map(employeeAttendanceListResponseMapper::fromEntity);
     }
 
     @Override
