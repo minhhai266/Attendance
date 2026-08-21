@@ -12,16 +12,20 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class SecurityUtil {
 
+    public Authentication getAuthentication(){
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
+
     public CustomUserDetails getCurrentUser() {
         if (!isAuthenticated()) {
             throw new IllegalStateException("Người dùng chưa đăng nhập");
         }
 
-        return (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return (CustomUserDetails) getAuthentication().getPrincipal();
     }
 
     public boolean isAuthenticated() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = getAuthentication();
         return authentication != null && authentication.isAuthenticated()
                 && !(authentication instanceof AnonymousAuthenticationToken);
     }

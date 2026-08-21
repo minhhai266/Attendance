@@ -9,14 +9,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceHistoryStatsResponse;
+import com.attendenceSystem.module.attendance.dto.response.AttendanceDetailResponse;
 import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.mapper.response.EmployeeAttendanceListResponseMapper;
+import com.attendenceSystem.module.attendance.mapper.response.AttendanceDetailResponseMapper;
 import com.attendenceSystem.module.attendance.mapper.response.ManagerAttendanceListResponseMapper;
 import com.attendenceSystem.module.attendance.model.DateRange;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
@@ -35,6 +39,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceRecordRepository attendanceRecordRepository;
     private final ManagerAttendanceListResponseMapper managerAttendanceListResponseMapper;
     private final EmployeeAttendanceListResponseMapper employeeAttendanceListResponseMapper;
+    private final AttendanceDetailResponseMapper attendanceDetailResponseMapper;
     private final AttendanceCalculator attendanceCalculator;
     private final ZoneId applicationZoneId;
     private final UserContextProvider userContextProvider;
@@ -182,6 +187,24 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
         LocalDate today = todayDate();
         return attendanceRecordRepository.findByUserAndAttendanceDateWithLock(user, today);
+    }
+
+    @Override
+    public AttendanceDetailResponse getAttendanceDetail(final Long recordId) {
+        User currentUser = userContextProvider.getCurrentUserEntity();
+        AttendanceRecord record = attendanceRecordRepository.findById(recordId)
+                .filter(attendance -> attendance.getUser().getId().equals(currentUser.getId()))
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Không tìm thấy bản ghi điểm danh"));
+        return attendanceDetailResponseMapper.fromEntity(record);
+    }
+
+    @Override
+    public AttendanceDetailResponse getManagerAttendanceDetail(final Long recordId) {
+        AttendanceRecord record = attendanceRecordRepository.findById(recordId)
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Không tìm thấy bản ghi điểm danh"));
+        return attendanceDetailResponseMapper.fromEntity(record);
     }
 
     private LocalDate todayDate() {

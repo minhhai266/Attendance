@@ -50,6 +50,12 @@ public class AttendanceRecord {
     @Column(name = "check_out_time")
     private LocalDateTime checkOutTime;
 
+    @Column(name = "check_in_image_path", length = 500)
+    private String checkInImagePath;
+
+    @Column(name = "check_out_image_path", length = 500)
+    private String checkOutImagePath;
+
     @Column(name = "status", nullable = false)
     private AttendanceStatus status;
 

@@ -22,6 +22,7 @@ public class EmployeeAttendanceListResponseMapper {
                 list.getCheckInTime(),
                 list.getCheckOutTime());
         return EmployeeAttendanceListResponse.builder()
+                .id(list.getId())
                 .attendanceDate(list.getAttendanceDate())
                 .checkInTime(list.getCheckInTime())
                 .checkOutTime(list.getCheckOutTime())

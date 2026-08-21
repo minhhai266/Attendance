@@ -8,16 +8,17 @@ import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import lombok.Builder;
 
 @Builder
-public record ManagerAttendanceListResponse(
+public record AttendanceDetailResponse(
         Long id,
-        String userFullName,
+        String fullName,
         LocalDate attendanceDate,
         LocalDateTime checkInTime,
         LocalDateTime checkOutTime,
         AttendanceStatus status,
         String note,
+        long workingMinutes,
         boolean late,
         boolean earlyLeave,
-        long workingMinutes) {
-
+        String checkInImageUrl,
+        String checkOutImageUrl) {
 }

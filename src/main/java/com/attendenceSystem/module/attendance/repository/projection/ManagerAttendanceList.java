@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 
 public interface ManagerAttendanceList {
+    Long getId();
     String getUserFullName();
     LocalDate getAttendanceDate();
     LocalDateTime getCheckInTime();

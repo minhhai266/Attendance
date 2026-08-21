@@ -1,0 +1,121 @@
+.detail-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.68);
+}
+
+.detail-modal {
+    width: min(960px, 100%);
+    max-height: min(760px, 90vh);
+    overflow: auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.3);
+}
+
+.detail-modal-header,
+.detail-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.detail-modal-footer {
+    justify-content: flex-end;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 0;
+}
+
+.detail-modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.detail-modal-close {
+    border: 0;
+    background: transparent;
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.detail-modal-body {
+    padding: 20px;
+}
+
+.detail-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 1fr);
+    gap: 24px;
+}
+
+.detail-info-grid {
+    display: grid;
+    gap: 14px;
+}
+
+.detail-info-item label,
+.detail-image-label {
+    display: block;
+    margin-bottom: 5px;
+    color: #6b7280;
+    font-size: 0.82rem;
+}
+
+.detail-info-item .value {
+    color: #111827;
+    overflow-wrap: anywhere;
+}
+
+.detail-images {
+    display: grid;
+    gap: 16px;
+}
+
+.detail-image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    overflow: hidden;
+    background: #000;
+    border-radius: 6px;
+}
+
+.detail-image-container img {
+    display: block;
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+}
+
+.no-image {
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+.detail-button {
+    padding: 6px 10px;
+    border: 1px solid #9ca3af;
+    border-radius: 4px;
+    background: #fff;
+    color: #374151;
+    cursor: pointer;
+}
+
+@media (max-width: 700px) {
+    .detail-content {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-modal-overlay {
+        padding: 12px;
+    }
+}

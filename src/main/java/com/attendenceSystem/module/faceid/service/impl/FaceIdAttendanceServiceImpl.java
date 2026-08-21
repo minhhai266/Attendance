@@ -159,12 +159,12 @@ public class FaceIdAttendanceServiceImpl implements FaceIdAttendanceService {
 
             if (todayRecord.isEmpty()) {
                 // Not checked in yet -> CHECKIN
-                attendanceResponse = attendanceActionService.checkIn(user);
+                attendanceResponse = attendanceActionService.checkIn(user, request.getImageBase64());
                 action = FaceIdAction.CHECKIN;
                 responseMessage = "Checked in successfully";
             } else if (todayRecord.get().getCheckOutTime() == null) {
                 // Checked in, not checked out -> CHECKOUT
-                attendanceResponse = attendanceActionService.checkOut(user);
+                attendanceResponse = attendanceActionService.checkOut(user, request.getImageBase64());
                 action = FaceIdAction.CHECKOUT;
                 responseMessage = "Checked out successfully";
             } else {
@@ -307,11 +307,11 @@ public class FaceIdAttendanceServiceImpl implements FaceIdAttendanceService {
             Optional<AttendanceRecord> todayRecord = attendanceService.getTodayAttendanceRecord(user);
 
             if (todayRecord.isEmpty()) {
-                attendanceResponse = attendanceActionService.checkIn(user);
+                attendanceResponse = attendanceActionService.checkIn(user, request.getImageBase64());
                 action = FaceIdAction.CHECKIN;
                 responseMessage = "Điểm danh vào ca thành công (thủ công)";
             } else if (todayRecord.get().getCheckOutTime() == null) {
-                attendanceResponse = attendanceActionService.checkOut(user);
+                attendanceResponse = attendanceActionService.checkOut(user, request.getImageBase64());
                 action = FaceIdAction.CHECKOUT;
                 responseMessage = "Điểm danh tan ca thành công (thủ công)";
             } else {

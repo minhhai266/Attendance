@@ -16,6 +16,7 @@ import com.attendenceSystem.module.faceid.entity.enums.FaceIdAction;
 import com.attendenceSystem.module.faceid.repository.FaceIdRecognitionRepository;
 import com.attendenceSystem.module.faceid.service.FaceIdLogService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,9 @@ public class FaceIdLogServiceImpl implements FaceIdLogService {
     public void saveRecognitionLog(FaceIdAttendanceRequest request, FaceIdAction action, String message,
             AttendanceResponse attendance, LocalDateTime timestamp) {
         try {
-            String requestPayload = objectMapper.writeValueAsString(request);
+            ObjectNode requestJson = objectMapper.valueToTree(request);
+            requestJson.remove("imageBase64");
+            String requestPayload = objectMapper.writeValueAsString(requestJson);
             String responsePayload = objectMapper.writeValueAsString(
                     FaceIdAttendanceResponse.builder()
                             .action(action)
@@ -73,7 +76,9 @@ public class FaceIdLogServiceImpl implements FaceIdLogService {
     public void saveManualRecognitionLog(FaceIdManualAttendanceRequest request, FaceIdAction action, String message,
             AttendanceResponse attendance, LocalDateTime timestamp) {
         try {
-            String requestPayload = objectMapper.writeValueAsString(request);
+            ObjectNode requestJson = objectMapper.valueToTree(request);
+            requestJson.remove("imageBase64");
+            String requestPayload = objectMapper.writeValueAsString(requestJson);
             String responsePayload = objectMapper.writeValueAsString(
                     FaceIdAttendanceResponse.builder()
                             .action(action)

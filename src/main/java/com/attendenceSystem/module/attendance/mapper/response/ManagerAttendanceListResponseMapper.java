@@ -15,6 +15,7 @@ public class ManagerAttendanceListResponseMapper {
 
     public ManagerAttendanceListResponse fromEntity(ManagerAttendanceList list){
         return ManagerAttendanceListResponse.builder()
+        .id(list.getId())
         .attendanceDate(list.getAttendanceDate())
         .userFullName(list.getUserFullName())
         .checkInTime(list.getCheckInTime())

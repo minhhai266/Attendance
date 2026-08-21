@@ -10,5 +10,9 @@ public interface AttendanceActionService {
 
     AttendanceResponse checkIn(User user);
 
+    AttendanceResponse checkIn(User user, String imageBase64);
+
     AttendanceResponse checkOut(User user);
+
+    AttendanceResponse checkOut(User user, String imageBase64);
 }

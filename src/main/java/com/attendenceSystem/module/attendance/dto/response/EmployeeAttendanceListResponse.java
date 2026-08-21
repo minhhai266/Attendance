@@ -9,6 +9,7 @@ import lombok.Builder;
 
 @Builder
 public record EmployeeAttendanceListResponse(
+                Long id,
                 LocalDate attendanceDate,
                 LocalDateTime checkInTime,
                 LocalDateTime checkOutTime,

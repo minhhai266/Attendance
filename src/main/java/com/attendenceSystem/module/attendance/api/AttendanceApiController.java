@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.module.attendance.dto.request.CreateLeaveRequest;
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
+import com.attendenceSystem.module.attendance.dto.response.AttendanceDetailResponse;
 import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.EmployeeLeaveListResponse;
 import com.attendenceSystem.module.attendance.dto.response.LeaveDetailResponse;
@@ -48,6 +49,11 @@ public class AttendanceApiController {
     public ResponseEntity<Page<EmployeeAttendanceListResponse>> getHistory(Pageable pageable) {
         Page<EmployeeAttendanceListResponse> page = attendanceService.getAttendanceHistory(pageable);
         return ResponseEntity.ok(page);
+    }
+
+    @GetMapping(Routes.Attendance.DETAIL + "/{id}")
+    public ResponseEntity<AttendanceDetailResponse> getAttendanceDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(attendanceService.getAttendanceDetail(id));
     }
 
     @PostMapping(Routes.Attendance.LEAVE)

@@ -45,6 +45,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
         boolean existsByPhone(String phone);
 
+        // ===== Check =====
+        @Query("SELECT u.status FROM User u WHERE u.id = :id")
+        Status findStatusById(@Param("id") Long id);
+
         // ===== List =====
 
         Page<User> findAllByOrderByIdAsc(Pageable pageable);
@@ -86,7 +90,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
                         @Param("department") Department department,
                         @Param("role") Role role);
 
-        @Query("SELECT new com.attendenceSystem.module.user.dto.response.UserWithSpecializationResponse(u.id, u.fullName, u.specialization) " +
+        @Query("SELECT new com.attendenceSystem.module.user.dto.response.UserWithSpecializationResponse(u.id, u.fullName, u.specialization) "
+                        +
                         "FROM User u WHERE u.role != :role ORDER BY u.fullName ASC")
         List<UserWithSpecializationResponse> findAllUsersWithSpecializationByRoleNot(@Param("role") Role role);
 }

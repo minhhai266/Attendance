@@ -5,12 +5,14 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.attendenceSystem.constant.Routes;
 import com.attendenceSystem.module.attendance.dto.response.ManagerAttendanceListResponse;
+import com.attendenceSystem.module.attendance.dto.response.AttendanceDetailResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.service.AttendanceService;
@@ -58,5 +60,10 @@ public class AttendanceManagerApiController {
         }
         List<ManagerAttendanceListResponse> list = attendanceService.getManagerAttendanceList(startDate, endDate, attendanceStatus);
         return ResponseEntity.ok(list);
+    }
+
+    @GetMapping(Routes.Attendance.DETAIL + "/{id}")
+    public ResponseEntity<AttendanceDetailResponse> getDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(attendanceService.getManagerAttendanceDetail(id));
     }
 }

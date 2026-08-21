@@ -20,6 +20,7 @@ import com.attendenceSystem.module.attendance.exception.NotCheckedInException;
 import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
 import com.attendenceSystem.module.attendance.repository.AttendanceRecordRepository;
 import com.attendenceSystem.module.attendance.service.AttendanceActionService;
+import com.attendenceSystem.module.attendance.service.AttendanceEvidenceService;
 import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
 import com.attendenceSystem.module.schedule.entity.WorkSchedule;
 import com.attendenceSystem.module.schedule.repository.WorkScheduleRepository;
@@ -47,6 +48,7 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
     private final AttendanceRecordRepository attendanceRecordRepository;
     private final AttendanceResponseMapper attendanceResponseMapper;
     private final WorkScheduleRepository workScheduleRepository;
+    private final AttendanceEvidenceService attendanceEvidenceService;
 
     private final ZoneId applicationZoneId;
 
@@ -102,6 +104,13 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
     }
 
     @Override
+    public AttendanceResponse checkIn(final User user, final String imageBase64) {
+        AttendanceResponse response = checkIn(user);
+        attendanceEvidenceService.saveCheckInImage(user, imageBase64);
+        return response;
+    }
+
+    @Override
     public AttendanceResponse checkOut(final User user) {
         LocalDate today = todayDate();
         AttendanceRecord attendance = attendanceRecordRepository
@@ -134,6 +143,13 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
         }
         attendanceRecordRepository.save(attendance);
         return attendanceResponseMapper.fromEntity(attendance);
+    }
+
+    @Override
+    public AttendanceResponse checkOut(final User user, final String imageBase64) {
+        AttendanceResponse response = checkOut(user);
+        attendanceEvidenceService.saveCheckOutImage(user, imageBase64);
+        return response;
     }
 
     private boolean isWorkingDay(LocalDate date) {

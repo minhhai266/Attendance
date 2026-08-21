@@ -61,6 +61,7 @@ public final class Routes {
         public static final String CHECK = "/check";
         public static final String CHECK_IN = "/check-in";
         public static final String CHECK_OUT = "/check-out";
+        public static final String DETAIL = "/detail";
     }
 
     public static final class FaceId {

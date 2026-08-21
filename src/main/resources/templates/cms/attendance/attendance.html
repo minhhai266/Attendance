@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý điểm danh</title>
     <link rel="stylesheet" href="/css/attendance/attendance.css">
+    <link rel="stylesheet" href="/css/attendance/attendance-detail.css">
 
 
 </head>
@@ -107,6 +108,7 @@
                                     <th>Tổng giờ</th>
                                     <th>Trạng thái</th>
                                     <th>Ghi chú</th>
+                                    <th>Chi tiết</th>
                                 </tr>
                             </thead>
 
@@ -125,7 +127,10 @@
 
 
 
+    <div th:replace="~{cms/attendance/attendance-detail-modal :: detailModal}"></div>
+
     <script src="/js/attendance-manager.js"></script>
+    <script src="/js/attendance-detail.js"></script>
 </body>
 
 </html>

@@ -105,25 +105,23 @@
                 const checkIn = formatTime(item?.checkInTime);
                 const checkOut = formatTime(item?.checkOutTime);
                 const workingHours = formatWorkingHours(item?.workingMinutes);
-                const late = item?.late;
-                const earlyLeave = item?.earlyLeave;
-                const hasCheckIn = !!item?.checkInTime;
-                let statusBadges = '';
-                if (!hasCheckIn) {
-                    statusBadges = '<span class="badge absent">Vắng mặt</span>';
-                } else {
-                    if (late) statusBadges += '<span class="badge late">Đi muộn</span>';
-                    if (earlyLeave) statusBadges += '<span class="badge warning">Về sớm</span>';
-                    if (!late && !earlyLeave) statusBadges = '<span class="badge success">Đúng giờ</span>';
-                }
+                const statusMap = {
+                    PRESENT: '<span class="badge success">Đúng giờ</span>',
+                    LATE: '<span class="badge late">Đi muộn</span>',
+                    ABSENT: '<span class="badge absent">Vắng mặt</span>',
+                    LEAVE: '<span class="badge leave">Nghỉ phép</span>',
+                    DAY_OFF: '<span class="badge day-off">Ngày nghỉ</span>'
+                };
+                const statusBadges = statusMap[item?.status] || '<span class="badge">Không rõ</span>';
                 tr.innerHTML = `
                     <td>${formatDate(item?.attendanceDate)}</td>
-                    <td>${name}</td>
+                    <td>${escapeHtml(name)}</td>
                     <td>${checkIn}</td>
                     <td>${checkOut}</td>
                     <td>${workingHours}</td>
                     <td>${statusBadges}</td>
-                    <td>${item?.note ?? '--'}</td>
+                    <td>${escapeHtml(item?.note ?? '--')}</td>
+                    <td><button type="button" class="detail-button" onclick="openAttendanceDetail(${item?.id}, '/api/attendance/manager')">Xem</button></td>
                 `;
                 tbody.appendChild(tr);
             }
@@ -132,6 +130,12 @@
             const target = getListTarget();
             if (target) target.innerHTML = '<tr><td colspan="8" class="text-center">Lỗi tải dữ liệu</td></tr>';
         }
+    }
+
+    function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, (character) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[character]);
     }
 
     window.loadAttendanceRecords = loadList;

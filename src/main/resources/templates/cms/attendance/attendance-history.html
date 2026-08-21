@@ -7,6 +7,7 @@
     <title>Lịch sử điểm danh cá nhân</title>
 
     <link rel="stylesheet" th:href="@{/css/attendance/attendance-history.css}">
+    <link rel="stylesheet" th:href="@{/css/attendance/attendance-detail.css}">
 </head>
 
 <body>
@@ -110,6 +111,7 @@
                                     <th>Tổng giờ</th>
                                     <th>Trạng thái</th>
                                     <th>Ghi chú</th>
+                                    <th>Chi tiết</th>
                                 </tr>
                             </thead>
 
@@ -126,9 +128,13 @@
                                         <span th:if="${record.checkInTime() == null}" class="badge absent">Vắng mặt</span>
                                     </td>
                                     <td th:text="${record.note() != null ? record.note() : '-'}">-</td>
+                                    <td>
+                                        <button type="button" class="detail-button"
+                                                th:attr="onclick=|openAttendanceDetail(${record.id()}, '/api/attendance')|">Xem</button>
+                                    </td>
                                 </tr>
                                 <tr th:if="${attendanceHistory.content.isEmpty()}">
-                                    <td colspan="6" class="text-center">Chưa có dữ liệu điểm danh.</td>
+                                    <td colspan="7" class="text-center">Chưa có dữ liệu điểm danh.</td>
                                 </tr>
                             </tbody>
 
@@ -161,9 +167,8 @@
 
     </div>
 
-
-
-
+    <div th:replace="~{cms/attendance/attendance-detail-modal :: detailModal}"></div>
+    <script src="/js/attendance-detail.js"></script>
 </body>
 
 </html>

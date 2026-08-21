@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceHistoryStatsResponse;
+import com.attendenceSystem.module.attendance.dto.response.AttendanceDetailResponse;
 import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
@@ -35,4 +36,8 @@ public interface AttendanceService {
     List<ManagerAttendanceListResponse> getManagerAttendanceList(LocalDate startDate, LocalDate endDate, AttendanceStatus status);
 
     Optional<AttendanceRecord> getTodayAttendanceRecord(User user);
+
+    AttendanceDetailResponse getAttendanceDetail(Long recordId);
+
+    AttendanceDetailResponse getManagerAttendanceDetail(Long recordId);
 }
