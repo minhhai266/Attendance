@@ -1,9 +1,12 @@
 package com.attendenceSystem.module.attendance.mapper.response;
 
+import java.util.Set;
+
 import org.springframework.stereotype.Component;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceDetailResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
+import com.attendenceSystem.module.attendance.entity.enums.AttendanceCheckStatus;
 import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
 import com.attendenceSystem.module.storage.provider.StorageProvider;
 
@@ -16,10 +19,11 @@ public class AttendanceDetailResponseMapper {
     private final StorageProvider storageProvider;
 
     public AttendanceDetailResponse fromEntity(AttendanceRecord record) {
-        boolean late = attendanceCalculator.isLate(record.getCheckInTime())
-                || attendanceCalculator.isPastAllowedCheckInTime(record.getCheckInTime());
-        boolean earlyLeave = attendanceCalculator.isEarlyLeave(record.getCheckOutTime())
-                || attendanceCalculator.isBeforeMinCheckOutTime(record.getCheckOutTime());
+        Set<AttendanceCheckStatus> checkStatuses = record.getCheckStatuses() != null
+                ? record.getCheckStatuses()
+                : Set.of();
+        boolean late = checkStatuses.contains(AttendanceCheckStatus.LATE);
+        boolean earlyLeave = checkStatuses.contains(AttendanceCheckStatus.EARLY_LEAVE);
 
         return AttendanceDetailResponse.builder()
                 .id(record.getId())
@@ -28,6 +32,7 @@ public class AttendanceDetailResponseMapper {
                 .checkInTime(record.getCheckInTime())
                 .checkOutTime(record.getCheckOutTime())
                 .status(record.getStatus())
+                .checkStatuses(checkStatuses)
                 .note(record.getNote())
                 .workingMinutes(attendanceCalculator.workingMinutes(
                         record.getCheckInTime(), record.getCheckOutTime()))

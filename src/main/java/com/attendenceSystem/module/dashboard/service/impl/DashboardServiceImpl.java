@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
+import com.attendenceSystem.module.attendance.entity.enums.AttendanceCheckStatus;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.provider.AttendanceStatisticsProvider;
 import com.attendenceSystem.module.dashboard.dto.response.AccountTypeDistributionResponse;
@@ -69,7 +70,7 @@ public class DashboardServiceImpl implements DashboardService {
                 long presentToday = attendanceStatisticsProvider
                                 .getCountByDateAndStatus(today, AttendanceStatus.PRESENT);
                 long lateToday = attendanceStatisticsProvider
-                                .getCountByDateAndStatus(today, AttendanceStatus.LATE);
+                                .getCountByDateAndCheckStatus(today, AttendanceCheckStatus.LATE);
                 long attendedToday = presentToday + lateToday;
                 long absentToday = Math.max(0, totalEmployees - attendedToday);
                 Page<AttendanceResponse> attendanceHistory = attendanceStatisticsProvider
@@ -83,8 +84,8 @@ public class DashboardServiceImpl implements DashboardService {
                                                         .getCountByDateAndStatus(date,
                                                                         AttendanceStatus.PRESENT);
                                         long late = attendanceStatisticsProvider
-                                                        .getCountByDateAndStatus(date,
-                                                                        AttendanceStatus.LATE);
+                                                        .getCountByDateAndCheckStatus(date,
+                                                                        AttendanceCheckStatus.LATE);
                                         long attended = present + late;
                                         long absent = Math.max(0, totalEmployees - attended);
                                         return new DailyAttendanceStats(

@@ -54,6 +54,9 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
 
         long countByAttendanceDateAndStatus(LocalDate attendanceDate, AttendanceStatus status);
 
+        @Query(value = "SELECT COUNT(*) FROM attendance_records WHERE attendance_date = :date AND (check_status & :bit) != 0", nativeQuery = true)
+        long countByAttendanceDateAndCheckStatus(@Param("date") LocalDate date, @Param("bit") int bit);
+
         long countByUser(User user);
 
         long countByUserAndCheckInTimeNotNullAndCheckOutTimeNotNull(User user);

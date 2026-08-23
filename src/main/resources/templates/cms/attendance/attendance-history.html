@@ -80,8 +80,7 @@
 
                         <select name="status">
                             <option value="" th:selected="${selectedStatus == null}">Tất cả trạng thái</option>
-                            <option value="PRESENT" th:selected="${selectedStatus?.name() == 'PRESENT'}">Đúng giờ</option>
-                            <option value="LATE" th:selected="${selectedStatus?.name() == 'LATE'}">Đi muộn</option>
+                            <option value="PRESENT" th:selected="${selectedStatus?.name() == 'PRESENT'}">Đã điểm danh</option>
                             <option value="ABSENT" th:selected="${selectedStatus?.name() == 'ABSENT'}">Vắng mặt</option>
                         </select>
 
@@ -123,9 +122,8 @@
                                     <td th:text="${record.workingMinutes() > 0 ? (record.workingMinutes() / 60) + ' giờ ' + (record.workingMinutes() % 60) + ' phút' : '--'}">8 giờ 34 phút</td>
                                     <td>
                                         <span th:if="${record.late()}" class="badge late">Đi muộn</span>
-                                        <span th:if="${!record.late() and !record.earlyLeave() and record.checkInTime() != null}" class="badge success">Đúng giờ</span>
+                                        <span th:if="${!record.late() and !record.earlyLeave()}" class="badge success">Đúng giờ</span>
                                         <span th:if="${record.earlyLeave()}" class="badge warning">Về sớm</span>
-                                        <span th:if="${record.checkInTime() == null}" class="badge absent">Vắng mặt</span>
                                     </td>
                                     <td th:text="${record.note() != null ? record.note() : '-'}">-</td>
                                     <td>

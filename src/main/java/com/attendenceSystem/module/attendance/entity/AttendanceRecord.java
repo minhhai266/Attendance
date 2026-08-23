@@ -2,7 +2,9 @@ package com.attendenceSystem.module.attendance.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
+import com.attendenceSystem.module.attendance.entity.enums.AttendanceCheckStatus;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.user.entity.User;
 
@@ -58,6 +60,9 @@ public class AttendanceRecord {
 
     @Column(name = "status", nullable = false)
     private AttendanceStatus status;
+
+    @Column(name = "check_status")
+    private Set<AttendanceCheckStatus> checkStatuses;
 
     @Column(name = "note", length = 1000)
     private String note;

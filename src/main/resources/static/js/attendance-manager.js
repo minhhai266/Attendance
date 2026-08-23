@@ -105,14 +105,17 @@
                 const checkIn = formatTime(item?.checkInTime);
                 const checkOut = formatTime(item?.checkOutTime);
                 const workingHours = formatWorkingHours(item?.workingMinutes);
-                const statusMap = {
-                    PRESENT: '<span class="badge success">Đúng giờ</span>',
+                const checkStatusMap = {
                     LATE: '<span class="badge late">Đi muộn</span>',
-                    ABSENT: '<span class="badge absent">Vắng mặt</span>',
-                    LEAVE: '<span class="badge leave">Nghỉ phép</span>',
-                    DAY_OFF: '<span class="badge day-off">Ngày nghỉ</span>'
+                    EARLY_LEAVE: '<span class="badge warning">Về sớm</span>'
                 };
-                const statusBadges = statusMap[item?.status] || '<span class="badge">Không rõ</span>';
+                let checkStatusBadges = '';
+                if (Array.isArray(item?.checkStatuses)) {
+                    for (const cs of item.checkStatuses) {
+                        if (checkStatusMap[cs]) checkStatusBadges += (checkStatusBadges ? ' ' : '') + checkStatusMap[cs];
+                    }
+                }
+                const statusBadges = checkStatusBadges || '<span class="badge success">Đúng giờ</span>';
                 tr.innerHTML = `
                     <td>${formatDate(item?.attendanceDate)}</td>
                     <td>${escapeHtml(name)}</td>
@@ -166,4 +169,3 @@
         }
     });
 })();
-

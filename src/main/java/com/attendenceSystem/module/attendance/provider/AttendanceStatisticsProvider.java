@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceListResponse;
+import com.attendenceSystem.module.attendance.entity.enums.AttendanceCheckStatus;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.mapper.response.AttendanceResponseMapper;
 import com.attendenceSystem.module.attendance.mapper.response.EmployeeAttendanceListResponseMapper;
@@ -25,6 +26,10 @@ public class AttendanceStatisticsProvider {
 
     public long getCountByDateAndStatus(LocalDate date, AttendanceStatus status) {
         return attendanceRecordRepository.countByAttendanceDateAndStatus(date, status);
+    }
+
+    public long getCountByDateAndCheckStatus(LocalDate date, AttendanceCheckStatus status) {
+        return attendanceRecordRepository.countByAttendanceDateAndCheckStatus(date, status.getValue());
     }
 
     public Page<AttendanceResponse> getRecentHistory(int size) {
