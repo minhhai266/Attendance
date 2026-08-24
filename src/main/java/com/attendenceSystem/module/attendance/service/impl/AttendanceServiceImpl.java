@@ -18,6 +18,7 @@ import com.attendenceSystem.module.attendance.dto.response.EmployeeAttendanceLis
 import com.attendenceSystem.module.attendance.dto.response.ManagerAttendanceListResponse;
 import com.attendenceSystem.module.attendance.dto.response.ManagerStatsResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
+import com.attendenceSystem.module.attendance.entity.enums.AttendanceCheckStatus;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.mapper.response.EmployeeAttendanceListResponseMapper;
 import com.attendenceSystem.module.attendance.mapper.response.AttendanceDetailResponseMapper;
@@ -107,7 +108,8 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .count();
 
         long lateArrivals = records.stream()
-                .filter(r -> r.getStatus() == AttendanceStatus.LATE)
+                .filter(r -> r.getCheckStatuses() != null
+                        && r.getCheckStatuses().contains(AttendanceCheckStatus.LATE))
                 .count();
 
         long absent = records.stream()
@@ -194,16 +196,16 @@ public class AttendanceServiceImpl implements AttendanceService {
         User currentUser = userContextProvider.getCurrentUserEntity();
         AttendanceRecord record = attendanceRecordRepository.findById(recordId)
                 .filter(attendance -> attendance.getUser().getId().equals(currentUser.getId()))
-            .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Không tìm thấy bản ghi điểm danh"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Không tìm thấy bản ghi điểm danh"));
         return attendanceDetailResponseMapper.fromEntity(record);
     }
 
     @Override
     public AttendanceDetailResponse getManagerAttendanceDetail(final Long recordId) {
         AttendanceRecord record = attendanceRecordRepository.findById(recordId)
-            .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Không tìm thấy bản ghi điểm danh"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Không tìm thấy bản ghi điểm danh"));
         return attendanceDetailResponseMapper.fromEntity(record);
     }
 
@@ -260,19 +262,19 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .filter(r -> r.getStatus() == AttendanceStatus.PRESENT)
                 .count();
         long late = records.stream()
-                .filter(r -> r.getStatus() == AttendanceStatus.LATE)
+                .filter(r -> r.getCheckStatuses() != null
+                        && r.getCheckStatuses().contains(AttendanceCheckStatus.LATE))
                 .count();
-        long earlyLeave = 0;
+        long earlyLeave = records.stream()
+                .filter(r -> r.getCheckStatuses() != null
+                        && r.getCheckStatuses().contains(AttendanceCheckStatus.EARLY_LEAVE))
+                .count();
         long totalWorkingMinutes = 0;
 
         for (AttendanceRecord record : records) {
             if (record.getCheckInTime() != null && record.getCheckOutTime() != null) {
                 totalWorkingMinutes += attendanceCalculator.workingMinutes(record.getCheckInTime(),
                         record.getCheckOutTime());
-            }
-
-            if (attendanceCalculator.isEarlyLeave(record.getCheckOutTime())) {
-                earlyLeave++;
             }
         }
 

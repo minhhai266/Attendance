@@ -53,10 +53,18 @@
         if (!status) return 'Không rõ';
         var map = {
             PRESENT: { text: 'Đúng giờ', cls: 'present' },
-            LATE: { text: 'Đi muộn', cls: 'late' },
             ABSENT: { text: 'Vắng mặt', cls: 'absent' },
             LEAVE: { text: 'Nghỉ phép', cls: 'leave' },
             'DAY_OFF': { text: 'Ngày nghỉ', cls: 'day-off' }
+        };
+        var entry = map[status] || { text: status, cls: '' };
+        return '<span class="status-badge ' + entry.cls + '">' + entry.text + '</span>';
+    }
+
+    function checkStatusLabel(status) {
+        var map = {
+            LATE: { text: 'Đi muộn', cls: 'late' },
+            'EARLY_LEAVE': { text: 'Về sớm', cls: 'early-leave' }
         };
         var entry = map[status] || { text: status, cls: '' };
         return '<span class="status-badge ' + entry.cls + '">' + entry.text + '</span>';
@@ -112,7 +120,14 @@
         html += '    <div class="detail-info-item"><label>Vào</label><div class="value">' + formatTime(data.checkInTime) + '</div></div>';
         html += '    <div class="detail-info-item"><label>Ra</label><div class="value">' + formatTime(data.checkOutTime) + '</div></div>';
         html += '    <div class="detail-info-item"><label>Tổng giờ</label><div class="value">' + formatWorkingHours(data.workingMinutes) + '</div></div>';
-        html += '    <div class="detail-info-item"><label>Trạng thái</label><div class="value">' + statusLabel(data.status) + '</div></div>';
+        var checkStatusHtml = '';
+        if (Array.isArray(data.checkStatuses)) {
+            for (var i = 0; i < data.checkStatuses.length; i++) {
+                checkStatusHtml += (checkStatusHtml ? ' ' : '') + checkStatusLabel(data.checkStatuses[i]);
+            }
+        }
+        var statusHtml = checkStatusHtml || '<span class="status-badge present">Đúng giờ</span>';
+        html += '    <div class="detail-info-item"><label>Trạng thái</label><div class="value">' + statusHtml + '</div></div>';
         html += '    <div class="detail-info-item"><label>Ghi chú</label><div class="value">' + escapeHtml(data.note || '-') + '</div></div>';
         html += '  </div>';
         html += '</div>';

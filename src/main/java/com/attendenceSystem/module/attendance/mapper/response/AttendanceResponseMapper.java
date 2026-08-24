@@ -1,9 +1,12 @@
 package com.attendenceSystem.module.attendance.mapper.response;
 
+import java.util.Set;
+
 import org.springframework.stereotype.Component;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
+import com.attendenceSystem.module.attendance.entity.enums.AttendanceCheckStatus;
 import com.attendenceSystem.module.attendance.util.AttendanceCalculator;
 
 import lombok.RequiredArgsConstructor;
@@ -14,14 +17,15 @@ public class AttendanceResponseMapper {
     private final AttendanceCalculator attendanceCalculator;
 
     public AttendanceResponse fromEntity(AttendanceRecord attendance) {
-    boolean late = attendanceCalculator.isLate(attendance.getCheckInTime())
-            || attendanceCalculator.isPastAllowedCheckInTime(attendance.getCheckInTime());
-    boolean earlyLeave = attendanceCalculator.isEarlyLeave(attendance.getCheckOutTime())
-            || attendanceCalculator.isBeforeMinCheckOutTime(attendance.getCheckOutTime());
-    long workingMinutes = attendanceCalculator.workingMinutes(
-            attendance.getCheckInTime(),
-            attendance.getCheckOutTime()
-    );
+        Set<AttendanceCheckStatus> checkStatuses = attendance.getCheckStatuses() != null
+                ? attendance.getCheckStatuses()
+                : Set.of();
+        boolean late = checkStatuses.contains(AttendanceCheckStatus.LATE);
+        boolean earlyLeave = checkStatuses.contains(AttendanceCheckStatus.EARLY_LEAVE);
+        long workingMinutes = attendanceCalculator.workingMinutes(
+                attendance.getCheckInTime(),
+                attendance.getCheckOutTime()
+        );
 
         return AttendanceResponse.builder()
                 .id(attendance.getId())
@@ -32,6 +36,7 @@ public class AttendanceResponseMapper {
                 .checkInTime(attendance.getCheckInTime())
                 .checkOutTime(attendance.getCheckOutTime())
                 .status(attendance.getStatus())
+                .checkStatuses(checkStatuses)
                 .note(attendance.getNote())
                 .late(late)
                 .earlyLeave(earlyLeave)

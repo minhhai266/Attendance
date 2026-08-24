@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.EnumSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
 import com.attendenceSystem.module.attendance.entity.AttendanceRecord;
+import com.attendenceSystem.module.attendance.entity.enums.AttendanceCheckStatus;
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 import com.attendenceSystem.module.attendance.exception.AlreadyCheckedInException;
 import com.attendenceSystem.module.attendance.exception.AlreadyCheckedOutException;
@@ -83,13 +85,17 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
 
         AttendanceStatus status;
         String note;
+        Set<AttendanceCheckStatus> checkStatuses = EnumSet.noneOf(AttendanceCheckStatus.class);
         if (!isWorkingDay) {
             status = AttendanceStatus.DAY_OFF;
             note = DAY_OFF_NOTE;
         } else {
             boolean late = attendanceCalculator.isLate(checkInTime);
-            status = late ? AttendanceStatus.LATE : AttendanceStatus.PRESENT;
+            status = AttendanceStatus.PRESENT;
             note = late ? "Đi muộn" : null;
+            if (late) {
+                checkStatuses.add(AttendanceCheckStatus.LATE);
+            }
         }
 
         AttendanceRecord attendanceRecord = AttendanceRecord.builder()
@@ -97,6 +103,7 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
                 .attendanceDate(today)
                 .checkInTime(checkInTime)
                 .status(status)
+                .checkStatuses(checkStatuses)
                 .note(note)
                 .build();
         attendanceRecordRepository.save(attendanceRecord);
@@ -121,7 +128,6 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
             throw new AlreadyCheckedOutException("Bạn đã checkout rồi");
         }
         if (attendance.getStatus() != AttendanceStatus.PRESENT
-                && attendance.getStatus() != AttendanceStatus.LATE
                 && attendance.getStatus() != AttendanceStatus.DAY_OFF) {
             throw new InvalidAttendanceStateException("Trạng thái điểm danh không hợp lệ");
         }
@@ -140,6 +146,11 @@ public class AttendanceActionServiceImpl implements AttendanceActionService {
         attendance.setCheckOutTime(checkOutTime);
         if (earlyLeave) {
             attendance.setNote((attendance.getNote() != null ? attendance.getNote() + "; " : "") + "Về sớm");
+            Set<AttendanceCheckStatus> checkStatuses = attendance.getCheckStatuses() != null
+                    ? attendance.getCheckStatuses()
+                    : EnumSet.noneOf(AttendanceCheckStatus.class);
+            checkStatuses.add(AttendanceCheckStatus.EARLY_LEAVE);
+            attendance.setCheckStatuses(checkStatuses);
         }
         attendanceRecordRepository.save(attendance);
         return attendanceResponseMapper.fromEntity(attendance);
