@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import com.attendenceSystem.module.attendance.entity.enums.AttendanceCheckStatus;
-import com.attendenceSystem.module.attendance.entity.enums.AttendanceStatus;
 
 import lombok.Builder;
 
@@ -15,7 +14,7 @@ public record EmployeeAttendanceListResponse(
                 LocalDate attendanceDate,
                 LocalDateTime checkInTime,
                 LocalDateTime checkOutTime,
-                AttendanceStatus status,
+                String status,
                 Set<AttendanceCheckStatus> checkStatuses,
                 boolean late,
                 boolean earlyLeave,

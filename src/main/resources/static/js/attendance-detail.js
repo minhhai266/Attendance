@@ -70,6 +70,16 @@
         return '<span class="status-badge ' + entry.cls + '">' + entry.text + '</span>';
     }
 
+    function attendanceStatusLabel(status) {
+        var map = {
+            ABSENT: { text: 'Vắng mặt', cls: 'absent' },
+            LEAVE: { text: 'Nghỉ phép', cls: 'leave' },
+            'DAY_OFF': { text: 'Ngày nghỉ', cls: 'day-off' }
+        };
+        var entry = map[status];
+        return entry ? '<span class="status-badge ' + entry.cls + '">' + entry.text + '</span>' : '';
+    }
+
     /* ---------- modal open / close ---------- */
 
     function openAttendanceDetail(recordId, apiBase) {
@@ -120,13 +130,14 @@
         html += '    <div class="detail-info-item"><label>Vào</label><div class="value">' + formatTime(data.checkInTime) + '</div></div>';
         html += '    <div class="detail-info-item"><label>Ra</label><div class="value">' + formatTime(data.checkOutTime) + '</div></div>';
         html += '    <div class="detail-info-item"><label>Tổng giờ</label><div class="value">' + formatWorkingHours(data.workingMinutes) + '</div></div>';
+        var statusFromAttendance = attendanceStatusLabel(data.status);
         var checkStatusHtml = '';
         if (Array.isArray(data.checkStatuses)) {
             for (var i = 0; i < data.checkStatuses.length; i++) {
                 checkStatusHtml += (checkStatusHtml ? ' ' : '') + checkStatusLabel(data.checkStatuses[i]);
             }
         }
-        var statusHtml = checkStatusHtml || '<span class="status-badge present">Đúng giờ</span>';
+        var statusHtml = statusFromAttendance || checkStatusHtml || '<span class="status-badge present">Đúng giờ</span>';
         html += '    <div class="detail-info-item"><label>Trạng thái</label><div class="value">' + statusHtml + '</div></div>';
         html += '    <div class="detail-info-item"><label>Ghi chú</label><div class="value">' + escapeHtml(data.note || '-') + '</div></div>';
         html += '  </div>';

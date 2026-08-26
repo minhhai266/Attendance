@@ -280,6 +280,21 @@
     color: var(--purple);
 }
 
+.badge.absent {
+    background: var(--btn-reject-15);
+    color: var(--danger);
+}
+
+.badge.leave {
+    background: var(--btn-warning-15);
+    color: var(--warning);
+}
+
+.badge.day-off {
+    background: var(--indigo-15);
+    color: var(--text-gray);
+}
+
 /* ===================================
    RESPONSIVE
 =================================== */

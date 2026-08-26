@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.attendenceSystem.module.attendance.dto.response.AttendanceResponse;
@@ -48,7 +49,8 @@ public class AttendanceStatisticsProvider {
 
     public Page<EmployeeAttendanceListResponse> getRecentHistoryByUser(User user, int size) {
         return attendanceRecordRepository
-                .findByUser(user, PageRequest.of(0, size))
+                .findByUser(user,
+                        PageRequest.of(0, size, Sort.by(Sort.Direction.DESC, "attendanceDate")))
                 .map(employeeAttendanceListResponseMapper::fromEntity);
     }
 }

@@ -102,7 +102,7 @@ public class AttendanceController {
         model.addAttribute("stats", stats);
         model.addAttribute("selectedStartDate", startDate);
         model.addAttribute("selectedEndDate", endDate);
-        model.addAttribute("selectedStatus", status);
+        model.addAttribute("selectedStatus", status == null ? null : status.name());
         model.addAttribute("hasFilter", hasFilter);
 
         return Views.Attendance.HISTORY;
